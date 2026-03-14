@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surf Java – Live Stream · Fan Meeting 2026</title>
+  <link rel="icon" type="image/jpeg" href="surf.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --amber:      #f5b63a;
+      --amber-deep: #c8882a;
+      --amber-glow: rgba(245,182,58,.45);
+      --dark:       #0d0b07;
+      --panel:      #111009;
+      --card:       #16130a;
+      --border:     rgba(245,182,58,.18);
+      --text:       #e6d9bb;
+      --muted:      #7a6e4a;
+      --green:      #2e4a1a;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS ── */
+    #bg-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ═══════════════════════════════
+       GATE (password screen)
+    ═══════════════════════════════ */
+    #gate {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.96);
+      backdrop-filter: blur(5px);
+    }
+
+    .gate-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 50px 44px; text-align: center;
+      max-width: 420px; width: 90%;
+      position: relative;
+    }
+    .gate-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--amber), transparent);
+    }
+
+    .gate-icon {
+      font-size: 3rem; margin-bottom: 20px; display: block;
+      animation: glow-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes glow-pulse {
+      0%,100% { filter: none; }
+      50%      { filter: drop-shadow(0 0 18px rgba(245,182,58,.8)); }
+    }
+
+    .gate-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem; color: var(--amber); margin-bottom: 4px;
+    }
+    .gate-sub {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .72rem; color: var(--muted);
+      letter-spacing: .18em; margin-bottom: 32px;
+    }
+    .gate-input {
+      width: 100%; padding: 13px 18px;
+      background: #0e0c06; border: 1px solid #3a3010;
+      color: #fff; font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem; letter-spacing: .28em; text-align: center;
+      outline: none; margin-bottom: 14px;
+      transition: border-color .2s;
+    }
+    .gate-input:focus { border-color: var(--amber); }
+    .gate-input.err   {
+      border-color: #f55;
+      animation: shake .35s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-8px); }
+      75%      { transform: translateX( 8px); }
+    }
+
+    .gate-btn {
+      width: 100%; padding: 14px;
+      background: var(--amber); color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .82rem; letter-spacing: .28em;
+      text-transform: uppercase; border: none; cursor: pointer;
+      transition: background .2s, box-shadow .2s;
+    }
+    .gate-btn:hover {
+      background: #ffcc44;
+      box-shadow: 0 0 24px var(--amber-glow);
+    }
+
+    .gate-err { font-size: .78rem; color: #f55; letter-spacing: .08em; margin-top: 14px; min-height: 18px; }
+    .gate-hint { font-size: .7rem; color: #3a3015; margin-top: 20px; letter-spacing: .06em; }
+
+    /* ═══════════════════════════════
+       MAIN CONTENT
+    ═══════════════════════════════ */
+    #main-content { display: none; position: relative; z-index: 1; }
+
+    /* TOP BAR */
+    .top-bar {
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .top-bar-logo {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem; color: var(--amber);
+      text-shadow: 0 0 20px var(--amber-glow);
+    }
+    .top-bar-logo span { color: #f0e3c0; }
+
+    .live-badge {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .68rem; letter-spacing: .15em; color: #fff;
+      background: rgba(120,80,10,.4); border: 1px solid var(--amber);
+      padding: 5px 14px;
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--amber);
+      animation: liveblink .9s steps(1) infinite;
+    }
+    @keyframes liveblink { 50% { opacity: 0; } }
+
+    .live-badge.offline { background: rgba(40,40,30,.4); border-color: #444; color: #555; }
+    .live-badge.offline .live-dot { background: #444; animation: none; }
+
+    .top-bar-back {
+      font-family: 'Orbitron', sans-serif; font-size: .68rem;
+      letter-spacing: .2em; color: var(--muted); text-decoration: none;
+      border: 1px solid #333; padding: 6px 14px;
+      transition: color .2s, border-color .2s;
+    }
+    .top-bar-back:hover { color: var(--amber); border-color: var(--amber); }
+
+    /* PLAYER AREA */
+    .player-section { padding: 0; background: #000; }
+    .player-wrap { max-width: 980px; margin: 0 auto; position: relative; }
+
+    .vimeo-embed {
+      position: relative; width: 100%; padding-bottom: 56.25%; background: #000;
+    }
+    .vimeo-embed iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+    }
+
+    /* Offline placeholder */
+    .stream-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 50%, rgba(80,55,10,.22) 0%, #000 70%);
+      text-align: center; padding: 24px;
+    }
+    .placeholder-icon { font-size: 3.5rem; margin-bottom: 18px; }
+    .placeholder-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem; color: var(--amber); margin-bottom: 10px;
+    }
+    .placeholder-sub {
+      font-size: .88rem; color: var(--muted);
+      letter-spacing: .07em; max-width: 360px; line-height: 1.6;
+    }
+
+    /* In-player countdown */
+    .countdown-inline {
+      display: flex; justify-content: center; gap: 10px;
+      margin: 22px 0 0; flex-wrap: wrap;
+    }
+    .cd-block { display: flex; flex-direction: column; align-items: center; min-width: 62px; }
+    .cd-num {
+      font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 700;
+      color: var(--amber); line-height: 1;
+      text-shadow: 0 0 16px var(--amber-glow);
+    }
+    .cd-lbl {
+      font-family: 'Orbitron', sans-serif; font-size: .52rem;
+      letter-spacing: .2em; color: var(--muted);
+      text-transform: uppercase; margin-top: 5px;
+    }
+    .cd-sep {
+      font-family: 'Orbitron', sans-serif; font-size: 1.8rem;
+      color: var(--amber); line-height: 1; margin-top: 4px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .cd-live-msg {
+      font-family: 'Orbitron', sans-serif; font-size: .88rem;
+      color: #8be05a; letter-spacing: .22em; margin-top: 18px;
+      text-shadow: 0 0 10px rgba(100,220,50,.4);
+    }
+
+    /* INFO STRIP */
+    .info-strip {
+      max-width: 980px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #0e0c07;
+    }
+    .info-strip-event {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.2rem; color: var(--amber); letter-spacing: .05em;
+    }
+    .info-strip-time {
+      font-family: 'Orbitron', sans-serif; font-size: .7rem;
+      letter-spacing: .12em; color: var(--muted);
+    }
+    .info-strip-time b { color: var(--amber); }
+
+    /* DETAILS */
+    .details-section {
+      max-width: 980px; margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+    .details-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 24px; margin-bottom: 36px;
+    }
+    @media (max-width: 640px) { .details-grid { grid-template-columns: 1fr; } }
+
+    .d-card {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 24px; position: relative; overflow: hidden;
+    }
+    .d-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--amber), transparent);
+    }
+    .d-card-title {
+      font-family: 'Orbitron', sans-serif; font-size: .7rem;
+      letter-spacing: .3em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .d-card p { font-size: .92rem; line-height: 1.75; color: #cbbf98; }
+    .d-card p b { color: var(--text); }
+    .d-card p .hi { color: var(--amber); }
+
+    /* TZ list */
+    .tz-quick { list-style: none; }
+    .tz-quick li {
+      display: flex; justify-content: space-between;
+      padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+      font-size: .88rem;
+    }
+    .tz-quick li:last-child { border: none; }
+    .tzq-n { color: #cbbf98; }
+    .tzq-t {
+      font-family: 'Orbitron', sans-serif; font-size: .7rem;
+      color: var(--amber);
+    }
+
+    /* contact note */
+    .contact-bar {
+      background: rgba(100,70,10,.1);
+      border: 1px solid var(--border);
+      padding: 20px 24px; text-align: center;
+      font-size: .88rem; color: var(--muted); letter-spacing: .05em;
+      margin-top: 32px;
+    }
+    .contact-bar a { color: var(--amber); text-decoration: none; }
+    .contact-bar a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center; padding: 28px 20px;
+      font-size: .75rem; color: var(--muted); letter-spacing: .1em;
+      position: relative; z-index: 1;
+    }
+
+    /* ── RESPONSIVE 640px ── */
+    @media (max-width: 640px) {
+      .gate-box   { padding: 36px 20px; }
+      .gate-title { font-size: 1.6rem; }
+      .gate-input { font-size: .9rem; letter-spacing: .15em; }
+      .top-bar    { padding: 10px 14px; gap: 8px; }
+      .top-bar-logo { font-size: 1.1rem; }
+      .live-badge   { font-size: .62rem; padding: 4px 10px; }
+      .top-bar-back { font-size: .6rem; padding: 5px 10px; }
+      .placeholder-title { font-size: 1.4rem; }
+      .cd-num  { font-size: 1.5rem; }
+      .cd-lbl  { font-size: .46rem; }
+      .cd-sep  { font-size: 1.3rem; }
+      .cd-block { min-width: 44px; }
+      .info-strip { flex-direction: column; gap: 4px; padding: 10px 14px; }
+      .details-section { padding: 24px 14px 48px; }
+      .d-card  { padding: 18px 14px; }
+      .tz-quick li { flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .gate-box { padding: 36px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- ════════════════════ GATE ════════════════════ -->
+<div id="gate">
+  <div class="gate-box">
+    <span class="gate-icon">🔐</span>
+    <h1 class="gate-title">Surf Java</h1>
+    <p class="gate-sub">1ST FAN MEETING · LIVE STREAM</p>
+    <input
+      type="password"
+      id="pwd-input"
+      class="gate-input"
+      placeholder="· · · · · ·"
+      maxlength="30"
+      autocomplete="off"
+      onkeydown="if(event.key==='Enter') checkPwd()"
+    />
+    <button class="gate-btn" onclick="checkPwd()">ENTRAR →</button>
+    <p class="gate-err" id="gate-err"></p>
+    <p class="gate-hint">Ingresa la clave que recibiste al reservar</p>
+  </div>
+</div>
+
+<!-- ════════════════════ MAIN CONTENT ════════════════════ -->
+<div id="main-content">
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="top-bar-logo">Surf Java &nbsp;<span>· Fan Meeting</span></div>
+    <div class="live-badge offline" id="live-indicator">
+      <div class="live-dot"></div>
+      <span id="live-label">EN ESPERA</span>
+    </div>
+    <a href="index.html" class="top-bar-back">← Volver</a>
+  </header>
+
+  <!-- PLAYER -->
+  <div class="player-section">
+    <div class="player-wrap">
+      <div class="vimeo-embed" id="player-box">
+        <!-- Offline placeholder shown until event is live -->
+        <div class="stream-placeholder" id="placeholder">
+          <div class="placeholder-icon">🌿</div>
+          <div class="placeholder-title">Surf Java — 25 Abril 2026</div>
+          <p class="placeholder-sub">
+            El stream comenzará pronto.<br/>
+            Asegúrate de tener tu clave lista.<br/>
+            ¡Nos vemos en el fan meeting!
+          </p>
+          <div class="countdown-inline" id="pc-timer">
+            <div class="cd-block"><div class="cd-num" id="pcd">--</div><div class="cd-lbl">días</div></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-block"><div class="cd-num" id="pch">--</div><div class="cd-lbl">horas</div></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-block"><div class="cd-num" id="pcm">--</div><div class="cd-lbl">min</div></div>
+            <div class="cd-sep">:</div>
+            <div class="cd-block"><div class="cd-num" id="pcs">--</div><div class="cd-lbl">seg</div></div>
+          </div>
+          <div class="cd-live-msg" id="pc-live-msg" style="display:none">🌸 ¡EL FAN MEETING ESTÁ EN VIVO!</div>
+        </div>
+        <!-- iframe added here dynamically when live -->
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-strip-event">Surf Java · 1st Fan Meeting in Thailand</div>
+    <div class="info-strip-time">
+      🗓 Sáb 25 Abr 2026 &nbsp;·&nbsp;
+      <b>5:00 PM Bangkok (UTC+7)</b>
+    </div>
+  </div>
+
+  <!-- DETAILS -->
+  <section class="details-section">
+    <div class="details-grid">
+
+      <div class="d-card">
+        <p class="d-card-title">📋 Información del Evento</p>
+        <p>
+          <b>Evento:</b> Surf Java 1st Fan Meeting in Thailand<br/>
+          <b>Fecha:</b> Sábado, 25 de Abril de 2026<br/>
+          <b>Hora:</b> <span class="hi">5:00 PM Bangkok (ICT · UTC+7)</span><br/>
+          <b>Venue:</b> MCC Hall FL.3 · The Mall Lifestore Bangkae<br/>
+          <b>Bangkok, Thailand</b>
+        </p>
+      </div>
+
+      <div class="d-card">
+        <p class="d-card-title">⏰ Horarios por Región</p>
+        <ul class="tz-quick" id="tz-quick-list">
+          <!-- filled by JS -->
+        </ul>
+      </div>
+
+      <div class="d-card">
+        <p class="d-card-title">🔑 Acceso al Stream</p>
+        <p>
+          Tu clave de acceso es <b>personal e intransferible</b>.
+          No la compartas con nadie.<br/><br/>
+          Si tienes problemas para ingresar, contáctanos en Telegram
+          al menos <span class="hi">30 minutos antes</span> del inicio del evento.
+        </p>
+      </div>
+
+      <div class="d-card">
+        <p class="d-card-title">💡 Consejo Técnico</p>
+        <p>
+          Para la mejor experiencia usa <b>Google Chrome</b> en escritorio.<br/>
+          Asegúrate de tener buena conexión a internet
+          (recomendamos al menos <span class="hi">10 Mbps</span>).<br/>
+          Cierra aplicaciones en segundo plano antes del evento.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="contact-bar">
+      ¿Problemas de acceso? Escríbenos en Telegram:
+      <a href="https://t.me/panchoenlared" target="_blank" rel="noopener">@panchoenlared</a>
+    </div>
+  </section>
+
+</div><!-- /main-content -->
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    <span style="color:var(--amber)">Surf Java</span>
+    &nbsp;·&nbsp;
+    <span style="color:var(--amber)">#1stFanMeeting</span>
+    &nbsp;·&nbsp;
+    Stream privado · Solo para clientes con reserva
+  </p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════
+   CANVAS – FAIRY LIGHTS
+═══════════════════════════════════ */
+(function () {
+  const cv  = document.getElementById('bg-canvas');
+  const ctx = cv.getContext('2d');
+  let W, H, lights, wires;
+
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+    wires = [
+      { y1: H * .02, y2: H * .08, sag: H * .03 },
+      { y1: H * .06, y2: H * .13, sag: H * .025 },
+    ];
+  }
+
+  function mkLights(n) {
+    lights = Array.from({ length: n }, () => {
+      const wi = Math.floor(Math.random() * 2);
+      const t  = Math.random();
+      const wr = wires[wi];
+      return {
+        x:  t * W,
+        y:  wr.y1 + (wr.y2 - wr.y1) * t + wr.sag * 4 * t * (1 - t),
+        r:  Math.random() * 2 + 1.2,
+        a:  Math.random(),
+        da: (Math.random() * .014 + .004) * (Math.random() > .5 ? 1 : -1),
+        h:  34 + Math.random() * 20,
+      };
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Wire lines
+    ctx.strokeStyle = 'rgba(200,160,60,.1)';
+    ctx.lineWidth   = 1;
+    wires.forEach(wr => {
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const t = i / 60, x = t * W;
+        const y = wr.y1 + (wr.y2 - wr.y1) * t + wr.sag * 4 * t * (1 - t);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    });
+
+    // Lights
+    lights.forEach(l => {
+      l.a += l.da;
+      if (l.a > 1 || l.a < .15) l.da *= -1;
+      const a = Math.max(0, Math.min(1, l.a));
+
+      const glow = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r * 7);
+      glow.addColorStop(0, `hsla(${l.h},88%,68%,${a * .36})`);
+      glow.addColorStop(1, 'transparent');
+      ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(l.x, l.y, l.r * 7, 0, Math.PI * 2); ctx.fill();
+
+      ctx.beginPath(); ctx.arc(l.x, l.y, l.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${l.h},95%,90%,${a})`; ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize(); mkLights(140); draw();
+  window.addEventListener('resize', () => { resize(); mkLights(140); });
+})();
+
+/* ═══════════════════════════════════
+   PASSWORD GATE
+═══════════════════════════════════ */
+function checkPwd() {
+  const input = document.getElementById('pwd-input');
+  const errEl = document.getElementById('gate-err');
+  const val   = input.value.trim().toLowerCase();
+
+  // Here the password is managed server-side / set before the event
+  // For now it matches a placeholder — replace with actual password
+  const PASS = 'surfjava2026';
+
+  if (val === PASS) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    initLiveBadge();
+    startPlayerCountdown();
+    buildTzList();
+  } else {
+    errEl.textContent = 'Clave incorrecta. Verifica tu correo o Telegram.';
+    input.classList.add('err');
+    input.value = '';
+    setTimeout(() => input.classList.remove('err'), 600);
+    setTimeout(() => { errEl.textContent = ''; }, 4000);
+  }
+}
+
+/* ═══════════════════════════════════
+   LIVE BADGE
+═══════════════════════════════════ */
+const EV = new Date('2026-04-25T10:00:00Z');  // 5pm Bangkok UTC+7
+
+function initLiveBadge() {
+  const badge = document.getElementById('live-indicator');
+  const label = document.getElementById('live-label');
+  const GRACE = 3 * 60 * 60 * 1000;  // 3h after start = "live" window
+
+  function update() {
+    const now  = Date.now();
+    const diff = EV - now;
+
+    if (diff <= 0 && now - EV < GRACE) {
+      // Live!
+      badge.classList.remove('offline');
+      label.textContent = '● EN VIVO';
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('pc-live-msg').style.display = 'block';
+      document.getElementById('pc-timer').style.display    = 'none';
+      injectPlayer();
+    } else if (diff > 0) {
+      badge.classList.add('offline');
+      label.textContent = 'EN ESPERA';
+    } else {
+      badge.classList.add('offline');
+      label.textContent = 'FINALIZADO';
+    }
+  }
+
+  update();
+  setInterval(update, 10000);
+}
+
+function injectPlayer() {
+  // Replace VIDEO_ID with actual Vimeo ID when available
+  const VIDEO_ID = '';
+  const box      = document.getElementById('player-box');
+  if (!VIDEO_ID) return;  // no-op if not yet assigned
+  const iframe = document.createElement('iframe');
+  iframe.src   = `https://player.vimeo.com/video/${VIDEO_ID}?autoplay=1&color=f5b63a&title=0&byline=0&portrait=0`;
+  iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+  iframe.allowFullscreen = true;
+  iframe.style.cssText   = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+  const ph = document.getElementById('placeholder');
+  if (ph) ph.remove();
+  box.appendChild(iframe);
+}
+
+/* ═══════════════════════════════════
+   PLAYER COUNTDOWN
+═══════════════════════════════════ */
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function startPlayerCountdown() {
+  function tick() {
+    const diff = EV - Date.now();
+    if (diff <= 0) {
+      ['pcd','pch','pcm','pcs'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '00';
+      });
+      document.getElementById('pc-timer').style.display    = 'none';
+      document.getElementById('pc-live-msg').style.display = 'block';
+      return;
+    }
+    const el = (id) => document.getElementById(id);
+    if (el('pcd')) el('pcd').textContent = pad(Math.floor(diff / 86400000));
+    if (el('pch')) el('pch').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    if (el('pcm')) el('pcm').textContent = pad(Math.floor((diff % 3600000) / 60000));
+    if (el('pcs')) el('pcs').textContent = pad(Math.floor((diff % 60000) / 1000));
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ═══════════════════════════════════
+   TIMEZONES (quick list on stream page)
+═══════════════════════════════════ */
+function buildTzList() {
+  const zones = [
+    { flag: '🇹🇭', name: 'Bangkok ★',          tz: 'Asia/Bangkok' },
+    { flag: '🇲🇽', name: 'México',              tz: 'America/Mexico_City' },
+    { flag: '🇨🇴', name: 'Colombia/Perú',       tz: 'America/Bogota' },
+    { flag: '🇦🇷', name: 'Argentina/Uruguay',   tz: 'America/Argentina/Buenos_Aires' },
+    { flag: '🇧🇷', name: 'Brasil',              tz: 'America/Sao_Paulo' },
+    { flag: '🇨🇱', name: 'Chile',               tz: 'America/Santiago' },
+    { flag: '🇺🇸', name: 'EE.UU. (NY)',         tz: 'America/New_York' },
+    { flag: '🇺🇸', name: 'EE.UU. (LA)',         tz: 'America/Los_Angeles' },
+    { flag: '🇪🇸', name: 'España',              tz: 'Europe/Madrid' },
+    { flag: '🇬🇧', name: 'Reino Unido',         tz: 'Europe/London' },
+    { flag: '🇩🇪', name: 'Alemania/Francia',    tz: 'Europe/Berlin' },
+    { flag: '🇷🇺', name: 'Rusia (Moscú)',       tz: 'Europe/Moscow' },
+    { flag: '🇯🇵', name: 'Japón',               tz: 'Asia/Tokyo' },
+    { flag: '🇰🇷', name: 'Corea del Sur',       tz: 'Asia/Seoul' },
+    { flag: '🇵🇭', name: 'Filipinas',           tz: 'Asia/Manila' },
+    { flag: '🇸🇬', name: 'Singapur/Malasia',    tz: 'Asia/Singapore' },
+    { flag: '🇮🇩', name: 'Indonesia (Yakarta)', tz: 'Asia/Jakarta' },
+    { flag: '🇮🇳', name: 'India',               tz: 'Asia/Kolkata' },
+    { flag: '🇻🇳', name: 'Vietnam',             tz: 'Asia/Ho_Chi_Minh' },
+  ];
+
+  const list = document.getElementById('tz-quick-list');
+  if (!list) return;
+
+  zones.forEach(z => {
+    const t = new Intl.DateTimeFormat('es', {
+      timeZone: z.tz,
+      weekday: 'short', month: 'short', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: true
+    }).format(EV);
+
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="tzq-n">${z.flag} ${z.name}</span><span class="tzq-t">${t}</span>`;
+    list.appendChild(li);
+  });
+}
+</script>
+</body>
+</html>
