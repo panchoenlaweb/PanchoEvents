@@ -95,9 +95,83 @@
       box-shadow: 0 0 20px var(--red-glow);
     }
 
+    /* ── HAMBURGER ── */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 4px;
+      z-index: 302;
+    }
+    .nav-burger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile-cta { display: none; }
+
     @media (max-width: 700px) {
       nav { padding: 0 18px; }
-      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+      .nav-cta { display: none; }
+
+      .nav-links {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(6,6,6,.97);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .38s ease, padding .38s ease;
+        padding: 0;
+        z-index: 299;
+      }
+      .nav-links.open {
+        max-height: 380px;
+        padding: 8px 0 20px;
+      }
+      .nav-links li {
+        border-bottom: 1px solid rgba(180,0,0,.1);
+      }
+      .nav-links li:last-child { border-bottom: none; }
+      .nav-links a {
+        display: block;
+        padding: 15px 24px;
+        font-size: .72rem;
+        letter-spacing: .2em;
+        color: var(--muted);
+      }
+      .nav-links a:hover { color: var(--red-l); background: rgba(180,0,0,.05); }
+
+      .nav-mobile-cta {
+        display: block;
+        padding: 0 20px;
+        margin-top: 10px;
+      }
+      .nav-mobile-cta a {
+        display: block !important;
+        padding: 13px 24px !important;
+        text-align: center;
+        background: var(--red) !important;
+        color: #fff !important;
+        border-radius: 0;
+        letter-spacing: .18em !important;
+        transition: background .2s;
+      }
+      .nav-mobile-cta a:hover { background: var(--red-l) !important; }
     }
 
     /* ── HERO ── */
@@ -647,13 +721,17 @@
 <!-- NAVBAR -->
 <nav>
   <div class="nav-logo">Pancho<span>Events</span></div>
-  <ul class="nav-links">
+  <ul class="nav-links" id="nav-links">
     <li><a href="#events">Eventos</a></li>
     <li><a href="#how">Cómo funciona</a></li>
     <li><a href="#trust">Nosotros</a></li>
     <li><a href="#contact">Contacto</a></li>
+    <li class="nav-mobile-cta"><a href="#events">Ver Boletos</a></li>
   </ul>
   <a href="#events" class="nav-cta">Ver Boletos</a>
+  <button class="nav-burger" id="nav-burger" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -944,9 +1022,30 @@
       const target = document.querySelector(a.getAttribute('href'));
       if (target) {
         e.preventDefault();
+        closeBurger();
         target.scrollIntoView({ behavior: 'smooth' });
       }
     });
+  });
+
+  /* ── Hamburger menu ── */
+  const burger = document.getElementById('nav-burger');
+  const navLinks = document.getElementById('nav-links');
+
+  function closeBurger() {
+    burger.classList.remove('open');
+    navLinks.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.addEventListener('click', e => {
+    if (!burger.contains(e.target) && !navLinks.contains(e.target)) closeBurger();
   });
 </script>
 </body>
