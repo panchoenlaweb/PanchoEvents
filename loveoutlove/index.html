@@ -178,15 +178,82 @@
     .hero-btn-enter {
       background: transparent;
       border: 2px solid #444;
-      color: #555;
-      cursor: not-allowed;
-      pointer-events: none;
+      color: #666;
+      cursor: pointer;
+      pointer-events: auto;
       position: relative;
     }
     .hero-btn-enter::after {
       content: '🔒';
       font-size: .9rem;
     }
+    .hero-btn-enter:hover {
+      border-color: #666;
+      color: #888;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #111;
+      border: 1px solid var(--red);
+      box-shadow: 0 0 60px rgba(200,0,0,.3);
+      padding: 44px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: modalIn .25s ease;
+    }
+    @keyframes modalIn {
+      from { transform: scale(.92); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .modal-icon {
+      font-size: 2.8rem;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .modal-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .75rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .modal-msg {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: .05em;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .modal-msg b { color: var(--gold); }
+    .modal-close {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 12px 32px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .modal-close:hover { background: #ff3333; }
     .hero-btn-reserve {
       background: var(--gold);
       color: #000;
@@ -1096,13 +1163,27 @@
 
     <!-- hero CTAs -->
     <div class="hero-btns">
-      <span class="hero-btn hero-btn-enter" data-i18n="hero-btn-enter">INGRESAR AL EVENTO</span>
+      <span class="hero-btn hero-btn-enter" data-i18n="hero-btn-enter" onclick="document.getElementById('access-modal').classList.add('show')">INGRESAR AL EVENTO</span>
       <a class="hero-btn hero-btn-reserve" href="https://t.me/Panchoenlared" target="_blank" rel="noopener" data-i18n="hero-btn-reserve">🎫 RESERVAR AHORA</a>
     </div>
 
   </div>
   <div class="checker-bottom"></div>
 </header>
+
+<!-- MODAL: acceso -->
+<div class="modal-overlay" id="access-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-box">
+    <span class="modal-icon">⏰</span>
+    <p class="modal-title">Acceso al Evento</p>
+    <p class="modal-msg">
+      El enlace de ingreso estará disponible<br>
+      <b>1 hora antes del inicio del evento.</b><br><br>
+      Asegúrate de tener tu clave lista y revisa tu Telegram a tiempo.
+    </p>
+    <button class="modal-close" onclick="document.getElementById('access-modal').classList.remove('show')">Entendido</button>
+  </div>
+</div>
 
 <!-- ══ ARTIST TICKER ══ -->
 <div class="ticker-wrap" aria-hidden="true">
