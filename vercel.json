@@ -5,7 +5,9 @@
     { "source": "/joongdunk",        "destination": "/joongdunk/index.html" },
     { "source": "/joongdunk/stream", "destination": "/joongdunk/stream.html" },
     { "source": "/loveoutloud",        "destination": "/loveoutloud/index.html" },
-    { "source": "/loveoutloud/stream", "destination": "/loveoutloud/stream.html" }
+    { "source": "/loveoutloud/stream", "destination": "/loveoutloud/stream.html" },
+    { "source": "/surfjava",           "destination": "/surfjava/index.html" },
+    { "source": "/surfjava/stream",    "destination": "/surfjava/stream.html" }
   ],
   "headers": [
     {
