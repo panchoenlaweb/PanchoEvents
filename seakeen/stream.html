@@ -478,8 +478,8 @@
 })();
 
 /* ── PASSWORD (SHA-256) ── */
-// Reemplaza este hash con el SHA-256 de la clave real del evento
-const VALID_HASH = 'REPLACE_WITH_SHA256_OF_YOUR_PASSWORD';
+// Clave del evento: seakeen2026
+const VALID_HASH = 'b487f0ae2a69c37a98e69db5dee1db5602c28c2b740a7660130d26d4160008f5';
 
 async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
