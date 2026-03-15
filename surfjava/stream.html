@@ -162,7 +162,14 @@
       transition: color .2s, border-color .2s;
     }
     .top-bar-back:hover { color: var(--amber); border-color: var(--amber); }
-
+    .btn-logout {
+      font-family: 'Orbitron', monospace; font-size: .63rem;
+      letter-spacing: .18em; text-transform: uppercase;
+      background: transparent; color: #4a5a30;
+      border: 1px solid #3a4a20; padding: 6px 14px; cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-logout:hover { color: var(--amber); border-color: var(--amber); }
     /* PLAYER AREA */
     .player-section { padding: 0; background: #000; }
     .player-wrap { max-width: 980px; margin: 0 auto; position: relative; }
@@ -361,7 +368,10 @@
       <div class="live-dot"></div>
       <span id="live-label">EN ESPERA</span>
     </div>
-    <a href="index.html" class="top-bar-back">← Volver</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn-logout" onclick="logoutStream()" title="Cambiar clave / cerrar sesión">🔒 Cerrar sesión</button>
+      <a href="index.html" class="top-bar-back">← Volver</a>
+    </div>
   </header>
 
   <!-- PLAYER -->
@@ -653,6 +663,14 @@ function startPlayerCountdown() {
 /* ═══════════════════════════════════
    TIMEZONES (quick list on stream page)
 ═══════════════════════════════════ */
+function logoutStream() {
+  sessionStorage.removeItem('sj_access');
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('gate-err').textContent = '';
+}
+
 // Auto-unlock si ya se autenticó en esta sesión
 if (sessionStorage.getItem('sj_access') === '1') {
   document.getElementById('gate').style.display = 'none';
