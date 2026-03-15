@@ -7,7 +7,8 @@
     { "source": "/loveoutloud",        "destination": "/loveoutloud/index.html" },
     { "source": "/loveoutloud/stream", "destination": "/loveoutloud/stream.html" },
     { "source": "/surfjava",           "destination": "/surfjava/index.html" },
-    { "source": "/surfjava/stream",    "destination": "/surfjava/stream.html" }
+    { "source": "/surfjava/stream",    "destination": "/surfjava/stream.html" },
+    { "source": "/seakeen",            "destination": "/seakeen/index.html" }
   ],
   "headers": [
     {
@@ -27,6 +28,12 @@
     },
     {
       "source": "/(.*).png",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*).jpg",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
