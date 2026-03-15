@@ -539,23 +539,31 @@
 })();
 
 /* ═══════════════════════════════════
-   PASSWORD GATE
+   PASSWORD GATE — SHA-256 only, never plain text
 ═══════════════════════════════════ */
-function checkPwd() {
+const VALID_HASH_SJ = '82b10018eb83c3218be592e201c904f900de5ea0211fca02ccffec9d9192934f';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPwd() {
   const input = document.getElementById('pwd-input');
   const errEl = document.getElementById('gate-err');
-  const val   = input.value.trim().toLowerCase();
+  const val   = input.value.trim();
+  if (!val) return;
 
-  // Here the password is managed server-side / set before the event
-  // For now it matches a placeholder — replace with actual password
-  const PASS = 'surfjava2026';
+  const hash = await sha256(val.toLowerCase());
 
-  if (val === PASS) {
+  if (hash === VALID_HASH_SJ) {
+    sessionStorage.setItem('sj_access', '1');
     document.getElementById('gate').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
     initLiveBadge();
     startPlayerCountdown();
     buildTzList();
+    errEl.textContent = '';
   } else {
     errEl.textContent = 'Clave incorrecta. Verifica tu correo o Telegram.';
     input.classList.add('err');
@@ -645,6 +653,15 @@ function startPlayerCountdown() {
 /* ═══════════════════════════════════
    TIMEZONES (quick list on stream page)
 ═══════════════════════════════════ */
+// Auto-unlock si ya se autenticó en esta sesión
+if (sessionStorage.getItem('sj_access') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  initLiveBadge();
+  startPlayerCountdown();
+  buildTzList();
+}
+
 function buildTzList() {
   const zones = [
     { flag: '🇹🇭', name: 'Bangkok ★',          tz: 'Asia/Bangkok' },
