@@ -234,6 +234,27 @@
             box-shadow: 0 0 30px var(--teal-glow);
         }
 
+        .btn-stream-wrap { position: relative; display: inline-block; }
+        .btn-stream {
+            font-family: 'Orbitron', monospace;
+            font-size: .8rem; letter-spacing: .22em; text-transform: uppercase;
+            padding: 15px 38px;
+            background: transparent;
+            color: #3a5a60; border: 1px solid #2a4048; cursor: not-allowed;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+        }
+        .btn-stream .lock-icon { margin-right: 8px; }
+        .btn-stream-tip {
+            display: none;
+            position: absolute; bottom: calc(100% + 10px); left: 50%;
+            transform: translateX(-50%);
+            background: #0d1b2a; border: 1px solid var(--border);
+            color: #7aabb8; font-family: 'Rajdhani', sans-serif;
+            font-size: .75rem; letter-spacing: .06em;
+            padding: 7px 16px; white-space: nowrap; pointer-events: none; z-index: 10;
+        }
+        .btn-stream-wrap:hover .btn-stream-tip { display: block; }
+
         .scroll-hint {
             position: absolute; bottom: 32px; left: 50%;
             transform: translateX(-50%); z-index: 2;
@@ -508,6 +529,14 @@
 
             .hero-btns { flex-direction: column; align-items: stretch; padding: 0 8px; }
             .btn-primary { clip-path: none; width: 100%; }
+            .btn-stream  { clip-path: none; width: 100%; }
+            .btn-stream-wrap { width: 100%; }
+            .btn-stream-tip {
+                white-space: normal; text-align: center;
+                width: 100%; left: 0; transform: none;
+                top: calc(100% + 8px); bottom: auto;
+                font-size: .72rem;
+            }
 
             .cd-single { padding: 28px 14px; }
             .t-block { min-width: 54px; }
@@ -569,6 +598,12 @@
             <button class="btn-primary" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">
                 🎟 VER ENTRADAS
             </button>
+            <div class="btn-stream-wrap">
+                <button class="btn-stream" disabled>
+                    <span class="lock-icon">🔒</span>INGRESAR AL EVENTO
+                </button>
+                <div class="btn-stream-tip">Disponible solo para compradores — recibirás la clave con tu entrada</div>
+            </div>
         </div>
     </div>
 
