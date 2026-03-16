@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OLYMPOP 2 – Stream Live</title>
+  <link rel="icon" type="image/png" href="/olympop/olympop.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Anton&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:      #1a6fff;
+      --blue-light:#4d94ff;
+      --blue-glow: rgba(26,111,255,.5);
+      --cyan:      #00d4ff;
+      --yellow:    #ffe033;
+      --dark:      #04080f;
+      --panel:     #080e1a;
+      --card:      #0b1220;
+      --border:    rgba(26,111,255,.22);
+      --text:      #ddeeff;
+      --muted:     #4a6080;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed; inset: 0;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ── GATE ── */
+    #gate {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1; padding: 24px;
+    }
+
+    .gate-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 52px 44px 44px;
+      text-align: center;
+      max-width: 430px; width: 100%;
+      position: relative;
+      clip-path: polygon(18px 0%, 100% 0%, calc(100% - 18px) 100%, 0% 100%);
+    }
+    .gate-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--blue), var(--cyan), transparent);
+    }
+    .gate-box::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--blue), var(--cyan), transparent);
+    }
+
+    .gate-icon { font-size: 3rem; margin-bottom: 16px; }
+
+    .gate-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 2.4rem; color: #fff;
+      text-shadow: 0 0 30px rgba(26,111,255,.8);
+      letter-spacing: .04em; margin-bottom: 4px;
+    }
+
+    .gate-sub {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .68rem; letter-spacing: .32em;
+      color: var(--cyan); margin-bottom: 4px;
+    }
+
+    .gate-date {
+      color: var(--muted); font-size: .82rem;
+      letter-spacing: .1em; margin-bottom: 28px;
+    }
+
+    .gate-input {
+      width: 100%; padding: 14px 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      color: #fff; font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem; letter-spacing: .15em; text-align: center;
+      outline: none; transition: border-color .2s;
+      margin-bottom: 14px; -webkit-appearance: none;
+    }
+    .gate-input:focus { border-color: var(--blue); }
+
+    .gate-btn {
+      width: 100%; padding: 14px;
+      background: var(--blue); color: #fff; border: none; cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .78rem; letter-spacing: .2em; text-transform: uppercase;
+      transition: background .25s, box-shadow .25s;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    }
+    .gate-btn:hover { background: var(--blue-light); box-shadow: 0 0 24px var(--blue-glow); }
+
+    .gate-error {
+      color: #ff5252; font-size: .8rem;
+      letter-spacing: .05em; min-height: 18px; margin-top: 10px;
+    }
+
+    .gate-help {
+      margin-top: 20px; font-size: .78rem;
+      color: var(--muted); line-height: 1.5;
+    }
+    .gate-help a { color: var(--cyan); text-decoration: none; }
+
+    /* ── MAIN CONTENT ── */
+    #main-content { display: none; position: relative; z-index: 1; }
+
+    /* top-bar */
+    .top-bar {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .72rem; letter-spacing: .2em; color: #fff;
+      background: #1a6fff; padding: 6px 16px;
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #00ff88;
+      animation: livepulse 1s ease-in-out infinite;
+      box-shadow: 0 0 8px #00ff88;
+    }
+    @keyframes livepulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+
+    .top-event {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem; letter-spacing: .04em; color: #fff;
+      text-shadow: 0 0 20px rgba(26,111,255,.6);
+    }
+
+    .top-tg a {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .82rem; letter-spacing: .06em;
+      color: var(--cyan); text-decoration: none;
+    }
+
+    /* player area */
+    .player-wrap {
+      max-width: 1100px; margin: 0 auto; padding: 28px 20px;
+    }
+
+    .player-box {
+      position: relative;
+      background: #000;
+      border: 1px solid var(--border);
+      width: 100%; aspect-ratio: 16/9;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    #player-iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+    }
+
+    .pre-live {
+      text-align: center; padding: 40px 24px;
+    }
+    .pre-live .big { font-size: 3rem; margin-bottom: 12px; }
+    .pre-live h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(.9rem, 2.5vw, 1.4rem); color: var(--cyan); margin-bottom: 8px;
+    }
+    .pre-live p { font-size: .9rem; color: var(--muted); margin: 4px 0; }
+
+    /* pre-live countdown in player */
+    .in-timer {
+      display: flex; gap: 12px; justify-content: center;
+      margin: 18px 0 12px; flex-wrap: wrap;
+    }
+    .it-blk { text-align: center; min-width: 60px; }
+    .it-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 900; color: #fff;
+      line-height: 1;
+    }
+    .it-lbl { font-size: .56rem; color: var(--muted); letter-spacing: .2em; text-transform: uppercase; margin-top: 4px; }
+
+    /* tz list */
+    .tz-list-bar {
+      max-width: 1100px; margin: 0 auto 16px; padding: 0 20px;
+    }
+    .tz-bar-title {
+      font-family: 'Orbitron', sans-serif; font-size: .65rem;
+      letter-spacing: .3em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .tz-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .tz-chip {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 7px 12px; font-size: .8rem;
+      display: flex; gap: 6px; align-items: center;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+    .tz-chip .cname { color: var(--muted); font-size: .74rem; }
+    .tz-chip .ctime { font-family: 'Orbitron', sans-serif; font-size: .68rem; color: var(--text); }
+
+    /* contact bar */
+    .contact-bar {
+      max-width: 1100px; margin: 0 auto; padding: 0 20px 40px;
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    }
+    .contact-bar span { color: var(--muted); font-size: .85rem; letter-spacing: .06em; }
+    .contact-bar a {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--card); border: 1px solid #26A5E4;
+      color: #26A5E4; padding: 7px 18px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .7rem; letter-spacing: .12em; text-decoration: none;
+      transition: box-shadow .2s;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    }
+    .contact-bar a:hover { box-shadow: 0 0 20px rgba(38,165,228,.4); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+    @media (max-width: 600px) {
+      .gate-box { padding: 40px 22px 32px; clip-path: none; }
+      .top-bar  { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- ═════════════ GATE ═════════════ -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">🔒</div>
+    <h1 class="gate-title">OLYMPOP 2</h1>
+    <p class="gate-sub">— &nbsp; SPORT DAY &nbsp; LIVE STREAM &nbsp; —</p>
+    <p class="gate-date">Sábado 9 de Mayo 2026 · 1:00 PM Bangkok</p>
+
+    <input
+      id="pass-input" type="password" class="gate-input"
+      placeholder="Ingresa tu clave de acceso"
+      autocomplete="current-password"
+    />
+    <button class="gate-btn" onclick="checkPass()">Acceder al Stream →</button>
+    <p class="gate-error" id="gate-err"></p>
+    <p class="gate-help">
+      ¿No tienes clave? Reserva en
+      <a href="https://t.me/panchoenlared" target="_blank" rel="noopener">@panchoenlared</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═════════════ CONTENT ═════════════ -->
+<div id="main-content">
+
+  <!-- top bar -->
+  <div class="top-bar">
+    <div class="live-badge"><span class="live-dot"></span>LIVE / EN VIVO</div>
+    <div class="top-event">OLYMPOP 2 — Sport Day 2026</div>
+    <div class="top-tg"><a href="https://t.me/panchoenlared" target="_blank" rel="noopener">✈ @panchoenlared</a></div>
+  </div>
+
+  <!-- player -->
+  <div class="player-wrap">
+    <div class="player-box" id="player-box">
+      <div class="pre-live" id="pre-live">
+        <div class="big">🏅</div>
+        <h2>El stream comienza pronto</h2>
+        <p>Sábado 9 de Mayo · 1:00 PM Bangkok</p>
+        <p style="font-size:.78rem; color:var(--muted); margin-top:6px">El video aparecerá automáticamente</p>
+        <div class="in-timer">
+          <div class="it-blk"><div class="it-num" id="p-d">--</div><div class="it-lbl">días</div></div>
+          <div class="it-blk"><div class="it-num" id="p-h">--</div><div class="it-lbl">hrs</div></div>
+          <div class="it-blk"><div class="it-num" id="p-m">--</div><div class="it-lbl">min</div></div>
+          <div class="it-blk"><div class="it-num" id="p-s">--</div><div class="it-lbl">seg</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- timezone chips -->
+  <div class="tz-list-bar">
+    <p class="tz-bar-title">Hora local de inicio:</p>
+    <div class="tz-chips" id="tz-chips"></div>
+  </div>
+
+  <!-- contact bar -->
+  <div class="contact-bar">
+    <span>¿Problemas? Contáctanos:</span>
+    <a href="https://t.me/panchoenlared" target="_blank" rel="noopener">✈ Telegram @panchoenlared</a>
+  </div>
+
+</div><!-- /main-content -->
+
+<script>
+/* ───── canvas ───── */
+(function () {
+  const cv  = document.getElementById('bg-canvas');
+  const ctx = cv.getContext('2d');
+  let W, H, particles;
+
+  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+
+  function mkParticles() {
+    particles = Array.from({ length: 140 }, () => ({
+      x:  Math.random() * W, y:  Math.random() * H,
+      r:  Math.random() * 1.2 + .2,
+      a:  Math.random(),
+      da: (Math.random() * .01 + .003) * (Math.random() > .5 ? 1 : -1),
+      vx: (Math.random() - .5) * .15,
+      vy: -(Math.random() * .28 + .04),
+      hue: Math.random() > .5 ? 210 : 190,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.a += p.da;
+      if (p.a > 1 || p.a < 0) p.da *= -1;
+      if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+      const a = Math.max(0, Math.min(1, p.a));
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue},100%,80%,${a * .6})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  resize(); mkParticles(); draw();
+  window.addEventListener('resize', () => { resize(); mkParticles(); });
+})();
+
+/* ───── auth ───── */
+const PASS  = 'olympop2026';   // replace before event
+const STATE = 'olympop_auth_v1';
+
+function showContent() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  initContent();
+}
+
+function checkPass() {
+  const val = document.getElementById('pass-input').value.trim();
+  if (!val) return;
+  if (val === PASS) {
+    sessionStorage.setItem(STATE, '1');
+    showContent();
+  } else {
+    const e = document.getElementById('gate-err');
+    e.textContent = 'Clave incorrecta. Contáctanos en Telegram.';
+    const inp = document.getElementById('pass-input');
+    inp.style.borderColor = '#ff5252';
+    setTimeout(() => { e.textContent = ''; inp.style.borderColor = ''; }, 3000);
+  }
+}
+
+document.getElementById('pass-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPass();
+});
+
+if (sessionStorage.getItem(STATE) === '1') showContent();
+
+/* ───── countdown inside player ───── */
+const EV    = new Date('2026-05-09T06:00:00Z');
+const GRACE = 3 * 60 * 60 * 1000;
+
+const VIDEO_ID = '';   // fill with Vimeo ID before event
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function injectPlayer() {
+  if (!VIDEO_ID) return;
+  const box = document.getElementById('player-box');
+  box.innerHTML = '';
+  const fr = document.createElement('iframe');
+  fr.id = 'player-iframe';
+  fr.src = `https://player.vimeo.com/video/${VIDEO_ID}?autoplay=1&title=0&byline=0&portrait=0&color=1a6fff`;
+  fr.allowFullscreen = true;
+  fr.allow = 'autoplay; fullscreen; picture-in-picture';
+  box.appendChild(fr);
+}
+
+function tickPlayer() {
+  const diff = EV - Date.now();
+  const past  = -diff;
+
+  if (diff <= 0 && past < GRACE) {
+    injectPlayer();
+    return;
+  }
+
+  if (past >= GRACE) {
+    const pre = document.getElementById('pre-live');
+    if (pre) {
+      pre.querySelector('h2').textContent = 'El stream ha finalizado';
+      pre.querySelector('.in-timer').innerHTML = '<p style="color:var(--muted);font-size:.9rem">Gracias por conectarte</p>';
+    }
+    return;
+  }
+
+  if (diff > 0) {
+    const el = id => document.getElementById(id);
+    if (el('p-d')) el('p-d').textContent = pad(Math.floor(diff / 86400000));
+    if (el('p-h')) el('p-h').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    if (el('p-m')) el('p-m').textContent = pad(Math.floor((diff % 3600000)  / 60000));
+    if (el('p-s')) el('p-s').textContent = pad(Math.floor((diff % 60000)    / 1000));
+  }
+}
+
+/* ───── tz chips ───── */
+const TZ_QUICK = [
+  { flag: '🇹🇭', name: 'Bangkok',     tz: 'Asia/Bangkok'                    },
+  { flag: '🇰🇷', name: 'Seúl',        tz: 'Asia/Seoul'                      },
+  { flag: '🇯🇵', name: 'Tokio',       tz: 'Asia/Tokyo'                      },
+  { flag: '🇪🇸', name: 'Madrid',      tz: 'Europe/Madrid'                   },
+  { flag: '🇬🇧', name: 'Londres',     tz: 'Europe/London'                   },
+  { flag: '🇧🇷', name: 'São Paulo',   tz: 'America/Sao_Paulo'               },
+  { flag: '🇦🇷', name: 'Bs. Aires',   tz: 'America/Argentina/Buenos_Aires'  },
+  { flag: '🇲🇽', name: 'CDMX',        tz: 'America/Mexico_City'             },
+  { flag: '🇨🇴', name: 'Bogotá',      tz: 'America/Bogota'                  },
+  { flag: '🇨🇱', name: 'Santiago',    tz: 'America/Santiago'                },
+  { flag: '🇵🇪', name: 'Lima',        tz: 'America/Lima'                    },
+  { flag: '🇺🇸', name: 'Nueva York',  tz: 'America/New_York'                },
+  { flag: '🇺🇸', name: 'Los Ángeles', tz: 'America/Los_Angeles'             },
+  { flag: '🇵🇭', name: 'Manila',      tz: 'Asia/Manila'                     },
+  { flag: '🇸🇬', name: 'Singapur',    tz: 'Asia/Singapore'                  },
+  { flag: '🇮🇩', name: 'Yakarta',     tz: 'Asia/Jakarta'                    },
+  { flag: '🇻🇳', name: 'Hanói',       tz: 'Asia/Ho_Chi_Minh'                },
+  { flag: '🇮🇳', name: 'Mumbai',      tz: 'Asia/Kolkata'                    },
+  { flag: '🇸🇦', name: 'Riad',        tz: 'Asia/Riyadh'                     },
+];
+
+function buildTzList() {
+  const wrap = document.getElementById('tz-chips');
+  if (!wrap) return;
+  TZ_QUICK.forEach(z => {
+    const t = new Intl.DateTimeFormat('es', {
+      timeZone: z.tz, weekday: 'short', day: '2-digit',
+      month: 'short', hour: '2-digit', minute: '2-digit', hour12: true
+    }).format(EV);
+    const chip = document.createElement('div');
+    chip.className = 'tz-chip';
+    chip.innerHTML = `${z.flag} <span class="cname">${z.name}</span><span class="ctime">${t}</span>`;
+    wrap.appendChild(chip);
+  });
+}
+
+function initContent() {
+  buildTzList();
+  tickPlayer();
+  setInterval(tickPlayer, 1000);
+}
+</script>
+</body>
+</html>

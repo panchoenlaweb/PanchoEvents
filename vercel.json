@@ -9,7 +9,9 @@
     { "source": "/surfjava",           "destination": "/surfjava/index.html" },
     { "source": "/surfjava/stream",    "destination": "/surfjava/stream.html" },
     { "source": "/seakeen",            "destination": "/seakeen/index.html" },
-    { "source": "/seakeen/stream",     "destination": "/seakeen/stream.html" }
+    { "source": "/seakeen/stream",     "destination": "/seakeen/stream.html" },
+    { "source": "/olympop",            "destination": "/olympop/index.html" },
+    { "source": "/olympop/stream",     "destination": "/olympop/stream.html" }
   ],
   "headers": [
     {
