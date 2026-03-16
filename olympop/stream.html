@@ -356,8 +356,13 @@
 })();
 
 /* ───── auth ───── */
-const PASS  = 'olympop2026';   // replace before event
+const PASS_HASH = '80f6700476e779de1840bbf54bede482bffb0079bc913f52a1289ad878dc15ab';
 const STATE = 'olympop_auth_v1';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 function showContent() {
   document.getElementById('gate').style.display = 'none';
@@ -365,10 +370,11 @@ function showContent() {
   initContent();
 }
 
-function checkPass() {
+async function checkPass() {
   const val = document.getElementById('pass-input').value.trim();
   if (!val) return;
-  if (val === PASS) {
+  const hash = await sha256(val);
+  if (hash === PASS_HASH) {
     sessionStorage.setItem(STATE, '1');
     showContent();
   } else {
@@ -380,8 +386,8 @@ function checkPass() {
   }
 }
 
-document.getElementById('pass-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkPass();
+document.getElementById('pass-input').addEventListener('keydown', async e => {
+  if (e.key === 'Enter') await checkPass();
 });
 
 if (sessionStorage.getItem(STATE) === '1') showContent();
