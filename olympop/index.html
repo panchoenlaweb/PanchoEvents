@@ -459,14 +459,16 @@
     .info-card p b { color: var(--text); }
 
     /* price highlight */
-    .price-highlight {
+    .price-highlight-wrap {
       max-width: 390px; margin: 0 auto 48px;
+      padding-top: 14px; /* space for the badge above */
+    }
+    .price-highlight {
       background: var(--card);
       border: 1px solid var(--blue);
       box-shadow: 0 0 50px rgba(26,111,255,.15);
-      padding: 36px 28px 28px; text-align: center;
+      padding: 28px 28px 28px; text-align: center;
       position: relative;
-      clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
     }
     .price-highlight::before {
       content: '';
@@ -474,11 +476,11 @@
       background: linear-gradient(to right, transparent, var(--blue), var(--cyan), transparent);
     }
     .price-highlight .best-lbl {
-      position: absolute; top: -11px; left: 50%;
+      position: absolute; top: -14px; left: 50%;
       transform: translateX(-50%);
       background: var(--blue); color: #fff;
       font-family: 'Orbitron', sans-serif;
-      font-size: .56rem; letter-spacing: .2em; padding: 3px 16px;
+      font-size: .56rem; letter-spacing: .2em; padding: 4px 18px;
       white-space: nowrap;
     }
     .ph-type {
@@ -673,7 +675,7 @@
       .t-block { min-width: 46px; }
       .t-lbl { font-size: .52rem; }
       .tz-subtitle { font-size: .78rem; margin-top: -28px; }
-      .price-highlight { max-width: 100%; margin: 0 0 36px; clip-path: none; }
+      .price-highlight-wrap { max-width: 100%; margin: 0 0 36px; }
       .ctbl th, .ctbl td { padding: 9px 12px; }
       .ctbl { font-size: .82rem; }
     }
@@ -924,11 +926,13 @@
     </div>
 
     <!-- Price card -->
+    <div class="price-highlight-wrap">
     <div class="price-highlight">
       <div class="best-lbl">⭐ PRECIO ESPECIAL</div>
       <p class="ph-type">🏅 Live Stream &nbsp;·&nbsp; Online Worldwide</p>
       <p class="ph-price"><sup>$</sup>2 <sub>USD</sub></p>
       <p class="ph-desc">Acceso completo al Sport Day · Sin importar tu país</p>
+    </div>
     </div>
 
     <div id="prices-box"><div class="spinner">Cargando precios actualizados</div></div>
