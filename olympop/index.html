@@ -95,7 +95,7 @@
 
     .hero-bg {
       position: absolute; inset: 0;
-      background: url('olympop.png') center top / cover no-repeat;
+      background: url('/olympop/olympop.png') center top / cover no-repeat;
       filter: blur(4px);
       transform: scale(1.06);
       z-index: 0;
@@ -198,20 +198,22 @@
     }
 
     .date-badge {
-      border: 1px solid var(--blue);
-      background: rgba(26,111,255,.1);
-      backdrop-filter: blur(4px);
+      border: 2px solid var(--cyan);
+      background: rgba(4,8,15,.75);
+      backdrop-filter: blur(8px);
       padding: 10px 28px;
       font-family: 'Orbitron', sans-serif;
       font-size: .84rem;
       letter-spacing: .1em;
       color: #fff;
+      text-shadow: 0 0 12px rgba(0,212,255,.6);
+      box-shadow: 0 0 18px rgba(0,212,255,.25), inset 0 0 16px rgba(26,111,255,.1);
       clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
     }
     .date-badge small {
       display: block;
       font-size: .54rem;
-      color: var(--muted);
+      color: var(--cyan);
       letter-spacing: .3em;
       margin-bottom: 3px;
     }
