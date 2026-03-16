@@ -95,10 +95,16 @@
 
     .hero-bg {
       position: absolute; inset: 0;
-      background: url('/olympop/olympop.png') center top / cover no-repeat;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
       filter: blur(4px);
       transform: scale(1.06);
-      z-index: 0;
+      transform-origin: center;
+      display: block;
     }
 
     #hero::before {
@@ -608,6 +614,58 @@
     ::-webkit-scrollbar-track { background: var(--dark); }
     ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
 
+    /* ── LINEUP ── */
+    #lineup {
+      background: linear-gradient(180deg, rgba(0,0,0,.3), rgba(5,15,35,.4));
+      border-top: 1px solid var(--border);
+    }
+    .lineup-divider {
+      display: flex; align-items: center; gap: 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .65rem; letter-spacing: .44em; text-transform: uppercase;
+      color: var(--cyan); margin: 0 0 32px; white-space: nowrap;
+    }
+    .lineup-divider::before, .lineup-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .headliners {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; align-items: center;
+      gap: 4px 10px; margin-bottom: 48px; text-align: center;
+    }
+    .hl-name {
+      font-family: 'Anton', sans-serif;
+      text-transform: uppercase; line-height: 1.2; cursor: default;
+      display: inline-block;
+      transition: color .2s, text-shadow .2s;
+    }
+    .hl-name:hover {
+      color: var(--cyan) !important;
+      text-shadow: 0 0 22px rgba(0,212,255,.65);
+    }
+    .hl-name.sz-xl { font-size: clamp(2.4rem, 7vw, 4.2rem); color: #fff; }
+    .hl-name.sz-lg { font-size: clamp(1.7rem, 5vw, 3rem);   color: #eef4ff; }
+    .hl-name.sz-md { font-size: clamp(1.1rem, 3.2vw, 2rem);  color: #c8deff; }
+    .hl-sep {
+      color: rgba(0,212,255,.38); font-family: 'Orbitron', sans-serif;
+      font-size: .85rem; align-self: center; line-height: 1;
+    }
+    .artists-chips {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 8px; max-width: 920px; margin: 0 auto;
+    }
+    .artist-chip {
+      font-family: 'Rajdhani', sans-serif; font-weight: 600;
+      font-size: clamp(.8rem, 2vw, .92rem);
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--text); background: rgba(26,111,255,.09);
+      border: 1px solid rgba(26,111,255,.28); padding: 7px 14px;
+      transition: background .2s, border-color .2s, color .2s; cursor: default;
+    }
+    .artist-chip:hover {
+      background: rgba(26,111,255,.22); border-color: var(--blue); color: #fff;
+    }
+
     /* ── MOBILE 640px ── */
     @media (max-width: 640px) {
       section { padding: 56px 0; }
@@ -638,6 +696,7 @@
 <!-- ── NAV DOTS ── -->
 <nav class="nav-dots" aria-label="Navegación">
   <div class="nav-dot active"  title="Inicio"           onclick="scrollToSect('hero')"></div>
+  <div class="nav-dot"         title="Lineup"            onclick="scrollToSect('lineup')"></div>
   <div class="nav-dot"         title="Cuenta regresiva" onclick="scrollToSect('countdown')"></div>
   <div class="nav-dot"         title="Horarios"         onclick="scrollToSect('timezones')"></div>
   <div class="nav-dot"         title="Acceso stream"    onclick="scrollToSect('tickets')"></div>
@@ -646,7 +705,9 @@
 
 <!-- ══════════════════ HERO ══════════════════ -->
 <section id="hero">
-  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-bg" aria-hidden="true">
+    <img src="/olympop/olympop.png" alt="">
+  </div>
   <div class="hero-stripes" aria-hidden="true">
     <div class="hero-stripe"></div>
     <div class="hero-stripe"></div>
@@ -704,6 +765,105 @@
     <span class="ticker-item">GMMTV</span><span class="ticker-sep">✦</span>
   </div>
 </div>
+
+<!-- ══════════════════ LINEUP ══════════════════ -->
+<section id="lineup">
+  <div class="wrapper">
+    <h2 class="section-title">Lineup · OLYMPOP 2</h2>
+
+    <p class="lineup-divider">Grupos y Solistas Destacados</p>
+    <div class="headliners">
+      <span class="hl-name sz-xl">BILLKIN</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-xl">JEFF SATUR</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-xl">PP KRIT</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">JAYLERR</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">NONT TANONT</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">4EVE</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">ATLAS</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">BUS</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">GELBOYS</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">THIRD</span>
+      <span class="hl-sep">✦</span>
+      <span class="hl-name sz-lg">TIGGER</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">DAOU</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">DICE</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">ICE PARIS</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">JACKIE</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">OABNITHI</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">PERSES</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">PiXXiE</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">PORSCHE</span>
+      <span class="hl-sep">·</span>
+      <span class="hl-name sz-md">VIIS</span>
+    </div>
+
+    <p class="lineup-divider" style="margin-top:8px">Artistas y Agrupaciones</p>
+    <div class="artists-chips">
+      <span class="artist-chip">ALALA</span>
+      <span class="artist-chip">bamm</span>
+      <span class="artist-chip">Benz Khaokhwan</span>
+      <span class="artist-chip">BLUE PONGTIWAT</span>
+      <span class="artist-chip">cheriie</span>
+      <span class="artist-chip">CIR*CRL</span>
+      <span class="artist-chip">DEXX</span>
+      <span class="artist-chip">Diamond Narakorn</span>
+      <span class="artist-chip">DIDIXDADA</span>
+      <span class="artist-chip">dom</span>
+      <span class="artist-chip">FirstOne</span>
+      <span class="artist-chip">ILY</span>
+      <span class="artist-chip">iZ</span>
+      <span class="artist-chip">JETAIME</span>
+      <span class="artist-chip">JMNK</span>
+      <span class="artist-chip">KENG HARIT</span>
+      <span class="artist-chip">KIRANA</span>
+      <span class="artist-chip">Kong Kongpob</span>
+      <span class="artist-chip">LE7EL</span>
+      <span class="artist-chip">LOVEiS Girl Group</span>
+      <span class="artist-chip">MEEPOOH</span>
+      <span class="artist-chip">MINDY</span>
+      <span class="artist-chip">MOBYE</span>
+      <span class="artist-chip">NAMP</span>
+      <span class="artist-chip">Namping</span>
+      <span class="artist-chip">NuNew</span>
+      <span class="artist-chip">OFFROAD</span>
+      <span class="artist-chip">ONGLEE PROXIE</span>
+      <span class="artist-chip">paiiinntt</span>
+      <span class="artist-chip">PS</span>
+      <span class="artist-chip">PUIMEKSTER</span>
+      <span class="artist-chip">RISA NARISA</span>
+      <span class="artist-chip">sarah salola</span>
+      <span class="artist-chip">SONRAY TRAINEE</span>
+      <span class="artist-chip">Stang Tari</span>
+      <span class="artist-chip">Sugar 'N Spice</span>
+      <span class="artist-chip">TEMI</span>
+      <span class="artist-chip">Thomas Teetut</span>
+      <span class="artist-chip">THUNWA</span>
+      <span class="artist-chip">TLE MATIMUN</span>
+      <span class="artist-chip">TYTAN</span>
+      <span class="artist-chip">VVV</span>
+      <span class="artist-chip">XINWEER KONG</span>
+      <span class="artist-chip">XOXO NEXT GEN</span>
+      <span class="artist-chip">ZEE PRUK</span>
+    </div>
+  </div>
+</section>
 
 <!-- ══════════════════ COUNTDOWN ══════════════════ -->
 <section id="countdown">
@@ -894,7 +1054,7 @@
 function scrollToSect(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
 (function () {
-  const ids  = ['hero', 'countdown', 'timezones', 'tickets', 'contact'];
+  const ids  = ['hero', 'lineup', 'countdown', 'timezones', 'tickets', 'contact'];
   const dots = document.querySelectorAll('.nav-dot');
   function sync() {
     const mid = window.scrollY + window.innerHeight * .45;
