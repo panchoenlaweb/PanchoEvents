@@ -8,6 +8,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'HVDComicSerifPro';
+            src: url('HVD_Comic_Serif_Pro.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
@@ -156,11 +163,11 @@
         }
 
         .hero-title {
-            font-family: 'Cinzel', serif;
+            font-family: 'HVDComicSerifPro', 'Cinzel', serif;
             font-size: clamp(3rem, 11vw, 10rem);
-            font-weight: 900;
-            letter-spacing: .08em;
-            padding-right: .08em;
+            font-weight: normal;
+            letter-spacing: .04em;
+            padding-right: .04em;
             line-height: 1;
             text-transform: uppercase;
             background: linear-gradient(145deg, #ffffff 0%, #a8dde8 40%, #ffffff 65%, var(--teal-light) 100%);
