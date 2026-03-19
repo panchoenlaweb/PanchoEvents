@@ -545,7 +545,9 @@
 ═══════════════════════════════════════ */
 const HASHES = {
     '2b851578e00705705420fac92d0de48b8d72583ad658d80309b6383ea5a1b334': 1,
-    'fec5b430ff367d2a0ec33955f6eb3cb12c3ba712750e8d93fcf6f9a5a8d6879b': 2
+    'fec5b430ff367d2a0ec33955f6eb3cb12c3ba712750e8d93fcf6f9a5a8d6879b': 2,
+    // ── PRUEBA ──
+    'de1ef4d4403b8a20739eed6bd6a8714e2d54ea4eed4f316f491d47df78c7e327': 'TEST',
 };
 
 async function sha256(str) {
@@ -587,7 +589,10 @@ async function checkPwd() {
     const hash = await sha256(val);
     const day  = HASHES[hash];
 
-    if (day) {
+    if (day === 'TEST') {
+        activateTestMode();
+        errEl.textContent = '';
+    } else if (day) {
         unlockDay(day);
         errEl.textContent = '';
     } else {
@@ -598,8 +603,35 @@ async function checkPwd() {
     }
 }
 
+function activateTestMode() {
+    sessionStorage.setItem('jd_test', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    const tab2 = document.getElementById('tab-d2');
+    if (tab2) { tab2.style.opacity='.25'; tab2.style.cursor='not-allowed'; tab2.style.pointerEvents='none'; }
+    const ind = document.getElementById('live-indicator');
+    const lbl = document.getElementById('live-label');
+    if (ind) ind.classList.remove('offline');
+    if (lbl) lbl.textContent = 'EN VIVO';
+    const area = document.getElementById('player-area');
+    const ph   = document.getElementById('stream-placeholder');
+    if (ph) ph.remove();
+    if (area && !area.querySelector('iframe')) {
+        const ifr = document.createElement('iframe');
+        ifr.src = 'https://vimeo.com/event/5810147/embed/interaction';
+        ifr.setAttribute('frameborder','0');
+        ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
+        ifr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+        ifr.allowFullscreen = true;
+        ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+        area.appendChild(ifr);
+    }
+    switchDay(1);
+}
+
 function logoutStream() {
     sessionStorage.removeItem('jd_access');
+    sessionStorage.removeItem('jd_test');
     document.getElementById('main-content').style.display = 'none';
     document.getElementById('gate').style.display = 'flex';
     document.getElementById('pwd-input').value = '';
@@ -710,10 +742,14 @@ function buildTZList(ev) {
 /* ═══════════════════════════════════════
    INIT
 ═══════════════════════════════════════ */
-const _initDay = (savedDay === 1 || savedDay === 2) ? savedDay : 1;
-switchDay(_initDay);
-if (savedDay === 1 || savedDay === 2) applyDayRestriction(savedDay);
-setInterval(() => updateLiveIndicator(activeDay===1 ? EV1 : EV2), 30000);
+if (sessionStorage.getItem('jd_test') === '1') {
+    activateTestMode();
+} else {
+    const _initDay = (savedDay === 1 || savedDay === 2) ? savedDay : 1;
+    switchDay(_initDay);
+    if (savedDay === 1 || savedDay === 2) applyDayRestriction(savedDay);
+    setInterval(() => updateLiveIndicator(activeDay===1 ? EV1 : EV2), 30000);
+}
 </script>
 </body>
 </html>

@@ -492,6 +492,7 @@
 /* ── PASSWORD (SHA-256) ── */
 // Clave del evento: seakeen2026
 const VALID_HASH = 'b487f0ae2a69c37a98e69db5dee1db5602c28c2b740a7660130d26d4160008f5';
+const TEST_HASH  = 'de1ef4d4403b8a20739eed6bd6a8714e2d54ea4eed4f316f491d47df78c7e327'; // pruebaevento123
 
 async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -505,12 +506,14 @@ async function checkPwd() {
     if (!val) return;
 
     const hash = await sha256(val);
-    if (hash === VALID_HASH) {
+    if (hash === VALID_HASH || hash === TEST_HASH) {
+        const isTest = hash === TEST_HASH;
+        if (isTest) sessionStorage.setItem('sk_test', '1');
         sessionStorage.setItem('sk_access', '1');
         document.getElementById('gate').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
         errEl.textContent = '';
-        initContent();
+        if (isTest) { activateTestMode(); } else { initContent(); }
     } else {
         errEl.textContent = 'Clave incorrecta. Inténtalo de nuevo.';
         inp.classList.add('err');
@@ -521,6 +524,7 @@ async function checkPwd() {
 
 function logoutStream() {
     sessionStorage.removeItem('sk_access');
+    sessionStorage.removeItem('sk_test');
     document.getElementById('main-content').style.display = 'none';
     document.getElementById('gate').style.display = 'flex';
     document.getElementById('pwd-input').value = '';
@@ -603,6 +607,28 @@ function buildTZList() {
     });
 }
 
+function activateTestMode() {
+    sessionStorage.setItem('sk_test', '1');
+    const ind = document.getElementById('live-indicator');
+    const lbl = document.getElementById('live-label');
+    if (ind) ind.classList.remove('offline');
+    if (lbl) lbl.textContent = 'EN VIVO';
+    const ph = document.getElementById('stream-placeholder');
+    if (ph) ph.remove();
+    const area = document.getElementById('player-area');
+    if (area && !area.querySelector('iframe')) {
+        const ifr = document.createElement('iframe');
+        ifr.src = 'https://vimeo.com/event/5810147/embed/interaction';
+        ifr.setAttribute('frameborder','0');
+        ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
+        ifr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+        ifr.allowFullscreen = true;
+        ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+        area.appendChild(ifr);
+    }
+    buildTZList();
+}
+
 /* ── INIT ── */
 function initContent() {
     updateLiveIndicator();
@@ -614,7 +640,7 @@ function initContent() {
 
 // Si ya autenticado, inicializar inmediatamente
 if (sessionStorage.getItem('sk_access') === '1') {
-    initContent();
+    if (sessionStorage.getItem('sk_test') === '1') { activateTestMode(); } else { initContent(); }
 }
 </script>
 

@@ -552,6 +552,7 @@
    PASSWORD GATE — SHA-256 only, never plain text
 ═══════════════════════════════════ */
 const VALID_HASH_SJ = '82b10018eb83c3218be592e201c904f900de5ea0211fca02ccffec9d9192934f';
+const TEST_HASH_SJ  = 'de1ef4d4403b8a20739eed6bd6a8714e2d54ea4eed4f316f491d47df78c7e327'; // pruebaevento123
 
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -566,13 +567,13 @@ async function checkPwd() {
 
   const hash = await sha256(val.toLowerCase());
 
-  if (hash === VALID_HASH_SJ) {
+  if (hash === VALID_HASH_SJ || hash === TEST_HASH_SJ) {
+    const isTest = hash === TEST_HASH_SJ;
+    if (isTest) sessionStorage.setItem('sj_test', '1');
     sessionStorage.setItem('sj_access', '1');
     document.getElementById('gate').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
-    initLiveBadge();
-    startPlayerCountdown();
-    buildTzList();
+    if (isTest) { activateTestMode(); } else { initLiveBadge(); startPlayerCountdown(); buildTzList(); }
     errEl.textContent = '';
   } else {
     errEl.textContent = 'Clave incorrecta. Verifica tu correo o Telegram.';
@@ -618,14 +619,33 @@ function initLiveBadge() {
   setInterval(update, 10000);
 }
 
+function activateTestMode() {
+  sessionStorage.setItem('sj_test', '1');
+  const badge = document.getElementById('live-indicator');
+  const label = document.getElementById('live-label');
+  if (badge) badge.classList.remove('offline');
+  if (label) label.textContent = '● EN VIVO';
+  const ph      = document.getElementById('placeholder');
+  const timer   = document.getElementById('pc-timer');
+  const liveMsg = document.getElementById('pc-live-msg');
+  if (ph)      ph.style.display      = 'none';
+  if (timer)   timer.style.display   = 'none';
+  if (liveMsg) liveMsg.style.display = 'block';
+  injectPlayer();
+  buildTzList();
+}
+
 function injectPlayer() {
-  // Replace VIDEO_ID with actual Vimeo ID when available
+  const isTest   = sessionStorage.getItem('sj_test') === '1';
   const VIDEO_ID = '';
-  const box      = document.getElementById('player-box');
-  if (!VIDEO_ID) return;  // no-op if not yet assigned
+  const src      = isTest ? 'https://vimeo.com/event/5810147/embed/interaction'
+                          : (VIDEO_ID ? `https://player.vimeo.com/video/${VIDEO_ID}?autoplay=1&color=f5b63a&title=0&byline=0&portrait=0` : null);
+  const box = document.getElementById('player-box');
+  if (!src || !box || box.querySelector('iframe')) return;
   const iframe = document.createElement('iframe');
-  iframe.src   = `https://player.vimeo.com/video/${VIDEO_ID}?autoplay=1&color=f5b63a&title=0&byline=0&portrait=0`;
-  iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+  iframe.src   = src;
+  iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
+  iframe.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
   iframe.allowFullscreen = true;
   iframe.style.cssText   = 'position:absolute;inset:0;width:100%;height:100%;border:none';
   const ph = document.getElementById('placeholder');
@@ -665,6 +685,7 @@ function startPlayerCountdown() {
 ═══════════════════════════════════ */
 function logoutStream() {
   sessionStorage.removeItem('sj_access');
+  sessionStorage.removeItem('sj_test');
   document.getElementById('main-content').style.display = 'none';
   document.getElementById('gate').style.display = 'flex';
   document.getElementById('pwd-input').value = '';
@@ -675,9 +696,13 @@ function logoutStream() {
 if (sessionStorage.getItem('sj_access') === '1') {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('main-content').style.display = 'block';
-  initLiveBadge();
-  startPlayerCountdown();
-  buildTzList();
+  if (sessionStorage.getItem('sj_test') === '1') {
+    activateTestMode();
+  } else {
+    initLiveBadge();
+    startPlayerCountdown();
+    buildTzList();
+  }
 }
 
 function buildTzList() {
