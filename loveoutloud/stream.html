@@ -546,7 +546,7 @@
     </div>
 
     <div class="stream-info">
-      <div class="info-chip">
+      <div class="info-chip" id="chip-live" style="display:none;">
         <span class="live-dot"></span>
         <span data-i18n="chip_live">En vivo</span>
       </div>
@@ -744,10 +744,13 @@
     const notice = document.getElementById('pre-event-notice');
     if (!notice) return;
     const diff = EVENT_START - new Date();
+    const liveChip = document.getElementById('chip-live');
     if (diff <= 0) {
       notice.style.display = 'none';
+      if (liveChip) liveChip.style.display = 'flex';
       return;
     }
+    if (liveChip) liveChip.style.display = 'none';
     notice.style.display = 'block';
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
