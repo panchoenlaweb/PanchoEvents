@@ -740,9 +740,22 @@
   ───────────────────────────────────────────── */
   const EVENT_START = new Date('2026-05-22T17:00:00+07:00');
 
+  function isTestKey() {
+    const k = (sessionStorage.getItem('lol_stream_key') || '').toUpperCase();
+    const meta = KEY_DATES[k];
+    return meta && meta.test === true;
+  }
+
   function updatePreEventCountdown() {
     const notice = document.getElementById('pre-event-notice');
     if (!notice) return;
+    // Clave de prueba: sin cuenta regresiva, chip En vivo siempre visible
+    if (isTestKey()) {
+      notice.style.display = 'none';
+      const liveChip = document.getElementById('chip-live');
+      if (liveChip) liveChip.style.display = 'flex';
+      return;
+    }
     const diff = EVENT_START - new Date();
     const liveChip = document.getElementById('chip-live');
     if (diff <= 0) {
