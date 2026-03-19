@@ -211,6 +211,15 @@
       line-height: 1.5;
     }
 
+    /* ── TEST BANNER ── */
+    #test-banner {
+      animation: testPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes testPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,165,0,0); }
+      50% { box-shadow: 0 0 12px 3px rgba(255,165,0,.25); }
+    }
+
     /* ── STREAM VIEW ── */
     #stream-view {
       display: none;
@@ -504,6 +513,14 @@
 
   <!-- ── STREAM VIEW ── -->
   <section id="stream-view">
+    <!-- Banner de prueba (solo visible con clave de test) -->
+    <div id="test-banner" style="display:none;width:100%;max-width:1280px;background:linear-gradient(135deg,rgba(255,165,0,.15),rgba(255,100,0,.10));border:2px dashed rgba(255,165,0,.6);border-radius:8px;padding:1rem 1.5rem;align-items:center;gap:.8rem;margin-bottom:1rem;">
+      <span style="font-size:1.5rem;">🧪</span>
+      <div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;color:#ffaa00;letter-spacing:.12em;text-transform:uppercase;">SESIÓN DE PRUEBA · Sábado 21 Mar 2026</div>
+        <div style="font-size:.82rem;color:#cca060;margin-top:.2rem;">Acceso de prueba activo. Este stream no es el evento real.</div>
+      </div>
+    </div>
     <div class="stream-title" data-i18n="stream_title">🏎 LOVE OUT LOUD 2026 — EN VIVO</div>
     <!-- pre-event notice (shown when event hasn't started yet) -->
     <div class="pre-event-notice" id="pre-event-notice">
@@ -518,29 +535,14 @@
       </div>
     </div>
     <div class="player-wrap" id="player-wrap">
-      <!--
-        ╔═══════════════════════════════════════════════════════════╗
-        ║  CONFIGURACIÓN: reemplaza el ID del iframe de abajo       ║
-        ║  con tu Cloudflare Stream Video UID o URL de Vimeo.       ║
-        ║                                                           ║
-        ║  Cloudflare Stream:                                       ║
-        ║   <iframe src="https://iframe.cloudflarestream.com/VIDEO_UID
-        ║    ?autoplay=true&muted=false"                            ║
-        ║    allow="autoplay; encrypted-media; picture-in-picture"  ║
-        ║    allowfullscreen></iframe>                              ║
-        ║                                                           ║
-        ║  Vimeo Live:                                              ║
-        ║   <iframe src="https://player.vimeo.com/video/VIDEO_ID   ║
-        ║    ?autoplay=1"                                           ║
-        ║    allow="autoplay; fullscreen" allowfullscreen></iframe> ║
-        ╚═══════════════════════════════════════════════════════════╝
-      -->
-      <!-- El iframe del stream se configurará aquí cuando el evento esté próximo -->
-      <div class="player-placeholder">
-        <div class="ph-icon">📡</div>
-        <p>El stream estará disponible aquí el día del evento.<br>
-        <strong style="color:var(--gold)">22 · 23 · 24 Mayo 2026 · 17:00 ICT</strong></p>
-      </div>
+      <iframe
+        src="https://vimeo.com/event/5810147/embed/interaction"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      ></iframe>
     </div>
 
     <div class="stream-info">
@@ -587,7 +589,8 @@
     '39e0b359a157db7b201387ef8913d1ba8f18fa5f8b306b5b2ed6aaa3f16e3fca': 'LOL2026DIA1',
     'e327ff24d8116d010f4ef6d586f2a5cd4ebf79e0b46bf182633fec963f283d7c': 'LOL2026DIA2',
     'cc8f835009182b33e54e33fdfdb7466bec2515f1cbb9b35eb1e4be179a739344': 'LOL2026DIA3',
-    // Para agregar una clave extra: calcula su SHA-256 y añade la entrada aquí
+    // ── CLAVES DE PRUEBA ──
+    '34e1e7f14d83d35beaca27c9d9344f07c143dc20f37ff882f383cf17db6252d1': 'PRUEBAEVENTO123',
   };
 
   async function sha256LOL(str) {
@@ -601,6 +604,8 @@
     'LOL2026DIA1': { date: '22 MAY 2026', time: '17:00 ICT' },
     'LOL2026DIA2': { date: '23 MAY 2026', time: '17:00 ICT' },
     'LOL2026DIA3': { date: '24 MAY 2026', time: '17:00 ICT' },
+    // ── PRUEBA ──
+    'PRUEBAEVENTO123': { date: '21 MAR 2026', time: '20:00 ICT', test: true },
   };
 
   /* ─────────────────────────────────────────────
@@ -706,6 +711,9 @@
     document.getElementById('chip-date').innerHTML = '<strong>' + meta.date + '</strong>&nbsp;·&nbsp;' + meta.time;
     document.getElementById('gate').style.display = 'none';
     document.getElementById('stream-view').style.display = 'flex';
+    // Banner de prueba
+    const testBanner = document.getElementById('test-banner');
+    if (testBanner) testBanner.style.display = meta.test ? 'flex' : 'none';
   }
 
   function logout() {
