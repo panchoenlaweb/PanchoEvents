@@ -170,6 +170,21 @@
       transition: color .2s, border-color .2s;
     }
     .btn-logout:hover { color: var(--amber); border-color: var(--amber); }
+
+    /* ── TEST BANNER ── */
+    #test-banner {
+      display: none;
+      max-width: 980px; margin: .8rem auto 0;
+      background: linear-gradient(135deg, rgba(255,165,0,.12), rgba(255,100,0,.08));
+      border: 2px dashed rgba(255,165,0,.55);
+      border-radius: 6px; padding: .9rem 1.4rem;
+      align-items: center; gap: .8rem;
+      animation: testPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes testPulse { 0%,100% { box-shadow: none; } 50% { box-shadow: 0 0 14px 3px rgba(255,165,0,.22); } }
+    #test-banner .tb-icon  { font-size: 1.4rem; flex-shrink: 0; }
+    #test-banner .tb-title { font-family: 'Orbitron', sans-serif; font-size: .72rem; font-weight: 700; color: #ffaa00; letter-spacing: .12em; text-transform: uppercase; }
+    #test-banner .tb-sub   { font-size: .8rem; color: #cca060; margin-top: .15rem; }
     /* PLAYER AREA */
     .player-section { padding: 0; background: #000; }
     .player-wrap { max-width: 980px; margin: 0 auto; position: relative; }
@@ -326,6 +341,7 @@
       .details-section { padding: 24px 14px 48px; }
       .d-card  { padding: 18px 14px; }
       .tz-quick li { flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 0; }
+      #test-banner { margin: .6rem 1rem 0; }
     }
 
     @media (max-width: 480px) {
@@ -373,6 +389,15 @@
       <a href="index.html" class="top-bar-back">← Volver</a>
     </div>
   </header>
+
+  <!-- TEST BANNER -->
+  <div id="test-banner">
+    <span class="tb-icon">🧪</span>
+    <div>
+      <div class="tb-title">SESIÓN DE PRUEBA · Domingo 22 Mar 2026</div>
+      <div class="tb-sub">Acceso de prueba activo. Este stream no es el evento real.</div>
+    </div>
+  </div>
 
   <!-- PLAYER -->
   <div class="player-section">
@@ -621,6 +646,8 @@ function initLiveBadge() {
 
 function activateTestMode() {
   sessionStorage.setItem('sj_test', '1');
+  const testBanner = document.getElementById('test-banner');
+  if (testBanner) testBanner.style.display = 'flex';
   const badge = document.getElementById('live-indicator');
   const label = document.getElementById('live-label');
   if (badge) badge.classList.remove('offline');

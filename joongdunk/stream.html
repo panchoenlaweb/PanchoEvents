@@ -164,6 +164,21 @@
         .day-tab:hover { color: #bbb; background: rgba(255,255,255,.03); }
         .day-tab.active { color: var(--red-light); border-bottom-color: var(--red); }
 
+        /* ── TEST BANNER ── */
+        #test-banner {
+            display: none;
+            max-width: 960px; margin: .8rem auto 0;
+            background: linear-gradient(135deg, rgba(255,165,0,.12), rgba(255,100,0,.08));
+            border: 2px dashed rgba(255,165,0,.55);
+            border-radius: 6px; padding: .9rem 1.4rem;
+            align-items: center; gap: .8rem;
+            animation: testPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes testPulse { 0%,100% { box-shadow: none; } 50% { box-shadow: 0 0 14px 3px rgba(255,165,0,.22); } }
+        #test-banner .tb-icon  { font-size: 1.4rem; flex-shrink: 0; }
+        #test-banner .tb-title { font-family: 'Orbitron', sans-serif; font-size: .72rem; font-weight: 700; color: #ffaa00; letter-spacing: .12em; text-transform: uppercase; }
+        #test-banner .tb-sub   { font-size: .8rem; color: #cca060; margin-top: .15rem; }
+
         /* PLAYER AREA */
         .player-section { padding: 0; background: #000; }
         .player-wrap {
@@ -345,6 +360,7 @@
 
             /* Chat note */
             .chat-note { font-size: .78rem; padding: 16px; }
+            #test-banner { margin: .6rem 1rem 0; }
         }
 
         @media (max-width: 400px) {
@@ -398,6 +414,15 @@
             <a href="index.html" class="top-bar-back">← Volver</a>
         </div>
     </header>
+
+    <!-- TEST BANNER -->
+    <div id="test-banner">
+        <span class="tb-icon">🧪</span>
+        <div>
+            <div class="tb-title">SESIÓN DE PRUEBA · Domingo 22 Mar 2026</div>
+            <div class="tb-sub">Acceso de prueba activo. Este stream no es el evento real.</div>
+        </div>
+    </div>
 
     <!-- DAY TABS -->
     <div class="day-tabs">
@@ -605,6 +630,8 @@ async function checkPwd() {
 
 function activateTestMode() {
     sessionStorage.setItem('jd_test', '1');
+    const testBanner = document.getElementById('test-banner');
+    if (testBanner) testBanner.style.display = 'flex';
     document.getElementById('gate').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
     const tab2 = document.getElementById('tab-d2');
