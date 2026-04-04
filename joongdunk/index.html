@@ -810,10 +810,24 @@ function tickCD(ev, pfx, stId, cardId) {
     setNum(pfx + 's', s);
 }
 
+function checkStreamBtn() {
+    const btn = document.querySelector('.btn-stream');
+    const tip = document.querySelector('.btn-stream-tip');
+    if (!btn) return;
+    const OPEN = EV1.getTime() - 15 * 60 * 1000; // 15 min antes
+    if (Date.now() >= OPEN) {
+        btn.removeAttribute('disabled');
+        btn.querySelector('.lock-icon').textContent = '📺';
+        if (tip) tip.textContent = '¡La transmisión está disponible!';
+    }
+}
+
 function tickAll() {
     const now = Date.now();
     const c1 = document.getElementById('cd1');
     const c2 = document.getElementById('cd2');
+
+    checkStreamBtn();
 
     if (now < EV1) {
         c1 && c1.classList.add('active');
