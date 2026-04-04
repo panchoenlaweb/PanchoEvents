@@ -453,13 +453,13 @@
                         <div class="cd-block"><span class="cd-num" id="mc-s">--</span><span class="cd-lbl">seg</span></div>
                     </div>
                 </div>
-                <!-- Vimeo Live embed — reemplaza EVENT_ID con tu ID de Vimeo Live -->
-                <!-- <iframe
+                <!-- Vimeo Live embed — Día 1 -->
+                <iframe
                     id="vimeo-player"
-                    src="https://vimeo.com/event/EVENT_ID/embed"
+                    src="https://vimeo.com/event/5846647/embed"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowfullscreen
-                ></iframe> -->
+                ></iframe>
             </div>
         </div>
 
@@ -678,6 +678,8 @@ if (savedDay === 1 || savedDay === 2) {
 ═══════════════════════════════════════ */
 const EV1 = new Date('2026-04-05T10:00:00Z'); // 17:00 Bangkok
 const EV2 = new Date('2026-04-06T10:00:00Z');
+const VIMEO_D1 = 'https://vimeo.com/event/5846647/embed';
+const VIMEO_D2 = 'https://vimeo.com/event/5846648/embed';
 
 let activeDay = 1;
 
@@ -692,6 +694,10 @@ function switchDay(d) {
         : 'Día 2 — Lunes 06 de Abril 2026';
 
     document.getElementById('strip-day').textContent = label;
+
+    const ifr = document.getElementById('vimeo-player');
+    if (ifr) ifr.src = d===1 ? VIMEO_D1 : VIMEO_D2;
+
     updateLiveIndicator(ev);
     buildTZList(ev);
 }
