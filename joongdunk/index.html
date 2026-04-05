@@ -204,6 +204,24 @@
             display: flex; gap: 16px; justify-content: center;
             flex-wrap: wrap; margin-top: 32px;
         }
+        .urgency-badge {
+            display: inline-block;
+            font-family: 'Orbitron', monospace;
+            font-size: .65rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            background: rgba(200,0,0,.18);
+            border: 1px solid var(--red);
+            color: #ff4444;
+            padding: 6px 20px;
+            margin-bottom: 24px;
+            animation: urgencyPulse 1.4s ease-in-out infinite;
+        }
+        @keyframes urgencyPulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(200,0,0,.4); opacity: 1; }
+            50%       { box-shadow: 0 0 22px rgba(255,0,0,.7); opacity: .85; }
+        }
+
         .btn-reserve {
             font-family: 'Orbitron', monospace;
             font-size: .82rem; letter-spacing: .25em; text-transform: uppercase;
@@ -588,6 +606,7 @@
 <section id="hero">
     <div class="hero-inner">
         <div class="gmmtv-badge">G · MM · TV</div>
+        <div class="urgency-badge">⚠ Últimas Horas para Comprar</div>
 
         <h1 class="hero-title">JOONG&nbsp;DUNK</h1>
         <h2 class="hero-subtitle">EYES&nbsp;ON&nbsp;YOU</h2>
