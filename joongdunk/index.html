@@ -802,6 +802,11 @@ function tickCD(ev, pfx, stId, cardId) {
 
 function tickAll() {
     tickCD(EV2, 'd2', 'st2', 'cd2');
+    // Hide reserve button once the event has started
+    const reserveBtn = document.querySelector('.btn-reserve');
+    if (reserveBtn) {
+        reserveBtn.style.display = Date.now() >= EV1.getTime() ? 'none' : '';
+    }
 }
 
 tickAll();
