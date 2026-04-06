@@ -239,21 +239,17 @@
             font-family: 'Orbitron', monospace;
             font-size: .82rem; letter-spacing: .25em; text-transform: uppercase;
             padding: 15px 36px;
-            background: transparent;
-            color: #555; border: 1px solid #333; cursor: not-allowed;
+            background: rgba(160,0,0,.18);
+            color: var(--red-light); border: 1px solid var(--red); cursor: pointer;
             clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: background .25s, box-shadow .25s;
+        }
+        .btn-stream:hover {
+            background: rgba(200,0,0,.35);
+            box-shadow: 0 0 28px rgba(255,50,50,.4);
         }
         .btn-stream .lock-icon { margin-right: 8px; }
         .btn-stream-wrap { position: relative; display: inline-block; }
-        .btn-stream-tip {
-            display: none; position: absolute; bottom: calc(100% + 10px); left: 50%;
-            transform: translateX(-50%);
-            background: #1a1a1a; border: 1px solid var(--border);
-            color: #aaa; font-family: 'Rajdhani', sans-serif;
-            font-size: .75rem; letter-spacing: .06em;
-            padding: 7px 14px; white-space: nowrap; pointer-events: none; z-index: 10;
-        }
-        .btn-stream-wrap:hover .btn-stream-tip { display: block; }
 
         .scroll-hint {
             position: absolute; bottom: 32px; left: 50%;
@@ -545,15 +541,6 @@
                 letter-spacing: .18em;
             }
             .btn-stream-wrap { width: 100%; }
-            /* Tooltip en mobile: debajo del botón, sin nowrap */
-            .btn-stream-tip {
-                white-space: normal;
-                text-align: center;
-                width: 100%;
-                left: 0; transform: none;
-                top: calc(100% + 8px); bottom: auto;
-                font-size: .72rem;
-            }
 
             /* Countdown */
             .cd-card { padding: 24px 14px; }
@@ -606,15 +593,15 @@
 <section id="hero">
     <div class="hero-inner">
         <div class="gmmtv-badge">G · MM · TV</div>
-        <div class="urgency-badge">⚠ Últimas Horas para Comprar</div>
+        <div class="urgency-badge">⚠ Día 2 — ¡En Vivo Hoy!</div>
 
         <h1 class="hero-title">JOONG&nbsp;DUNK</h1>
         <h2 class="hero-subtitle">EYES&nbsp;ON&nbsp;YOU</h2>
         <p  class="hero-fancon">— &nbsp; F A N C O N &nbsp; —</p>
 
         <div class="hero-dates">
-            <div class="date-badge"><small>DÍA 1</small>DOM 05 · ABR · 2026</div>
-            <div class="date-badge"><small>DÍA 2</small>LUN 06 · ABR · 2026</div>
+            <div class="date-badge" style="opacity:.38;text-decoration:line-through"><small>DÍA 1 · FINALIZADO</small>DOM 05 · ABR · 2026</div>
+            <div class="date-badge" style="border-color:var(--red);box-shadow:0 0 18px rgba(200,0,0,.3)"><small>DÍA 2 · HOY</small>LUN 06 · ABR · 2026</div>
         </div>
 
         <div class="hero-meta">
@@ -625,10 +612,9 @@
         <div class="hero-btns">
             <button class="btn-reserve" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">🎟 Reservar Entrada</button>
             <div class="btn-stream-wrap">
-                <button class="btn-stream" disabled onclick="window.location.href='stream.html'">
-                    <span class="lock-icon">🔒</span>Ver Transmisión
+                <button class="btn-stream" onclick="window.location.href='https://www.panchoenlared.com/joongdunk/stream'">
+                    <span class="lock-icon">📺</span>Ver Transmisión
                 </button>
-                <div class="btn-stream-tip">Disponible el 05 de Abril a las 5:00 PM Bangkok</div>
             </div>
         </div>
     </div>
@@ -640,25 +626,10 @@
     <div class="wrapper">
         <h2 class="section-title">Cuenta Regresiva</h2>
 
-        <div class="countdown-grid">
-            <!-- Day 1 -->
-            <div class="cd-card" id="cd1">
-                <p class="cd-day-label">Día 1 — Domingo 05 Abril</p>
-                <div class="timer">
-                    <div class="t-block"><span class="t-num" id="d1d">--</span><span class="t-lbl">días</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d1h">--</span><span class="t-lbl">horas</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d1m">--</span><span class="t-lbl">min</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d1s">--</span><span class="t-lbl">seg</span></div>
-                </div>
-                <p class="cd-status" id="st1">5:00 PM · Bangkok (UTC+7)</p>
-            </div>
-
+        <div class="countdown-grid" style="grid-template-columns:1fr;max-width:420px">
             <!-- Day 2 -->
-            <div class="cd-card" id="cd2">
-                <p class="cd-day-label">Día 2 — Lunes 06 Abril</p>
+            <div class="cd-card active" id="cd2">
+                <p class="cd-day-label">Día 2 — Lunes 06 Abril · HOY</p>
                 <div class="timer">
                     <div class="t-block"><span class="t-num" id="d2d">--</span><span class="t-lbl">días</span></div>
                     <span class="t-sep">:</span>
@@ -829,34 +800,7 @@ function tickCD(ev, pfx, stId, cardId) {
     setNum(pfx + 's', s);
 }
 
-function checkStreamBtn() {
-    const btn = document.querySelector('.btn-stream');
-    const tip = document.querySelector('.btn-stream-tip');
-    if (!btn) return;
-    const OPEN = EV1.getTime() - 15 * 60 * 1000; // 15 min antes
-    if (Date.now() >= OPEN) {
-        btn.removeAttribute('disabled');
-        btn.querySelector('.lock-icon').textContent = '📺';
-        if (tip) tip.textContent = '¡La transmisión está disponible!';
-    }
-}
-
 function tickAll() {
-    const now = Date.now();
-    const c1 = document.getElementById('cd1');
-    const c2 = document.getElementById('cd2');
-
-    checkStreamBtn();
-
-    if (now < EV1) {
-        c1 && c1.classList.add('active');
-        c2 && c2.classList.remove('active');
-    } else if (now < EV2) {
-        c1 && c1.classList.remove('active');
-        c2 && c2.classList.add('active');
-    }
-
-    tickCD(EV1, 'd1', 'st1', 'cd1');
     tickCD(EV2, 'd2', 'st2', 'cd2');
 }
 
