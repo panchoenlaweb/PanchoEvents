@@ -585,11 +585,29 @@ async function sha256(str) {
         .join('');
 }
 
+function loadPlayer(day) {
+    const area = document.getElementById('player-area');
+    const ph   = document.getElementById('stream-placeholder');
+    if (!area || area.querySelector('iframe')) return;
+    const ids = { 2: '5846648' };
+    if (!ids[day]) return;
+    if (ph) ph.remove();
+    const ifr = document.createElement('iframe');
+    ifr.src = `https://vimeo.com/event/${ids[day]}/embed/interaction`;
+    ifr.setAttribute('frameborder','0');
+    ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
+    ifr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+    ifr.allowFullscreen = true;
+    ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+    area.appendChild(ifr);
+}
+
 function unlockDay(day) {
     sessionStorage.setItem('jd_access', String(day));
     document.getElementById('gate').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
     applyDayRestriction(day);
+    loadPlayer(day);
     switchDay(day);
 }
 
@@ -774,7 +792,10 @@ if (sessionStorage.getItem('jd_test') === '1') {
 } else {
     const _initDay = (savedDay === 1 || savedDay === 2) ? savedDay : 1;
     switchDay(_initDay);
-    if (savedDay === 1 || savedDay === 2) applyDayRestriction(savedDay);
+    if (savedDay === 1 || savedDay === 2) {
+        applyDayRestriction(savedDay);
+        loadPlayer(savedDay);
+    }
     setInterval(() => updateLiveIndicator(activeDay===1 ? EV1 : EV2), 30000);
 }
 </script>
