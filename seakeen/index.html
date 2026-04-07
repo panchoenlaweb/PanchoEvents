@@ -255,6 +255,32 @@
         .hero-meta b { color: var(--teal-light); }
         .hero-meta .loc { color: var(--gold); font-weight: 600; }
 
+        /* ── LOCAL TIME BANNER ── */
+        .local-time-banner {
+            margin-top: 2rem;
+            display: inline-flex; flex-direction: column; align-items: center; gap: .4rem;
+            background: rgba(0,0,0,.45);
+            border: 1px solid rgba(0,201,177,.4);
+            border-radius: 10px; padding: .9rem 2rem;
+            backdrop-filter: blur(8px);
+            animation: fadeInUp .6s ease both;
+        }
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .local-time-label {
+            font-family: 'Orbitron', sans-serif; font-size: .6rem;
+            letter-spacing: .25em; color: #97bfcc; text-transform: uppercase;
+        }
+        .local-time-value {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: 900; color: var(--teal-light);
+            text-shadow: 0 0 20px rgba(77,255,217,.5); line-height: 1;
+        }
+        .local-time-tz { font-size: .78rem; color: #97bfcc; letter-spacing: .05em; }
+        .local-time-tz span { color: #fff; }
+
         /* Buttons */
         .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
@@ -631,6 +657,13 @@
         <div class="hero-meta">
             <span>🕔 <b>17:00 ICT</b> — Bangkok, Thailand</span>
             <span class="loc">📍 Bangkok, Thailand</span>
+        </div>
+
+        <!-- local time auto-detect -->
+        <div class="local-time-banner" id="local-time-banner">
+            <div class="local-time-label">🌍 El evento en tu país será a las</div>
+            <div class="local-time-value" id="local-time-value">--:--</div>
+            <div class="local-time-tz" id="local-time-tz">Detectando tu zona horaria…</div>
         </div>
 
         <div class="hero-btns">
@@ -1265,6 +1298,19 @@ function drawFrame() {
     requestAnimationFrame(drawFrame);
 }
 drawFrame();
+
+/* ── LOCAL TIME AUTO-DETECT ── */
+(function(){
+    try {
+        const ev = new Date('2026-04-26T17:00:00+07:00');
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const t = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
+        const s = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value||tz;
+        const r = tz.replace(/_/g,' ');
+        document.getElementById('local-time-value').textContent = t+' hs';
+        document.getElementById('local-time-tz').innerHTML = '<span>'+s+'</span> &nbsp;·&nbsp; '+r;
+    } catch(e){ document.getElementById('local-time-tz').textContent='No se pudo detectar tu zona horaria'; }
+})();
 </script>
 
 </body>

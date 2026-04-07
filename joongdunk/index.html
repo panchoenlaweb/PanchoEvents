@@ -229,6 +229,32 @@
         }
         .hero-meta b { color: var(--red-light); }
 
+        /* ── LOCAL TIME BANNER ── */
+        .local-time-banner {
+            margin-top: 2rem;
+            display: inline-flex; flex-direction: column; align-items: center; gap: .4rem;
+            background: rgba(0,0,0,.45);
+            border: 1px solid rgba(255,51,51,.4);
+            border-radius: 10px; padding: .9rem 2rem;
+            backdrop-filter: blur(8px);
+            animation: fadeInUp .6s ease both;
+        }
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .local-time-label {
+            font-family: 'Orbitron', sans-serif; font-size: .6rem;
+            letter-spacing: .25em; color: #bbb; text-transform: uppercase;
+        }
+        .local-time-value {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: 900; color: var(--red-light);
+            text-shadow: 0 0 20px rgba(255,51,51,.5); line-height: 1;
+        }
+        .local-time-tz { font-size: .78rem; color: #bbb; letter-spacing: .05em; }
+        .local-time-tz span { color: #fff; }
+
         /* ── HERO BUTTONS ── */
         .hero-btns {
             display: flex; gap: 16px; justify-content: center;
@@ -640,6 +666,13 @@
             <span>⏰ <b>5:00 PM</b> &nbsp;Hora Bangkok (ICT · UTC+7)</span>
         </div>
 
+        <!-- local time auto-detect -->
+        <div class="local-time-banner" id="local-time-banner">
+            <div class="local-time-label">🌍 El evento en tu país será a las</div>
+            <div class="local-time-value" id="local-time-value">--:--</div>
+            <div class="local-time-tz" id="local-time-tz">Detectando tu zona horaria…</div>
+        </div>
+
         <div class="hero-btns">
             <div class="btn-stream-wrap">
                 <button class="btn-stream" onclick="window.location.href='https://www.panchoenlared.com/joongdunk/stream'">
@@ -1032,6 +1065,19 @@ async function loadRates() {
 }
 
 loadRates();
+
+/* ── LOCAL TIME AUTO-DETECT ── */
+(function(){
+    try {
+        const ev = new Date('2026-04-05T17:00:00+07:00');
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const t = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
+        const s = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value||tz;
+        const r = tz.replace(/_/g,' ');
+        document.getElementById('local-time-value').textContent = t+' hs';
+        document.getElementById('local-time-tz').innerHTML = '<span>'+s+'</span> &nbsp;·&nbsp; '+r;
+    } catch(e){ document.getElementById('local-time-tz').textContent='No se pudo detectar tu zona horaria'; }
+})();
 </script>
 </body>
 </html>
