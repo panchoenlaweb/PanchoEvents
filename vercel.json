@@ -11,7 +11,13 @@
     { "source": "/seakeen",            "destination": "/seakeen/index.html" },
     { "source": "/seakeen/stream",     "destination": "/seakeen/stream.html" },
     { "source": "/olympop",            "destination": "/olympop/index.html" },
-    { "source": "/olympop/stream",     "destination": "/olympop/stream.html" }
+    { "source": "/olympop/stream",     "destination": "/olympop/stream.html" },
+    { "source": "/perthsanta",         "destination": "/perthsanta/index.html" },
+    { "source": "/perthsanta/stream",  "destination": "/perthsanta/stream.html" },
+    { "source": "/starlympic",         "destination": "/starlympic/index.html" },
+    { "source": "/starlympic/stream",  "destination": "/starlympic/stream.html" },
+    { "source": "/dmdland3",           "destination": "/dmdland3/index.html" },
+    { "source": "/dmdland3/stream",    "destination": "/dmdland3/stream.html" }
   ],
   "headers": [
     {
