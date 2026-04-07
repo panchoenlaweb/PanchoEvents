@@ -712,6 +712,245 @@
       margin: 0 auto;
       line-height: 1.7;
     }
+
+    /* ── BUNDLES ── */
+    #bundles {
+      background: linear-gradient(180deg, var(--dark) 0%, #0a0000 50%, var(--dark) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .bundles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .bundle-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .bundle-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent, var(--red));
+      z-index: 2;
+    }
+    .bundle-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent, var(--red));
+      box-shadow: 0 14px 45px rgba(0,0,0,.6);
+    }
+    /* Featured card */
+    .bundle-card.b-featured {
+      grid-column: 1 / -1;
+      border-color: rgba(245,197,24,.4);
+      background: linear-gradient(135deg, #0d0000 0%, #1a0500 40%, #0a0000 100%);
+    }
+    .bundle-card.b-featured::after {
+      height: 4px;
+      background: linear-gradient(to right, var(--gold), var(--red-l), var(--gold));
+    }
+    .bundle-card.b-featured::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(-45deg, rgba(245,197,24,.015) 0px, rgba(245,197,24,.015) 1px, transparent 1px, transparent 18px);
+      pointer-events: none;
+    }
+    .b-feat-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 36px;
+      padding: 40px 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .b-feat-left { flex: 1; min-width: 260px; }
+    .b-feat-right {
+      flex-shrink: 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .b-ribbon {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-family: 'Orbitron', monospace;
+      font-size: .48rem;
+      font-weight: 900;
+      letter-spacing: .15em;
+      padding: 5px 14px;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+    .b-head { padding: 28px 24px 0; }
+    .b-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .b-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: .06em;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .b-sub {
+      font-family: 'Orbitron', monospace;
+      font-size: .52rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .b-desc {
+      font-size: .88rem;
+      color: #777;
+      line-height: 1.7;
+      letter-spacing: .03em;
+    }
+    .b-body {
+      padding: 18px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .b-events {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .b-tag {
+      font-family: 'Orbitron', monospace;
+      font-size: .46rem;
+      letter-spacing: .1em;
+      padding: 4px 9px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .b-list {
+      list-style: none;
+      flex: 1;
+    }
+    .b-list li {
+      font-size: .84rem;
+      color: #999;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .b-list li::before {
+      content: '✓';
+      color: #00c850;
+      font-weight: 700;
+      font-size: .7rem;
+      flex-shrink: 0;
+    }
+    .b-foot {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 18px 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .bp-old {
+      font-size: .85rem;
+      color: #555;
+      text-decoration: line-through;
+    }
+    .bp-new {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .bp-new sup { font-size: .75rem; color: var(--gold); vertical-align: super; }
+    .bp-save {
+      font-family: 'Orbitron', monospace;
+      font-size: .48rem;
+      letter-spacing: .1em;
+      color: #00c850;
+      margin-top: 2px;
+    }
+    .b-btn {
+      font-family: 'Orbitron', monospace;
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 12px 22px;
+      text-decoration: none;
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      transition: transform .15s, box-shadow .2s;
+      white-space: nowrap;
+    }
+    .b-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(245,197,24,.4);
+    }
+    .b-custom {
+      margin-top: 40px;
+      text-align: center;
+      padding: 28px 24px;
+      border: 1px dashed rgba(245,197,24,.25);
+      background: rgba(245,197,24,.03);
+    }
+    .b-custom p {
+      font-size: .95rem;
+      color: #999;
+      letter-spacing: .04em;
+    }
+    .b-custom a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .b-custom a:hover { text-decoration: underline; }
+    .b-currencies {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .b-cur {
+      font-family: 'Orbitron', monospace;
+      font-size: .46rem;
+      letter-spacing: .06em;
+      padding: 3px 8px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #888;
+      white-space: nowrap;
+    }
+    .b-cur b { color: #bbb; font-weight: 600; }
+    .b-feat-currencies {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      justify-content: center;
+    }
+    .b-feat-currencies .b-cur {
+      font-size: .5rem;
+      padding: 4px 10px;
+    }
+    @media (max-width: 700px) {
+      .bundle-card.b-featured { grid-column: auto; }
+      .b-foot { flex-direction: column; text-align: center; }
+      .b-feat-right { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -723,6 +962,7 @@
   <div class="nav-logo">Pancho<span>Events</span></div>
   <ul class="nav-links" id="nav-links">
     <li><a href="#events">Eventos</a></li>
+    <li><a href="#bundles">Bundles</a></li>
     <li><a href="#how">Cómo funciona</a></li>
     <li><a href="#trust">Nosotros</a></li>
     <li><a href="#contact">Contacto</a></li>
@@ -995,6 +1235,217 @@
       </a>
 
     </div>
+
+  </div>
+</section>
+
+<!-- BUNDLES -->
+<section id="bundles">
+  <div class="wrapper">
+    <p class="section-tag">Combina & Ahorra</p>
+    <h2 class="section-title">Packs & Bundles</h2>
+    <p class="section-sub">Elige el pack que más te convenga y obtén el mejor precio</p>
+
+    <div class="bundles-grid">
+
+      <!-- ★ PACK TOTAL — FEATURED ★ -->
+      <div class="bundle-card b-featured" style="--accent:var(--gold);">
+        <span class="b-ribbon" style="background:var(--gold);color:#000;">⭐ MEJOR VALOR</span>
+        <div class="b-feat-inner">
+          <div class="b-feat-left">
+            <div class="b-icon">🏅</div>
+            <h3 class="b-name" style="font-size:1.5rem;">Pack Total</h3>
+            <p class="b-sub" style="color:var(--gold);">Todos los Eventos · Todos los Días</p>
+            <p class="b-desc">
+              Acceso completo a los <b style="color:#e4e4e4;">7 eventos</b> con todos sus días incluidos.
+              Conciertos, Fan Meetings y Sport Days — la experiencia definitiva de PanchoEvents.
+            </p>
+            <div class="b-events" style="margin-top:18px;">
+              <span class="b-tag" style="border-color:rgba(255,215,0,.4);color:rgba(255,215,0,.8);">🏆 Starlympic</span>
+              <span class="b-tag" style="border-color:rgba(245,197,24,.4);color:rgba(245,197,24,.8);">❤ LOL × 3d</span>
+              <span class="b-tag" style="border-color:rgba(0,180,255,.4);color:rgba(0,180,255,.8);">⚡ DMD Land × 2d</span>
+              <span class="b-tag" style="border-color:rgba(232,115,138,.4);color:rgba(232,115,138,.8);">🎵 Perth Santa × 2d</span>
+              <span class="b-tag" style="border-color:rgba(245,182,58,.4);color:rgba(245,182,58,.8);">🌿 Surf Java</span>
+              <span class="b-tag" style="border-color:rgba(0,201,177,.4);color:rgba(0,201,177,.8);">🌊 Sea Keen</span>
+              <span class="b-tag" style="border-color:rgba(77,148,255,.4);color:rgba(77,148,255,.8);">🏅 Olympop 2</span>
+            </div>
+          </div>
+          <div class="b-feat-right" data-usd="16">
+            <div style="font-family:'Orbitron',monospace;font-size:.6rem;letter-spacing:.25em;color:var(--gold);margin-bottom:6px;text-transform:uppercase;">Pack Total</div>
+            <div style="font-family:'Cinzel',serif;font-size:clamp(3rem,7vw,4.5rem);font-weight:900;color:#fff;line-height:1;text-shadow:0 0 40px rgba(245,197,24,.4);">
+              <sup style="font-size:1.4rem;vertical-align:super;color:var(--gold);">$</sup>16<sup style="font-size:1rem;color:var(--gold);">USD</sup>
+            </div>
+            <div class="bp-old" style="margin:8px 0 2px;">$18.50 USD</div>
+            <div class="bp-save">✓ Ahorras $2.50 USD</div>
+            <div class="b-feat-currencies" data-currencies></div>
+            <div style="margin-top:18px;"></div>
+            <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn" style="padding:14px 34px;">🎫 QUIERO EL PACK TOTAL</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔥 PACK MEGA -->
+      <div class="bundle-card" style="--accent:var(--red-l);">
+        <span class="b-ribbon" style="background:var(--red);color:#fff;">🔥 POPULAR</span>
+        <div class="b-head">
+          <div class="b-icon">🔥</div>
+          <h3 class="b-name">Pack Mega</h3>
+          <p class="b-sub" style="color:var(--red-l);">4 Eventos Principales</p>
+          <p class="b-desc">Los 4 eventos más grandes con todos sus días. El favorito de la comunidad.</p>
+        </div>
+        <div class="b-body">
+          <div class="b-events">
+            <span class="b-tag" style="border-color:rgba(255,215,0,.3);color:rgba(255,215,0,.7);">🏆 Starlympic</span>
+            <span class="b-tag" style="border-color:rgba(245,197,24,.3);color:rgba(245,197,24,.7);">❤ LOL × 3d</span>
+            <span class="b-tag" style="border-color:rgba(0,180,255,.3);color:rgba(0,180,255,.7);">⚡ DMD × 2d</span>
+            <span class="b-tag" style="border-color:rgba(232,115,138,.3);color:rgba(232,115,138,.7);">🎵 Perth × 2d</span>
+          </div>
+          <ul class="b-list">
+            <li>Starlympic + LOL 3 días + DMD Land 2 días + Perth Santa 2 días</li>
+            <li>8 días totales de streaming en vivo</li>
+            <li>Subtítulos en español incluidos</li>
+          </ul>
+        </div>
+        <div class="b-foot" data-usd="11">
+          <div>
+            <div class="bp-old">$12.50 USD</div>
+            <div class="bp-new"><sup>$</sup>11<sup>USD</sup></div>
+            <div class="bp-save">✓ Ahorras $1.50</div>
+            <div class="b-currencies" data-currencies></div>
+          </div>
+          <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn">🎫 LO QUIERO</a>
+        </div>
+      </div>
+
+      <!-- 🎵 PACK CONCIERTOS -->
+      <div class="bundle-card" style="--accent:#e8738a;">
+        <div class="b-head">
+          <div class="b-icon">🎵</div>
+          <h3 class="b-name">Pack Conciertos</h3>
+          <p class="b-sub" style="color:#e8738a;">3 Conciertos · 7 Días</p>
+          <p class="b-desc">Los 3 conciertos completos con todos sus días. Pura música y emoción.</p>
+        </div>
+        <div class="b-body">
+          <div class="b-events">
+            <span class="b-tag" style="border-color:rgba(245,197,24,.3);color:rgba(245,197,24,.7);">❤ LOL × 3d</span>
+            <span class="b-tag" style="border-color:rgba(232,115,138,.3);color:rgba(232,115,138,.7);">🎵 Perth Santa × 2d</span>
+            <span class="b-tag" style="border-color:rgba(0,180,255,.3);color:rgba(0,180,255,.7);">⚡ DMD Land × 2d</span>
+          </div>
+          <ul class="b-list">
+            <li>Love Out Loud 3 días + Perth Santa 2 días + DMD Land 2 días</li>
+            <li>7 días de conciertos en vivo</li>
+            <li>Subtítulos en español incluidos</li>
+          </ul>
+        </div>
+        <div class="b-foot" data-usd="9">
+          <div>
+            <div class="bp-old">$10.00 USD</div>
+            <div class="bp-new"><sup>$</sup>9<sup>USD</sup></div>
+            <div class="bp-save">✓ Ahorras $1.00</div>
+            <div class="b-currencies" data-currencies></div>
+          </div>
+          <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn">🎫 LO QUIERO</a>
+        </div>
+      </div>
+
+      <!-- 📅 PACK MAYO -->
+      <div class="bundle-card" style="--accent:#00b4ff;">
+        <div class="b-head">
+          <div class="b-icon">📅</div>
+          <h3 class="b-name">Pack Mayo</h3>
+          <p class="b-sub" style="color:#00b4ff;">Eventos de Mayo · 6 Días</p>
+          <p class="b-desc">Todos los eventos del mes de mayo juntos a precio especial.</p>
+        </div>
+        <div class="b-body">
+          <div class="b-events">
+            <span class="b-tag" style="border-color:rgba(0,180,255,.3);color:rgba(0,180,255,.7);">⚡ DMD Land × 2d</span>
+            <span class="b-tag" style="border-color:rgba(245,197,24,.3);color:rgba(245,197,24,.7);">❤ LOL × 3d</span>
+            <span class="b-tag" style="border-color:rgba(77,148,255,.3);color:rgba(77,148,255,.7);">🏅 Olympop 2</span>
+          </div>
+          <ul class="b-list">
+            <li>DMD Land 2 días + Love Out Loud 3 días + Olympop 2</li>
+            <li>6 días de streaming en mayo</li>
+            <li>Del 2 al 24 de mayo 2026</li>
+          </ul>
+        </div>
+        <div class="b-foot" data-usd="8">
+          <div>
+            <div class="bp-old">$9.00 USD</div>
+            <div class="bp-new"><sup>$</sup>8<sup>USD</sup></div>
+            <div class="bp-save">✓ Ahorras $1.00</div>
+            <div class="b-currencies" data-currencies></div>
+          </div>
+          <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn">🎫 LO QUIERO</a>
+        </div>
+      </div>
+
+      <!-- 🏆 PACK SPORT -->
+      <div class="bundle-card" style="--accent:#FFD700;">
+        <div class="b-head">
+          <div class="b-icon">🏆</div>
+          <h3 class="b-name">Pack Sport Day</h3>
+          <p class="b-sub" style="color:#FFD700;">2 Sport Days GMMTV</p>
+          <p class="b-desc">Las 2 competencias deportivas de GMMTV juntas. Pura adrenalina y diversión.</p>
+        </div>
+        <div class="b-body">
+          <div class="b-events">
+            <span class="b-tag" style="border-color:rgba(255,215,0,.3);color:rgba(255,215,0,.7);">🏆 Starlympic</span>
+            <span class="b-tag" style="border-color:rgba(77,148,255,.3);color:rgba(77,148,255,.7);">🏅 Olympop 2</span>
+          </div>
+          <ul class="b-list">
+            <li>Starlympic + Olympop 2 Sport Day</li>
+            <li>Fútbol, básquet, relevos y más</li>
+            <li>Subs en español incluidos</li>
+          </ul>
+        </div>
+        <div class="b-foot" data-usd="4">
+          <div>
+            <div class="bp-old">$4.50 USD</div>
+            <div class="bp-new"><sup>$</sup>4<sup>USD</sup></div>
+            <div class="bp-save">✓ Ahorras $0.50</div>
+            <div class="b-currencies" data-currencies></div>
+          </div>
+          <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn">🎫 LO QUIERO</a>
+        </div>
+      </div>
+
+      <!-- 💫 PACK FAN MEETINGS -->
+      <div class="bundle-card" style="--accent:#00c9b1;">
+        <div class="b-head">
+          <div class="b-icon">💫</div>
+          <h3 class="b-name">Pack Fan Meetings</h3>
+          <p class="b-sub" style="color:#00c9b1;">2 Fan Meets · Abril</p>
+          <p class="b-desc">Los 2 fan meetings de abril back-to-back. Un fin de semana especial en Bangkok.</p>
+        </div>
+        <div class="b-body">
+          <div class="b-events">
+            <span class="b-tag" style="border-color:rgba(245,182,58,.3);color:rgba(245,182,58,.7);">🌿 Surf Java</span>
+            <span class="b-tag" style="border-color:rgba(0,201,177,.3);color:rgba(0,201,177,.7);">🌊 Sea Keen</span>
+          </div>
+          <ul class="b-list">
+            <li>Surf Java + Sea Keen Fan Meeting</li>
+            <li>Sáb 25 + Dom 26 de abril 2026</li>
+            <li>Streaming privado desde Bangkok</li>
+          </ul>
+        </div>
+        <div class="b-foot" data-usd="3.5">
+          <div>
+            <div class="bp-old">$4.00 USD</div>
+            <div class="bp-new"><sup>$</sup>3<sup>.50 USD</sup></div>
+            <div class="bp-save">✓ Ahorras $0.50</div>
+            <div class="b-currencies" data-currencies></div>
+          </div>
+          <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn">🎫 LO QUIERO</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NOTA PACK PERSONALIZADO -->
+    <div class="b-custom">
+      <p>💡 ¿Quieres combinar otros eventos? <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener">Escríbenos por Telegram</a> y te armamos un pack a tu medida con precio especial.</p>
+    </div>
+
   </div>
 </section>
 
@@ -1226,6 +1677,29 @@
   document.addEventListener('click', e => {
     if (!burger.contains(e.target) && !navLinks.contains(e.target)) closeBurger();
   });
+
+  /* ── Bundle currency conversion ── */
+  (async function loadBundleRates() {
+    try {
+      const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
+      const data = await res.json();
+      if (data.result !== 'success') return;
+      const MXN = data.rates.MXN;
+      const EUR = data.rates.EUR;
+      const CLP = data.rates.CLP;
+
+      document.querySelectorAll('[data-usd]').forEach(el => {
+        const usd = parseFloat(el.dataset.usd);
+        const container = el.querySelector('[data-currencies]');
+        if (!container) return;
+        container.innerHTML = `
+          <span class="b-cur">🇲🇽 <b>$${(usd * MXN).toFixed(0)} MXN</b></span>
+          <span class="b-cur">🇪🇺 <b>€${(usd * EUR).toFixed(2)} EUR</b></span>
+          <span class="b-cur">🇨🇱 <b>$${(usd * CLP).toLocaleString('es-CL', {maximumFractionDigits:0})} CLP</b></span>
+        `;
+      });
+    } catch (e) { /* silently fail */ }
+  })();
 </script>
 </body>
 </html>
