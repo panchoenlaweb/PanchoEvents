@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMD LAND 3 : THE FINAL LAND — Land of Fusion</title>
+    <link rel="icon" type="image/png" href="/dmdland3/dmdland3.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue:       #0077cc;
+            --blue-light: #00b4ff;
+            --blue-glow:  rgba(0,140,255,0.50);
+            --cyan:       #00e5ff;
+            --dark:       #060a14;
+            --card:       #0c1220;
+            --card2:      #111828;
+            --border:     rgba(0,120,220,0.28);
+            --text:       #d8e2f0;
+            --muted:      #556;
+        }
+
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        body {
+            background: var(--dark);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ── CANVAS ── */
+        #bg-canvas {
+            position: fixed; inset: 0;
+            width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        /* ── LAYOUT HELPERS ── */
+        .wrapper { max-width: 1160px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        section { padding: 90px 0; position: relative; z-index: 1; }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            font-weight: 700;
+            letter-spacing: .35em;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 90px; height: 2px;
+            background: linear-gradient(to right, transparent, var(--blue-light), transparent);
+            margin: 12px auto 0;
+        }
+
+        /* ── NAV DOTS ── */
+        .nav-dots {
+            position: fixed; right: 18px; top: 50%;
+            transform: translateY(-50%);
+            z-index: 200;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .nav-dot {
+            width: 9px; height: 9px; border-radius: 50%;
+            border: 1px solid var(--blue);
+            background: transparent; cursor: pointer;
+            transition: background .25s, box-shadow .25s;
+        }
+        .nav-dot.active {
+            background: var(--blue-light);
+            box-shadow: 0 0 10px var(--blue-glow);
+        }
+        @media (max-width: 600px) { .nav-dots { display: none; } }
+
+        /* ─────────────────────────────────────────
+           HERO
+        ───────────────────────────────────────── */
+        #hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 0;
+            position: relative;
+            background: url('/dmdland3/dmdland3.jpg') center center / cover no-repeat;
+        }
+        #hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(4,8,20,.50) 0%,
+                rgba(4,8,20,.30) 40%,
+                rgba(4,8,20,.40) 70%,
+                rgba(4,8,20,.75) 100%
+            );
+            z-index: 1;
+        }
+
+        /* scanline */
+        #hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,.06) 0px,
+                rgba(0,0,0,.06) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-inner { position: relative; z-index: 2; padding: 20px; }
+        .scroll-hint { z-index: 2; }
+
+        .event-badge {
+            display: inline-block;
+            font-family: 'Orbitron', monospace;
+            font-size: .7rem;
+            letter-spacing: .5em;
+            color: var(--cyan);
+            border: 1px solid var(--blue);
+            padding: 4px 18px;
+            margin-bottom: 16px;
+        }
+
+        .subs-badge {
+            display: inline-block;
+            position: relative;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.6rem, 2vw, .82rem);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #0066ff, #00ccff, #0066ff);
+            background-size: 200% 200%;
+            color: #fff;
+            padding: 10px 30px;
+            margin-bottom: 28px;
+            border: none;
+            clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+            animation: subsShimmer 2.5s ease infinite, subsGlow 1.4s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(0,200,255,.6);
+            font-weight: 700;
+        }
+        @keyframes subsShimmer {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes subsGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(0,180,255,.4), 0 0 30px rgba(0,200,255,.15); filter: brightness(1); }
+            50%       { box-shadow: 0 0 20px rgba(0,200,255,.7), 0 0 50px rgba(0,220,255,.3); filter: brightness(1.15); }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.2rem, 8vw, 7rem);
+            font-weight: 900;
+            letter-spacing: .08em;
+            line-height: 1.05;
+            padding: 0.05em 0;
+            text-transform: uppercase;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            background: linear-gradient(140deg, #fff 0%, #a0c4e8 30%, #fff 55%, #7eb8e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 40px rgba(0,140,255,.45));
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Exo 2', sans-serif;
+            font-size: clamp(.85rem, 3vw, 1.8rem);
+            letter-spacing: .45em;
+            color: var(--cyan);
+            text-shadow: 0 0 25px var(--blue-glow);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .hero-edition {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.6rem, 1.5vw, .9rem);
+            letter-spacing: .9em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .hero-dates {
+            display: flex; gap: 18px;
+            justify-content: center; flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .date-badge {
+            border: 1px solid var(--blue);
+            background: rgba(0,100,200,.12);
+            padding: 10px 26px;
+            font-family: 'Orbitron', monospace;
+            font-size: .82rem;
+            letter-spacing: .08em;
+        }
+        .date-badge small {
+            display: block;
+            font-size: .58rem;
+            color: #8ab;
+            letter-spacing: .25em;
+            margin-bottom: 3px;
+        }
+
+        .hero-meta {
+            display: flex; flex-direction: column; gap: 8px;
+            align-items: center;
+            font-size: 1.05rem; letter-spacing: .08em; color: #bcd;
+        }
+        .hero-meta b { color: var(--blue-light); }
+
+        /* ── HERO BUTTONS ── */
+        .hero-btns {
+            display: flex; gap: 16px; justify-content: center;
+            flex-wrap: wrap; margin-top: 32px;
+        }
+
+        .btn-reserve {
+            font-family: 'Orbitron', monospace;
+            font-size: .82rem; letter-spacing: .25em; text-transform: uppercase;
+            padding: 15px 36px;
+            background: var(--blue);
+            color: #fff; border: none; cursor: pointer;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: background .25s, box-shadow .25s;
+        }
+        .btn-reserve:hover {
+            background: var(--blue-light);
+            box-shadow: 0 0 28px rgba(0,180,255,.5);
+        }
+        .btn-stream {
+            font-family: 'Orbitron', monospace;
+            font-size: .82rem; letter-spacing: .25em; text-transform: uppercase;
+            padding: 15px 36px;
+            background: rgba(0,100,200,.18);
+            color: var(--blue-light); border: 1px solid var(--blue); cursor: pointer;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: background .25s, box-shadow .25s;
+        }
+        .btn-stream:hover {
+            background: rgba(0,120,220,.35);
+            box-shadow: 0 0 28px rgba(0,180,255,.4);
+        }
+        .btn-stream .lock-icon { margin-right: 8px; }
+        .btn-stream-wrap { position: relative; display: inline-block; }
+
+        .scroll-hint {
+            position: absolute; bottom: 32px; left: 50%;
+            transform: translateX(-50%); z-index: 2;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        .scroll-hint span {
+            display: block; width: 18px; height: 18px;
+            border-right: 2px solid var(--blue);
+            border-bottom: 2px solid var(--blue);
+            transform: rotate(45deg);
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50%        { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* ─────────────────────────────────────────
+           COUNTDOWN
+        ───────────────────────────────────────── */
+        #countdown { background: linear-gradient(180deg, transparent, rgba(0,80,180,.05), transparent); }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px; max-width: 860px; margin: 0 auto;
+        }
+        @media (max-width: 580px) { .countdown-grid { grid-template-columns: 1fr; } }
+
+        .cd-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 32px 24px;
+            text-align: center;
+            position: relative; overflow: hidden;
+            transition: box-shadow .4s, border-color .4s;
+        }
+        .cd-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(to right, transparent, var(--blue-light), transparent);
+        }
+        .cd-card.active {
+            border-color: rgba(0,140,255,.6);
+            box-shadow: 0 0 40px rgba(0,140,255,.18), inset 0 0 30px rgba(0,140,255,.04);
+        }
+        .cd-card.ended .cd-day-label { color: #0f0; }
+
+        .cd-day-label {
+            font-family: 'Orbitron', monospace;
+            font-size: .75rem; letter-spacing: .3em;
+            color: var(--blue-light); margin-bottom: 24px;
+            text-transform: uppercase;
+        }
+
+        .timer {
+            display: flex; align-items: center;
+            justify-content: center; gap: 4px;
+        }
+
+        .t-block { display: flex; flex-direction: column; align-items: center; min-width: 58px; }
+
+        .t-num {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2rem, 6vw, 3.6rem);
+            font-weight: 700; color: #fff; line-height: 1;
+            text-shadow: 0 0 18px rgba(0,180,255,.3);
+        }
+
+        .t-lbl {
+            font-size: .58rem; letter-spacing: .2em;
+            color: var(--muted); text-transform: uppercase; margin-top: 5px;
+        }
+
+        .t-sep {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            color: var(--blue-light); line-height: .9;
+            margin-bottom: 12px;
+            animation: blink 1s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .cd-status {
+            margin-top: 14px; font-size: .75rem;
+            letter-spacing: .12em; color: var(--muted);
+        }
+
+        @keyframes numFlip {
+            0%   { transform: translateY(-8px); opacity: 0; }
+            100% { transform: translateY(0);    opacity: 1; }
+        }
+        .num-anim { animation: numFlip .2s ease-out; }
+
+        /* ─────────────────────────────────────────
+           TIMEZONES
+        ───────────────────────────────────────── */
+        #timezones { background: rgba(0,0,0,.3); }
+
+        .tz-subtitle {
+            text-align: center;
+            color: var(--muted); font-size: .88rem;
+            letter-spacing: .1em;
+            margin-top: -42px; margin-bottom: 48px;
+        }
+
+        .region-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 28px;
+        }
+        @media (max-width: 900px)  { .region-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 560px)  { .region-grid { grid-template-columns: 1fr; } }
+
+        .region-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .region-header {
+            background: rgba(0,100,200,.18);
+            padding: 13px 18px;
+            font-family: 'Orbitron', monospace;
+            font-size: .72rem; letter-spacing: .3em;
+            color: var(--blue-light);
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+        }
+
+        .tz-list { list-style: none; padding: 8px 12px; }
+
+        .tz-item {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 9px 6px;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            gap: 10px;
+        }
+        .tz-item:last-child { border-bottom: none; }
+        .tz-item.ev-tz { background: rgba(0,100,200,.08); }
+        .tz-item.ev-tz .tz-name { color: var(--blue-light); font-weight: 700; }
+
+        .tz-name { font-size: .9rem; font-weight: 500; white-space: nowrap; }
+
+        .tz-times { text-align: right; flex-shrink: 0; }
+        .tz-t1 { font-family: 'Orbitron', monospace; font-size: .72rem; color: var(--text); }
+        .tz-t2 { font-family: 'Orbitron', monospace; font-size: .62rem; color: var(--muted); }
+        .tz-dlbl { font-size: .55rem; color: var(--blue-light); letter-spacing: .1em; }
+
+        /* ─────────────────────────────────────────
+           TICKETS / PRICES
+        ───────────────────────────────────────── */
+        #tickets { background: linear-gradient(180deg, rgba(0,60,140,.04), transparent); }
+
+        .price-opts {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 28px; max-width: 540px; margin: 0 auto 54px;
+        }
+        @media (max-width: 480px) { .price-opts { grid-template-columns: 1fr; max-width: 280px; } }
+
+        .p-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 28px 20px; text-align: center;
+            position: relative;
+        }
+        .p-card.featured {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 35px rgba(0,140,255,.18);
+        }
+        .feat-badge {
+            position: absolute; top: -11px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--blue); color: #fff;
+            font-family: 'Orbitron', monospace;
+            font-size: .58rem; letter-spacing: .2em; padding: 3px 14px;
+            white-space: nowrap;
+        }
+        .p-card-name {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.05rem; letter-spacing: .2em; margin-bottom: 10px;
+        }
+        .p-usd {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.6rem; font-weight: 700; color: var(--blue-light);
+        }
+        .p-usd sup { font-size: 1rem; vertical-align: super; color: var(--muted); }
+        .p-desc { font-size: .78rem; color: var(--muted); margin-top: 8px; letter-spacing: .08em; }
+
+        /* Table */
+        .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); }
+        .ctbl { width: 100%; border-collapse: collapse; font-size: .93rem; }
+        .ctbl thead tr { background: rgba(0,100,200,.18); }
+        .ctbl th {
+            padding: 13px 20px; text-align: left;
+            font-family: 'Orbitron', monospace;
+            font-size: .68rem; letter-spacing: .2em;
+            color: var(--blue-light);
+            border-bottom: 1px solid rgba(0,120,220,.4);
+        }
+        .ctbl td { padding: 11px 20px; border-bottom: 1px solid rgba(255,255,255,.04); }
+        .ctbl tr:hover td { background: rgba(255,255,255,.025); }
+        .ctbl .reg-sep td {
+            background: rgba(0,100,200,.1);
+            color: var(--blue-light);
+            font-family: 'Orbitron', monospace;
+            font-size: .65rem; letter-spacing: .3em;
+            padding: 8px 20px; border-bottom: 1px solid var(--border);
+        }
+        .c-flag  { font-size: 1.1rem; margin-right: 8px; }
+        .c-name  { font-weight: 500; }
+        .c-code  { font-family: 'Orbitron', monospace; font-size: .68rem; color: var(--muted); }
+        .p1d     { font-family: 'Orbitron', monospace; font-weight: 700; }
+        .p2d     { font-family: 'Orbitron', monospace; font-weight: 700; color: var(--blue-light); }
+
+        .price-note {
+            text-align: center; font-size: .78rem;
+            color: var(--muted); margin-top: 18px; letter-spacing: .06em;
+        }
+
+        .spinner {
+            text-align: center; padding: 48px;
+            font-family: 'Orbitron', monospace; font-size: .75rem;
+            letter-spacing: .2em; color: var(--muted);
+        }
+        .spinner::after {
+            content: '';
+            display: inline-block; width: 18px; height: 18px;
+            border: 2px solid rgba(0,120,220,.3);
+            border-top-color: var(--blue-light);
+            border-radius: 50%; margin-left: 10px;
+            vertical-align: middle;
+            animation: spin .8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--border);
+            text-align: center; padding: 38px 20px;
+            font-size: .78rem; color: var(--muted); letter-spacing: .1em;
+        }
+        .hashtag { color: var(--blue-light); font-weight: 600; }
+
+        /* ══════════════════════════════
+           MOBILE — 640px
+        ══════════════════════════════ */
+        @media (max-width: 640px) {
+            section { padding: 56px 0; }
+            .wrapper { padding: 0 16px; }
+            .section-title { letter-spacing: .18em; margin-bottom: 36px; }
+
+            .hero-inner { padding: 80px 18px 40px; }
+            .event-badge { font-size: .6rem; letter-spacing: .3em; padding: 4px 12px; }
+            .hero-subtitle { letter-spacing: .2em; }
+            .hero-edition { letter-spacing: .35em; font-size: .65rem; }
+
+            .hero-meta { font-size: .88rem; gap: 6px; }
+            .hero-meta span {
+                display: flex; flex-wrap: wrap;
+                justify-content: center; gap: 4px;
+                text-align: center;
+            }
+
+            .hero-btns {
+                flex-direction: column; align-items: stretch;
+                gap: 12px; padding: 0 8px;
+            }
+            .btn-reserve, .btn-stream {
+                width: 100%; clip-path: none;
+                padding: 16px 20px; font-size: .78rem; letter-spacing: .18em;
+            }
+            .btn-stream-wrap { width: 100%; }
+
+            .cd-card { padding: 24px 14px; }
+            .cd-day-label { font-size: .65rem; letter-spacing: .18em; }
+            .t-block { min-width: 46px; }
+            .t-lbl { font-size: .52rem; }
+
+            .tz-subtitle { font-size: .78rem; letter-spacing: .06em; margin-top: -28px; }
+            .tz-name { font-size: .82rem; }
+            .tz-t1 { font-size: .64rem; }
+            .tz-t2 { font-size: .56rem; }
+
+            .price-opts { max-width: 100%; gap: 20px; padding: 0 4px; }
+            .p-usd { font-size: 2.2rem; }
+
+            .ctbl { font-size: .82rem; }
+            .ctbl th, .ctbl td { padding: 9px 12px; }
+            .c-flag { font-size: .95rem; margin-right: 5px; }
+        }
+
+        @media (max-width: 400px) {
+            .hero-title { letter-spacing: .04em; font-size: clamp(1.8rem, 11vw, 7rem); }
+            .hero-subtitle { font-size: clamp(.75rem, 4.5vw, 1.2rem); letter-spacing: .12em; }
+            .date-badge { padding: 8px 14px; font-size: .72rem; }
+            .t-sep { font-size: clamp(1.4rem, 5vw, 2rem); }
+            .ctbl th { font-size: .58rem; letter-spacing: .1em; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots" aria-label="Navegación por secciones">
+    <div class="nav-dot active"  title="Inicio"         onclick="scrollTo('hero')"></div>
+    <div class="nav-dot"         title="Cuenta regresiva" onclick="scrollTo('countdown')"></div>
+    <div class="nav-dot"         title="Horarios"        onclick="scrollTo('timezones')"></div>
+    <div class="nav-dot"         title="Entradas"        onclick="scrollTo('tickets')"></div>
+</nav>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section id="hero">
+    <div class="hero-inner">
+        <div class="subs-badge">⚡ ¡ÚNICOS CON SUBTÍTULOS EN ESPAÑOL! ⚡</div>
+
+        <h1 class="hero-title">DMD LAND 3</h1>
+        <h2 class="hero-subtitle">THE FINAL LAND</h2>
+        <p  class="hero-edition">— &nbsp; L A N D &nbsp; O F &nbsp; F U S I O N &nbsp; —</p>
+
+        <div class="hero-dates">
+            <div class="date-badge"><small>DÍA 1</small>SAB 02 · MAY · 2026</div>
+            <div class="date-badge"><small>DÍA 2</small>DOM 03 · MAY · 2026</div>
+        </div>
+
+        <div class="hero-meta">
+            <span>📍 <b>IMPACT Arena, Muang Thong Thani</b> &nbsp;·&nbsp; Bangkok, Thailand</span>
+            <span>⏰ Día 1: <b>10:00 AM</b> &nbsp;|&nbsp; Día 2: <b>4:00 PM</b> &nbsp;(GMT+7)</span>
+        </div>
+
+        <div class="hero-btns">
+            <button class="btn-reserve" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">🎟 Reservar Entrada</button>
+            <div class="btn-stream-wrap">
+                <button class="btn-stream" onclick="window.location.href='https://www.panchoenlared.com/dmdland3/stream'">
+                    <span class="lock-icon">📺</span>Ver Transmisión
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span></span></div>
+</section>
+
+<!-- ════════════════════ COUNTDOWN ════════════════════ -->
+<section id="countdown">
+    <div class="wrapper">
+        <h2 class="section-title">Cuenta Regresiva</h2>
+
+        <div class="countdown-grid">
+            <!-- Day 1 -->
+            <div class="cd-card active" id="cd1">
+                <p class="cd-day-label">Día 1 — Sáb 02 Mayo</p>
+                <div class="timer">
+                    <div class="t-block"><span class="t-num" id="d1d">--</span><span class="t-lbl">días</span></div>
+                    <span class="t-sep">:</span>
+                    <div class="t-block"><span class="t-num" id="d1h">--</span><span class="t-lbl">horas</span></div>
+                    <span class="t-sep">:</span>
+                    <div class="t-block"><span class="t-num" id="d1m">--</span><span class="t-lbl">min</span></div>
+                    <span class="t-sep">:</span>
+                    <div class="t-block"><span class="t-num" id="d1s">--</span><span class="t-lbl">seg</span></div>
+                </div>
+                <p class="cd-status" id="st1">10:00 AM · Bangkok (GMT+7)</p>
+            </div>
+            <!-- Day 2 -->
+            <div class="cd-card" id="cd2">
+                <p class="cd-day-label">Día 2 — Dom 03 Mayo</p>
+                <div class="timer">
+                    <div class="t-block"><span class="t-num" id="d2d">--</span><span class="t-lbl">días</span></div>
+                    <span class="t-sep">:</span>
+                    <div class="t-block"><span class="t-num" id="d2h">--</span><span class="t-lbl">horas</span></div>
+                    <span class="t-sep">:</span>
+                    <div class="t-block"><span class="t-num" id="d2m">--</span><span class="t-lbl">min</span></div>
+                    <span class="t-sep">:</span>
+                    <div class="t-block"><span class="t-num" id="d2s">--</span><span class="t-lbl">seg</span></div>
+                </div>
+                <p class="cd-status" id="st2">4:00 PM · Bangkok (GMT+7)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ TIMEZONES ════════════════════ -->
+<section id="timezones">
+    <div class="wrapper">
+        <h2 class="section-title">Horarios Mundiales</h2>
+        <p class="tz-subtitle">Día 1: 10:00 AM Bangkok (GMT+7) · Día 2: 4:00 PM Bangkok (GMT+7)</p>
+        <div class="region-grid" id="tz-grid"></div>
+    </div>
+</section>
+
+<!-- ════════════════════ TICKETS ════════════════════ -->
+<section id="tickets">
+    <div class="wrapper">
+        <h2 class="section-title">Precios Online (Reventa)</h2>
+
+        <div class="price-opts">
+            <div class="p-card">
+                <p class="p-card-name">1 Día</p>
+                <p class="p-usd"><sup>$</sup>2 <sup style="font-size:.7rem">USD</sup></p>
+                <p class="p-desc">Día 1 O Día 2</p>
+            </div>
+            <div class="p-card featured">
+                <div class="feat-badge">MEJOR OPCIÓN</div>
+                <p class="p-card-name">2 Días</p>
+                <p class="p-usd"><sup>$</sup>3 <sup style="font-size:.7rem">USD</sup></p>
+                <p class="p-desc">Día 1 + Día 2</p>
+            </div>
+        </div>
+
+        <div id="prices-box"><div class="spinner">Cargando precios actualizados</div></div>
+        <p class="price-note" id="rate-note"></p>
+    </div>
+</section>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer>
+    <p><span class="hashtag">#DMDLAND3</span> &nbsp;·&nbsp; <span class="hashtag">#LandOfFusion</span> &nbsp;·&nbsp; <span class="hashtag">#TheFinalLand</span></p>
+    <p style="margin-top:10px">¿Dudas o soporte? Escríbeme en Telegram: <a href="https://t.me/panchoenlared" target="_blank" style="color:var(--blue-light);text-decoration:none">@panchoenlared</a></p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   CANVAS STARFIELD
+═══════════════════════════════════════ */
+(function () {
+    const cv = document.getElementById('bg-canvas');
+    const ctx = cv.getContext('2d');
+    let W, H, stars;
+
+    function resize() {
+        W = cv.width  = window.innerWidth;
+        H = cv.height = window.innerHeight;
+    }
+
+    function mkStars(n) {
+        stars = Array.from({ length: n }, () => ({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.4 + .2,
+            a: Math.random(),
+            da: (Math.random() * .015 + .004) * (Math.random() > .5 ? 1 : -1)
+        }));
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // soft blue glows
+        [[.35, .4, .38], [.68, .52, .32]].forEach(([cx, cy, r]) => {
+            const g = ctx.createRadialGradient(W * cx, H * cy, 0, W * cx, H * cy, W * r);
+            g.addColorStop(0, 'rgba(0,80,200,.05)'); g.addColorStop(1, 'transparent');
+            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        });
+
+        stars.forEach(s => {
+            s.a += s.da;
+            if (s.a > 1 || s.a < 0) s.da *= -1;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(180,210,255,${Math.max(0, Math.min(1, s.a))})`;
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+
+    resize(); mkStars(250); draw();
+    window.addEventListener('resize', () => { resize(); mkStars(250); });
+})();
+
+/* ═══════════════════════════════════════
+   NAV DOTS SCROLL SYNC
+═══════════════════════════════════════ */
+function scrollTo(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+(function () {
+    const ids  = ['hero', 'countdown', 'timezones', 'tickets'];
+    const dots = document.querySelectorAll('.nav-dot');
+    function sync() {
+        const mid = window.scrollY + window.innerHeight * .45;
+        ids.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (mid >= el.offsetTop && mid < el.offsetTop + el.offsetHeight) {
+                dots.forEach(d => d.classList.remove('active'));
+                dots[i] && dots[i].classList.add('active');
+            }
+        });
+    }
+    window.addEventListener('scroll', sync, { passive: true });
+})();
+
+/* ═══════════════════════════════════════
+   COUNTDOWN
+   Day 1 → 2026-05-02 03:00 UTC  (10:00 AM Bangkok GMT+7)
+   Day 2 → 2026-05-03 09:00 UTC  (4:00 PM Bangkok GMT+7)
+═══════════════════════════════════════ */
+const EV1 = new Date('2026-05-02T03:00:00Z');
+const EV2 = new Date('2026-05-03T09:00:00Z');
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function setNum(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const s = pad(val);
+    if (el.textContent !== s) {
+        el.textContent = s;
+        el.classList.remove('num-anim');
+        void el.offsetWidth;
+        el.classList.add('num-anim');
+    }
+}
+
+function tickCD(ev, pfx, stId, cardId) {
+    const diff = ev - Date.now();
+    const card = document.getElementById(cardId);
+    const st   = document.getElementById(stId);
+
+    if (diff <= 0) {
+        ['d','h','m','s'].forEach(u => setNum(pfx + u, 0));
+        if (st) st.textContent = '🎉 ¡El evento ha comenzado!';
+        card && card.classList.add('ended');
+        return;
+    }
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
+
+    setNum(pfx + 'd', d);
+    setNum(pfx + 'h', h);
+    setNum(pfx + 'm', m);
+    setNum(pfx + 's', s);
+}
+
+function tickAll() {
+    tickCD(EV1, 'd1', 'st1', 'cd1');
+    tickCD(EV2, 'd2', 'st2', 'cd2');
+}
+
+tickAll();
+setInterval(tickAll, 1000);
+
+/* ═══════════════════════════════════════
+   TIMEZONES
+═══════════════════════════════════════ */
+const TZ_DATA = {
+    'América Latina': [
+        { flag: '🇲🇽', name: 'México',           city: 'Ciudad de México', tz: 'America/Mexico_City' },
+        { flag: '🇨🇴', name: 'Colombia',          city: 'Bogotá',           tz: 'America/Bogota'      },
+        { flag: '🇵🇪', name: 'Perú',              city: 'Lima',             tz: 'America/Lima'        },
+        { flag: '🇨🇱', name: 'Chile',             city: 'Santiago',         tz: 'America/Santiago'    },
+        { flag: '🇦🇷', name: 'Argentina',         city: 'Buenos Aires',     tz: 'America/Argentina/Buenos_Aires' },
+        { flag: '🇧🇷', name: 'Brasil',            city: 'São Paulo',        tz: 'America/Sao_Paulo'   },
+        { flag: '🇻🇪', name: 'Venezuela',         city: 'Caracas',          tz: 'America/Caracas'     },
+        { flag: '🇺🇸', name: 'EE.UU. (NY)',       city: 'Nueva York',       tz: 'America/New_York'    },
+    ],
+    'Europa': [
+        { flag: '🇪🇸', name: 'España',            city: 'Madrid',           tz: 'Europe/Madrid'   },
+        { flag: '🇬🇧', name: 'Reino Unido',        city: 'Londres',          tz: 'Europe/London'   },
+        { flag: '🇫🇷', name: 'Francia',           city: 'París',            tz: 'Europe/Paris'    },
+        { flag: '🇩🇪', name: 'Alemania',          city: 'Berlín',           tz: 'Europe/Berlin'   },
+        { flag: '🇮🇹', name: 'Italia',            city: 'Roma',             tz: 'Europe/Rome'     },
+        { flag: '🇵🇹', name: 'Portugal',          city: 'Lisboa',           tz: 'Europe/Lisbon'   },
+        { flag: '🇷🇺', name: 'Rusia',             city: 'Moscú',            tz: 'Europe/Moscow'   },
+        { flag: '🇵🇱', name: 'Polonia',           city: 'Varsovia',         tz: 'Europe/Warsaw'   },
+    ],
+    'Asia': [
+        { flag: '🇹🇭', name: 'Tailandia ★',      city: 'Bangkok',          tz: 'Asia/Bangkok',    isEvent: true },
+        { flag: '🇯🇵', name: 'Japón',             city: 'Tokio',            tz: 'Asia/Tokyo'      },
+        { flag: '🇰🇷', name: 'Corea del Sur',     city: 'Seúl',             tz: 'Asia/Seoul'      },
+        { flag: '🇵🇭', name: 'Filipinas',         city: 'Manila',           tz: 'Asia/Manila'     },
+        { flag: '🇸🇬', name: 'Singapur',          city: 'Singapur',         tz: 'Asia/Singapore'  },
+        { flag: '🇮🇩', name: 'Indonesia',         city: 'Yakarta',          tz: 'Asia/Jakarta'    },
+        { flag: '🇮🇳', name: 'India',             city: 'Mumbai',           tz: 'Asia/Kolkata'    },
+        { flag: '🇨🇳', name: 'China',             city: 'Beijing',          tz: 'Asia/Shanghai'   },
+    ]
+};
+
+function fmtTZ(date, tz) {
+    return new Intl.DateTimeFormat('es', {
+        timeZone: tz,
+        weekday: 'short', day: '2-digit', month: 'short',
+        hour:    '2-digit', minute: '2-digit', hour12: true
+    }).format(date);
+}
+
+(function buildTZ() {
+    const grid = document.getElementById('tz-grid');
+    Object.entries(TZ_DATA).forEach(([region, zones]) => {
+        const card = document.createElement('div');
+        card.className = 'region-card';
+        card.innerHTML = `<div class="region-header">${region}</div>`;
+
+        const ul = document.createElement('ul');
+        ul.className = 'tz-list';
+
+        zones.forEach(z => {
+            const t1 = fmtTZ(EV1, z.tz);
+            const t2 = fmtTZ(EV2, z.tz);
+            const li = document.createElement('li');
+            li.className = 'tz-item' + (z.isEvent ? ' ev-tz' : '');
+            li.innerHTML = `
+                <span class="tz-name">${z.flag} ${z.name}</span>
+                <div class="tz-times">
+                    <div class="tz-t1"><span class="tz-dlbl">D1 · </span>${t1}</div>
+                    <div class="tz-t2"><span class="tz-dlbl">D2 · </span>${t2}</div>
+                </div>`;
+            ul.appendChild(li);
+        });
+
+        card.appendChild(ul);
+        grid.appendChild(card);
+    });
+})();
+
+/* ═══════════════════════════════════════
+   PRICES & EXCHANGE RATES
+═══════════════════════════════════════ */
+const CURRENCIES = [
+    { region: 'América Latina', flag: '🇺🇸', name: 'Dólar Estadounidense', code: 'USD',
+        fmt: v => `$${v.toFixed(2)}` },
+    { region: 'América Latina', flag: '🇲🇽', name: 'Peso Mexicano',        code: 'MXN',
+        fmt: v => `MX$${v.toFixed(2)}` },
+    { region: 'América Latina', flag: '🇨🇴', name: 'Peso Colombiano',      code: 'COP',
+        fmt: v => `COP$${Math.round(v).toLocaleString('es-CO')}` },
+    { region: 'América Latina', flag: '🇧🇷', name: 'Real Brasileño',       code: 'BRL',
+        fmt: v => `R$${v.toFixed(2)}` },
+    { region: 'América Latina', flag: '🇦🇷', name: 'Peso Argentino *',     code: 'ARS',
+        fmt: v => `AR$${Math.round(v).toLocaleString('es-AR')}` },
+    { region: 'América Latina', flag: '🇨🇱', name: 'Peso Chileno',         code: 'CLP',
+        fmt: v => `CLP$${Math.round(v).toLocaleString('es-CL')}` },
+    { region: 'América Latina', flag: '🇵🇪', name: 'Sol Peruano',          code: 'PEN',
+        fmt: v => `S/${v.toFixed(2)}` },
+    { region: 'América Latina', flag: '🇻🇪', name: 'Bolívar Venezolano',   code: 'VES',
+        fmt: v => `Bs.D ${v.toFixed(2)}` },
+
+    { region: 'Europa', flag: '🇪🇺', name: 'Euro',                code: 'EUR',
+        fmt: v => `€${v.toFixed(2)}` },
+    { region: 'Europa', flag: '🇬🇧', name: 'Libra Esterlina',     code: 'GBP',
+        fmt: v => `£${v.toFixed(2)}` },
+    { region: 'Europa', flag: '🇷🇺', name: 'Rublo Ruso',          code: 'RUB',
+        fmt: v => `₽${v.toFixed(2)}` },
+    { region: 'Europa', flag: '🇵🇱', name: 'Złoty Polaco',        code: 'PLN',
+        fmt: v => `zł${v.toFixed(2)}` },
+    { region: 'Europa', flag: '🇸🇪', name: 'Corona Sueca',        code: 'SEK',
+        fmt: v => `kr${v.toFixed(2)}` },
+
+    { region: 'Asia', flag: '🇹🇭', name: 'Baht Tailandés',        code: 'THB',
+        fmt: v => `฿${v.toFixed(2)}` },
+    { region: 'Asia', flag: '🇯🇵', name: 'Yen Japonés',           code: 'JPY',
+        fmt: v => `¥${Math.round(v).toLocaleString()}` },
+    { region: 'Asia', flag: '🇰🇷', name: 'Won Coreano',           code: 'KRW',
+        fmt: v => `₩${Math.round(v).toLocaleString()}` },
+    { region: 'Asia', flag: '🇵🇭', name: 'Peso Filipino',         code: 'PHP',
+        fmt: v => `₱${v.toFixed(2)}` },
+    { region: 'Asia', flag: '🇸🇬', name: 'Dólar Singapurense',    code: 'SGD',
+        fmt: v => `S$${v.toFixed(2)}` },
+    { region: 'Asia', flag: '🇮🇩', name: 'Rupia Indonesia',       code: 'IDR',
+        fmt: v => `Rp${Math.round(v).toLocaleString('id-ID')}` },
+    { region: 'Asia', flag: '🇮🇳', name: 'Rupia India',           code: 'INR',
+        fmt: v => `₹${v.toFixed(2)}` },
+    { region: 'Asia', flag: '🇨🇳', name: 'Yuan Chino',            code: 'CNY',
+        fmt: v => `¥${v.toFixed(2)}` },
+];
+
+const FB = {
+    USD:1, MXN:18.2, COP:4300, BRL:5.15, ARS:1100, CLP:965, PEN:3.76, VES:56,
+    EUR:0.91, GBP:0.78, RUB:90, PLN:3.98, SEK:10.4,
+    THB:34.5, JPY:148, KRW:1340, PHP:56.5, SGD:1.34, IDR:15900, INR:83.2, CNY:7.25
+};
+
+function renderTable(rates, note, live) {
+    const regions = ['América Latina', 'Europa', 'Asia'];
+    let rows = '';
+
+    regions.forEach(reg => {
+        rows += `<tr class="reg-sep"><td colspan="4">— ${reg} —</td></tr>`;
+        CURRENCIES.filter(c => c.region === reg).forEach(c => {
+            const r  = rates[c.code] ?? FB[c.code] ?? 1;
+            const p1 = c.fmt(2 * r);
+            const p2 = c.fmt(3 * r);
+            rows += `<tr>
+                <td><span class="c-flag">${c.flag}</span><span class="c-name">${c.name}</span></td>
+                <td><span class="c-code">${c.code}</span></td>
+                <td><span class="p1d">${p1}</span></td>
+                <td><span class="p2d">${p2}</span></td>
+            </tr>`;
+        });
+    });
+
+    document.getElementById('prices-box').innerHTML = `
+        <div class="tbl-wrap">
+            <table class="ctbl">
+                <thead><tr>
+                    <th>Moneda</th><th>Código</th>
+                    <th>1 Día &nbsp;(USD 2)</th>
+                    <th>2 Días (USD 3)</th>
+                </tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+
+    document.getElementById('rate-note').innerHTML =
+        `${live ? '🟢 Tasas en tiempo real' : '🟡 Tasas de referencia aproximadas'} &nbsp;·&nbsp; ${note}
+        <br><small>* Peso Argentino: tasa oficial. &nbsp;Precios base: 1 día = USD 2 &nbsp;|&nbsp; 2 días = USD 3</small>`;
+}
+
+async function loadRates() {
+    try {
+        const res  = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data.result !== 'success') throw new Error('API error');
+
+        const t = new Date(data.time_last_update_utc);
+        const note = `Actualizado: ${t.toLocaleDateString('es', {
+            day:'2-digit', month:'long', year:'numeric',
+            hour:'2-digit', minute:'2-digit', timeZone:'UTC'
+        })} UTC`;
+        renderTable(data.rates, note, true);
+    } catch {
+        const today = new Date().toLocaleDateString('es', { day:'2-digit', month:'long', year:'numeric' });
+        renderTable(FB, `Referencia al ${today}`, false);
+    }
+}
+
+loadRates();
+</script>
+</body>
+</html>
