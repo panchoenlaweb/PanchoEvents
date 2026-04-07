@@ -89,7 +89,13 @@
             display: flex; align-items: center; justify-content: center;
             text-align: center; padding: 0;
             position: relative;
+            overflow: hidden;
+        }
+        #hero .hero-bg {
+            position: absolute; inset: -10px;
             background: url('/dmdland3/dmdland3.jpg') center center / cover no-repeat;
+            filter: blur(6px);
+            z-index: 0;
         }
         #hero::before {
             content: '';
@@ -577,6 +583,7 @@
 
 <!-- ════════════════════ HERO ════════════════════ -->
 <section id="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-inner">
         <div class="subs-badge">⚡ ¡ÚNICOS CON SUBTÍTULOS EN ESPAÑOL! ⚡</div>
 
