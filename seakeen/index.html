@@ -154,12 +154,40 @@
             border: 1px solid rgba(245,200,66,.35);
             background: rgba(245,200,66,.06);
             padding: 6px 20px;
-            margin-bottom: 32px;
+            margin-bottom: 16px;
         }
         .event-badge::before, .event-badge::after {
             content: '✦';
             font-size: .5rem;
             color: var(--teal);
+        }
+
+        .subs-badge {
+            display: inline-block;
+            position: relative;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.6rem, 2vw, .82rem);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00c9b1, #4dffd9, #00c9b1);
+            background-size: 200% 200%;
+            color: #fff;
+            padding: 10px 30px;
+            margin-bottom: 32px;
+            border: none;
+            clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+            animation: subsShimmer 2.5s ease infinite, subsGlow 1.4s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(0,201,177,.6);
+            font-weight: 700;
+        }
+        @keyframes subsShimmer {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes subsGlow {
+            0%, 100% { box-shadow: 0 0 12px rgba(0,201,177,.4), 0 0 30px rgba(77,255,217,.15); filter: brightness(1); }
+            50%       { box-shadow: 0 0 20px rgba(0,201,177,.7), 0 0 50px rgba(77,255,217,.3); filter: brightness(1.15); }
         }
 
         .hero-title {
@@ -584,6 +612,7 @@
 
     <div class="hero-inner">
         <div class="event-badge">1ST FAN MEETING · THAILAND</div>
+        <div class="subs-badge">⚡ ¡ÚNICOS CON SUBTÍTULOS EN ESPAÑOL! ⚡</div>
 
         <h1 class="hero-title">SEA&nbsp;KEEN</h1>
         <h2 class="hero-subtitle">1st&nbsp;FAN&nbsp;MEETING</h2>

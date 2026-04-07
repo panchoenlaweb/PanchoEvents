@@ -116,7 +116,35 @@
       letter-spacing: .15em;
       padding: .25rem .75rem;
       border-radius: 2px;
+      margin-bottom: .8rem;
+    }
+
+    .subs-badge {
+      display: inline-block;
+      position: relative;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(.55rem, 2vw, .78rem);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #e50914, #ff4466, #e50914);
+      background-size: 200% 200%;
+      color: #fff;
+      padding: 10px 30px;
       margin-bottom: 1.2rem;
+      border: none;
+      clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+      animation: subsShimmer 2.5s ease infinite, subsGlow 1.4s ease-in-out infinite;
+      text-shadow: 0 0 10px rgba(255,50,80,.6);
+      font-weight: 700;
+    }
+    @keyframes subsShimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes subsGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(229,9,20,.4), 0 0 30px rgba(255,50,80,.15); filter: brightness(1); }
+      50%       { box-shadow: 0 0 20px rgba(255,50,80,.7), 0 0 50px rgba(255,80,100,.3); filter: brightness(1.15); }
     }
 
     .hero-title {
@@ -1130,6 +1158,7 @@
 
   <div class="hero-content">
     <div class="badge-gmm">GMM&nbsp;&nbsp;·&nbsp;&nbsp;G-MM TV&nbsp;&nbsp;·&nbsp;&nbsp;FAN FEST 2026</div>
+    <div class="subs-badge">⚡ ¡ÚNICOS CON SUBTÍTULOS EN ESPAÑOL! ⚡</div>
 
     <h1 class="hero-title">
       Love Out<br><span>Loud</span>

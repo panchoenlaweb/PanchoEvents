@@ -150,10 +150,38 @@
       color: var(--cyan);
       border: 1px solid rgba(0,212,255,.45);
       padding: 5px 20px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       background: rgba(0,212,255,.06);
       backdrop-filter: blur(4px);
       text-transform: uppercase;
+    }
+
+    .subs-badge {
+      display: inline-block;
+      position: relative;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(.55rem, 2vw, .78rem);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #1a6fff, #00d4ff, #1a6fff);
+      background-size: 200% 200%;
+      color: #fff;
+      padding: 10px 30px;
+      margin-bottom: 20px;
+      border: none;
+      clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+      animation: subsShimmer 2.5s ease infinite, subsGlow 1.4s ease-in-out infinite;
+      text-shadow: 0 0 10px rgba(0,180,255,.6);
+      font-weight: 700;
+    }
+    @keyframes subsShimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes subsGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(26,111,255,.4), 0 0 30px rgba(0,180,255,.15); filter: brightness(1); }
+      50%       { box-shadow: 0 0 20px rgba(0,180,255,.7), 0 0 50px rgba(0,212,255,.3); filter: brightness(1.15); }
     }
 
     .hero-title {
@@ -710,6 +738,7 @@
   </div>
   <div class="hero-inner">
     <div class="event-badge">🏅 &nbsp; G · MM · TV · 2026 &nbsp; 🏅</div>
+    <div class="subs-badge">⚡ ¡ÚNICOS CON SUBTÍTULOS EN ESPAÑOL! ⚡</div>
 
     <h1 class="hero-title">OLYMPOP</h1>
     <h2 class="hero-subtitle">2 — Sport Day</h2>
