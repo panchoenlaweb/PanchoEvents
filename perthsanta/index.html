@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PERTH SANTA CONCERT 2026 – Paragon Hall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink:    #e8738a;
+      --pink-d:  #c4556b;
+      --coral:   #f0926a;
+      --blue:    #5ec6d4;
+      --blue-d:  #3da8b8;
+      --dark:    #0c0e14;
+      --panel:   #10131c;
+      --card:    #141824;
+      --border:  #252a3a;
+      --text:    #e8e4ef;
+      --muted:   #7a7f99;
+      --gold:    #f5c518;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(232,115,138,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(94,198,212,.10) 0%, transparent 60%),
+        linear-gradient(180deg, #0c0e14 0%, #10080e 40%, #0c0e14 100%);
+      z-index: 0;
+    }
+
+    /* Animated stripes */
+    .stripes {
+      position: absolute; inset: 0; overflow: hidden; z-index: 0;
+      pointer-events: none;
+    }
+    .stripe {
+      position: absolute;
+      height: 2px;
+      animation: streakLeft 4s linear infinite;
+      opacity: .3;
+    }
+    .stripe:nth-child(1){ top:15%; width:60%; left:-60%; animation-delay:0s; background: linear-gradient(90deg, transparent, var(--pink), transparent); }
+    .stripe:nth-child(2){ top:35%; width:40%; left:-40%; animation-delay:.8s; background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+    .stripe:nth-child(3){ top:55%; width:70%; left:-70%; animation-delay:1.6s; background: linear-gradient(90deg, transparent, var(--coral), transparent); }
+    .stripe:nth-child(4){ top:72%; width:50%; left:-50%; animation-delay:2.4s; background: linear-gradient(90deg, transparent, var(--pink), transparent); }
+    .stripe:nth-child(5){ top:88%; width:45%; left:-45%; animation-delay:3.2s; background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+
+    @keyframes streakLeft {
+      0%   { transform: translateX(0); opacity: 0; }
+      10%  { opacity: .4; }
+      90%  { opacity: .4; }
+      100% { transform: translateX(260vw); opacity: 0; }
+    }
+
+    /* Decorative top/bottom lines */
+    .deco-line-top, .deco-line-bottom {
+      position: absolute; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--blue), var(--coral));
+      z-index: 2;
+    }
+    .deco-line-top  { top: 0; }
+    .deco-line-bottom { bottom: 0; }
+
+    .hero-content { position: relative; z-index: 3; max-width: 860px; }
+
+    .badge-event {
+      display: inline-block;
+      background: var(--pink);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      padding: .25rem .75rem;
+      border-radius: 2px;
+      margin-bottom: .8rem;
+    }
+
+    .subs-badge {
+      display: block;
+      width: fit-content;
+      margin: 0 auto 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(.55rem, 2vw, .78rem);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--pink), var(--coral), var(--pink));
+      background-size: 200% 200%;
+      color: #fff;
+      padding: 10px 30px;
+      border: none;
+      clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+      animation: subsShimmer 2.5s ease infinite, subsGlow 1.4s ease-in-out infinite;
+      text-shadow: 0 0 10px rgba(232,115,138,.6);
+      font-weight: 700;
+    }
+    @keyframes subsShimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes subsGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(232,115,138,.4), 0 0 30px rgba(240,146,106,.15); filter: brightness(1); }
+      50%       { box-shadow: 0 0 20px rgba(232,115,138,.7), 0 0 50px rgba(240,146,106,.3); filter: brightness(1.15); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: .95;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow:
+        0 0 30px rgba(232,115,138,.6),
+        0 0 80px rgba(232,115,138,.2);
+    }
+    .hero-title span {
+      color: var(--pink);
+      display: block;
+      font-size: clamp(3.5rem, 12vw, 8rem);
+    }
+
+    .hero-subtitle {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(.9rem, 2.5vw, 1.5rem);
+      letter-spacing: .3em;
+      color: var(--blue);
+      margin-top: .5rem;
+      text-shadow: 0 0 20px rgba(94,198,212,.5);
+    }
+
+    .hero-divider {
+      width: 120px; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--pink), var(--blue), transparent);
+      margin: 1.5rem auto;
+    }
+
+    /* ── HERO BUTTONS ── */
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .hero-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .85rem 1.8rem;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      transition: transform .15s, box-shadow .15s;
+      cursor: pointer;
+    }
+    .hero-btn-enter {
+      background: transparent;
+      border: 2px solid #444;
+      color: #666;
+      cursor: pointer;
+      position: relative;
+    }
+    .hero-btn-enter::after {
+      content: '🔒';
+      font-size: .9rem;
+    }
+    .hero-btn-enter:hover {
+      border-color: #666;
+      color: #888;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: #111;
+      border: 1px solid var(--pink);
+      box-shadow: 0 0 60px rgba(232,115,138,.2);
+      padding: 44px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: modalIn .25s ease;
+    }
+    @keyframes modalIn {
+      from { transform: scale(.92); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .modal-icon { font-size: 2.8rem; margin-bottom: 18px; display: block; }
+    .modal-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .75rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 16px;
+    }
+    .modal-msg {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: .05em;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .modal-msg b { color: var(--blue); }
+    .modal-close {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: var(--pink);
+      color: #fff;
+      border: none;
+      padding: 12px 32px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .modal-close:hover { background: var(--pink-d); }
+
+    .hero-btn-reserve {
+      background: var(--blue);
+      color: #000;
+      border: 2px solid var(--blue);
+      box-shadow: 0 0 18px rgba(94,198,212,.35);
+    }
+    .hero-btn-reserve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(94,198,212,.55);
+    }
+    .hero-btn-reserve:active { transform: scale(.97); }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .hero-meta-item { text-align: center; }
+    .hero-meta-item .label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .65rem;
+      letter-spacing: .2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .hero-meta-item .value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: .2rem;
+    }
+
+    /* ── LOCAL TIME BANNER ── */
+    .local-time-banner {
+      margin-top: 2rem;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(94,198,212,.4);
+      border-radius: 10px;
+      padding: .9rem 2rem;
+      backdrop-filter: blur(8px);
+      animation: fadeInUp .6s ease both;
+    }
+    @keyframes fadeInUp {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .local-time-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .6rem;
+      letter-spacing: .25em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .local-time-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 900;
+      color: var(--blue);
+      text-shadow: 0 0 20px rgba(94,198,212,.5);
+      line-height: 1;
+    }
+    .local-time-tz {
+      font-size: .78rem;
+      color: var(--muted);
+      letter-spacing: .05em;
+    }
+    .local-time-tz span { color: #fff; }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      width: 100%;
+      background: var(--pink);
+      border-bottom: 2px solid var(--blue);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: .55rem 0;
+    }
+    .ticker-track {
+      display: inline-flex;
+      gap: 0;
+      animation: ticker-scroll 20s linear infinite;
+    }
+    .ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+    .ticker-item {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: #fff;
+      text-transform: uppercase;
+      padding: 0 1.2rem;
+    }
+    .ticker-sep {
+      color: var(--blue);
+      font-size: .9rem;
+      padding: 0 .2rem;
+      opacity: .7;
+    }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* countdown */
+    .countdown-section {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    .countdown-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .7rem;
+      letter-spacing: .3em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .countdown {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cd-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--pink);
+      padding: .8rem 1.2rem;
+      min-width: 80px;
+      border-radius: 4px;
+    }
+    .cd-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1;
+    }
+    .cd-unit {
+      font-size: .7rem;
+      color: var(--muted);
+      letter-spacing: .15em;
+      margin-top: .3rem;
+    }
+
+    /* ─── MAIN CONTENT ──────────────────────────────── */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .6rem;
+      letter-spacing: .25em;
+      color: var(--pink);
+      border: 1px solid var(--pink);
+      padding: .25rem .8rem;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .5rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ─── INCLUDES ──────────────────────────────────── */
+    .includes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+    .include-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--pink);
+      border-radius: 6px;
+      padding: 1.5rem;
+      transition: transform .2s, border-color .2s;
+    }
+    .include-card:hover { transform: translateY(-4px); border-color: var(--blue); }
+    .include-card .icon { font-size: 2rem; margin-bottom: .7rem; }
+    .include-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .85rem;
+      color: var(--blue);
+      margin-bottom: .4rem;
+    }
+    .include-card p { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+
+    /* ─── PRICES ────────────────────────────────────── */
+    .prices-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .price-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(232,115,138,.2);
+    }
+    .price-card.featured {
+      border-color: var(--blue);
+      box-shadow: 0 0 30px rgba(94,198,212,.15);
+    }
+    .price-card.featured::before {
+      content: '⭐ MEJOR VALOR';
+      position: absolute; top: 0; left: 0; right: 0;
+      background: var(--blue);
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .6rem;
+      letter-spacing: .2em;
+      padding: .3rem;
+    }
+    .price-card.featured { padding-top: 2.8rem; }
+    .price-days {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .75rem;
+      letter-spacing: .2em;
+      color: var(--muted);
+    }
+    .price-nights {
+      font-size: 1.1rem;
+      color: var(--text);
+      font-weight: 700;
+      margin: .3rem 0;
+    }
+    .price-usd {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1;
+      margin: .5rem 0;
+    }
+    .price-usd span { font-size: 1.5rem; vertical-align: super; }
+    .price-dates {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: .3rem;
+    }
+    .price-divider { width: 60px; height: 2px; background: var(--border); margin: 1rem auto; }
+
+    /* currency rows */
+    .currency-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .4rem .5rem;
+      border-radius: 4px;
+      transition: background .15s;
+    }
+    .currency-row:hover { background: rgba(255,255,255,.04); }
+    .currency-flag { font-size: 1.1rem; margin-right: .4rem; }
+    .currency-code {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .65rem;
+      color: var(--muted);
+      width: 30px;
+    }
+    .currency-name { font-size: .8rem; color: var(--text); flex: 1; text-align: left; margin-left: .3rem; }
+    .currency-amount {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--blue);
+    }
+    .currency-amount.loading { color: var(--muted); font-size: .7rem; }
+
+    /* exchange rate bar */
+    .rate-bar {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .rate-bar-info { display: flex; align-items: center; gap: .5rem; }
+    .rate-indicator {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #0f0; box-shadow: 0 0 8px #0f0;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+    .rate-text { font-size: .85rem; color: var(--muted); }
+    .rate-text strong { color: var(--text); }
+    .rate-refresh {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .6rem;
+      letter-spacing: .1em;
+      color: var(--pink);
+      cursor: pointer;
+      border: 1px solid var(--pink);
+      padding: .3rem .8rem;
+      border-radius: 3px;
+      background: transparent;
+      transition: background .2s;
+    }
+    .rate-refresh:hover { background: var(--pink); color: #fff; }
+
+    /* ─── PAYMENTS ──────────────────────────────────── */
+    .payments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .payment-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .8rem;
+      transition: border-color .2s;
+    }
+    .payment-card:hover { border-color: var(--pink); }
+    .payment-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .payment-info h4 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .75rem;
+      color: var(--blue);
+      margin-bottom: .2rem;
+    }
+    .payment-info p { font-size: .85rem; color: var(--muted); line-height: 1.4; }
+
+    /* deadline banner */
+    .deadline-banner {
+      background: linear-gradient(135deg, rgba(232,115,138,.12), rgba(232,115,138,.04));
+      border: 1px solid var(--pink);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+    .deadline-icon { font-size: 2.5rem; flex-shrink: 0; }
+    .deadline-text h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: var(--pink);
+      margin-bottom: .3rem;
+    }
+    .deadline-text p { color: var(--muted); font-size: .95rem; }
+    .deadline-text strong { color: #fff; }
+
+    /* ─── CONTACT ───────────────────────────────────── */
+    .contact-section {
+      background: linear-gradient(135deg, var(--panel), rgba(232,115,138,.06));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 1.5rem;
+      text-align: center;
+    }
+    .contact-note { color: var(--muted); font-size: 1rem; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+    .social-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 1.8rem 0 1.2rem;
+    }
+    .contact-handle {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(.85rem, 2.5vw, 1.1rem);
+      font-weight: 700;
+      color: #fff;
+      background: var(--card);
+      border: 2px solid var(--pink);
+      border-radius: 50px;
+      padding: .75rem 1.6rem;
+      text-decoration: none;
+      transition: box-shadow .25s, transform .25s;
+      box-shadow: 0 0 14px rgba(232,115,138,.2);
+    }
+    .contact-handle:hover { box-shadow: 0 0 32px rgba(232,115,138,.5); transform: scale(1.05); color: var(--blue); }
+    .contact-handle.tg  { border-color: #26A5E4; box-shadow: 0 0 14px rgba(38,165,228,.2); }
+    .contact-handle.tg:hover  { box-shadow: 0 0 32px rgba(38,165,228,.5); }
+    .contact-handle.ig  { border-color: #E1306C; box-shadow: 0 0 14px rgba(225,48,108,.2); }
+    .contact-handle.ig:hover  { box-shadow: 0 0 32px rgba(225,48,108,.5); }
+    .contact-handle.tw  { border-color: #1DA1F2; box-shadow: 0 0 14px rgba(29,161,242,.2); }
+    .contact-handle.tw:hover  { box-shadow: 0 0 32px rgba(29,161,242,.5); }
+
+    /* ─── FAQ ─────────────────────────────────────────── */
+    .faq-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+    .faq-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--pink);
+      border-radius: 6px;
+      margin-bottom: .8rem;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .faq-item:hover { border-color: var(--blue); }
+    .faq-question {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--text);
+      padding: 1.1rem 1.3rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      user-select: none;
+    }
+    .faq-question::after {
+      content: '＋';
+      font-size: 1.1rem;
+      color: var(--blue);
+      flex-shrink: 0;
+      transition: transform .25s;
+    }
+    .faq-item.open .faq-question::after { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .25s;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.7;
+      padding: 0 1.3rem;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 0 1.3rem 1.2rem;
+    }
+    .faq-answer a { color: var(--blue); text-decoration: none; }
+    .faq-answer a:hover { text-decoration: underline; }
+
+    /* refund notice */
+    .refund-notice {
+      background: linear-gradient(135deg, rgba(232,115,138,.12), rgba(232,115,138,.04));
+      border: 1px solid rgba(232,115,138,.4);
+      border-radius: 8px;
+      padding: 1rem 1.4rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .9rem;
+      margin-top: 1.8rem;
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .refund-notice .ri-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: .1rem; }
+    .refund-notice strong { color: var(--pink); }
+
+    /* ─── TIMEZONES ─────────────────────────────────── */
+    .tz-section {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 1.5rem;
+    }
+    .tz-inner { max-width: 1100px; margin: 0 auto; }
+    .tz-header { text-align: center; margin-bottom: 2rem; }
+    .tz-origin {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--card);
+      border: 1px solid var(--blue);
+      border-radius: 6px;
+      padding: .5rem 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: .8rem;
+      color: var(--blue);
+      margin-top: .8rem;
+    }
+    .tz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .tz-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .tz-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--pink);
+      box-shadow: 0 8px 24px rgba(232,115,138,.15);
+    }
+    .tz-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pink), var(--blue));
+      transform: scaleX(0);
+      transition: transform .2s;
+    }
+    .tz-card:hover::after { transform: scaleX(1); }
+    .tz-flag {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      color: var(--muted);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: .15rem .45rem;
+      margin-bottom: .5rem;
+      display: inline-block;
+    }
+    .tz-country {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .tz-time {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .tz-ampm {
+      font-size: .8rem;
+      color: var(--pink);
+      font-weight: 700;
+      margin-left: .2rem;
+    }
+    .tz-label {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .3rem;
+    }
+    .tz-note {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+    .tz-note span { color: var(--blue); }
+
+    /* ─── FOOTER ────────────────────────────────────── */
+    footer {
+      background: #06060a;
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    footer .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--pink);
+    }
+    footer .footer-sub {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: .4rem;
+    }
+    footer .deco-footer {
+      width: 80px; height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--blue));
+      margin: .8rem auto 0;
+      opacity: .5;
+    }
+
+    /* ─── LANG ── */
+    .lang-toggle {
+      position: fixed;
+      top: 1rem; right: 1rem;
+      z-index: 9999;
+      display: flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,.5);
+    }
+    .lang-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .65rem;
+      letter-spacing: .12em;
+      font-weight: 700;
+      padding: .5rem .9rem;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      transition: background .2s, color .2s;
+    }
+    .lang-btn.active { background: var(--pink); color: #fff; }
+    .lang-btn:hover:not(.active) { background: rgba(255,255,255,.07); color: var(--text); }
+    html.lang-en .price-card.featured::before { content: '⭐ BEST VALUE'; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 3px; }
+
+    /* responsive */
+    @media(max-width:600px){
+      .hero-meta { gap: 1rem; }
+      .rate-bar { flex-direction: column; align-items: flex-start; }
+      .deadline-banner { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- lang toggle -->
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button class="lang-btn active" id="lang-btn-es" onclick="setLang('es')">ES</button>
+  <button class="lang-btn"        id="lang-btn-en" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<header class="hero">
+  <div class="deco-line-top"></div>
+  <div class="stripes">
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="badge-event">GMMTV&nbsp;&nbsp;·&nbsp;&nbsp;CONCERT 2026</div>
+    <div class="subs-badge">⚡ ¡ÚNICOS CON SUBTÍTULOS EN ESPAÑOL! ⚡</div>
+
+    <h1 class="hero-title">
+      Perth<br><span>Santa</span>
+    </h1>
+
+    <p class="hero-subtitle">🎵&nbsp; CONCERT 2026 &nbsp;·&nbsp; PARAGON HALL &nbsp;🎵</p>
+
+    <div class="hero-divider"></div>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="label" data-i18n="label-dates">📅 Fechas</div>
+        <div class="value">18 · 19 JUL 2026</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-i18n="label-time">🕔 Horario</div>
+        <div class="value" data-i18n="label-time-value">POR CONFIRMAR</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">📍 Venue</div>
+        <div class="value">PARAGON HALL · BANGKOK</div>
+      </div>
+    </div>
+
+    <!-- local time auto-detect -->
+    <div class="local-time-banner" id="local-time-banner" style="display:none">
+      <div class="local-time-label" data-i18n="local-time-label">🌍 El evento en tu país será a las</div>
+      <div class="local-time-value" id="local-time-value">--:--</div>
+      <div class="local-time-tz" id="local-time-tz">Detectando tu zona horaria…</div>
+    </div>
+
+    <!-- hero CTAs -->
+    <div class="hero-btns">
+      <span class="hero-btn hero-btn-enter" data-i18n="hero-btn-enter" onclick="document.getElementById('access-modal').classList.add('show')">INGRESAR AL EVENTO</span>
+      <a class="hero-btn hero-btn-reserve" href="https://t.me/Panchoenlared" target="_blank" rel="noopener" data-i18n="hero-btn-reserve">🎫 RESERVAR AHORA</a>
+    </div>
+
+  </div>
+  <div class="deco-line-bottom"></div>
+</header>
+
+<!-- MODAL: acceso -->
+<div class="modal-overlay" id="access-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-box">
+    <span class="modal-icon">⏰</span>
+    <p class="modal-title">Acceso al Evento</p>
+    <p class="modal-msg" data-i18n="modal-msg">
+      El enlace de ingreso estará disponible<br>
+      <b>1 hora antes del inicio del evento.</b><br><br>
+      Asegúrate de tener tu clave lista y revisa tu Telegram a tiempo.
+    </p>
+    <button class="modal-close" onclick="document.getElementById('access-modal').classList.remove('show')">Entendido</button>
+  </div>
+</div>
+
+<!-- ══ ARTIST TICKER ══ -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">PERTH TANAPON</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">SANTA PONGSAPAK</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">PERTH SANTA CONCERT</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">PARAGON HALL</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">18-19 JUL 2026</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">GMMTV</span><span class="ticker-sep">✦</span>
+    <!-- second copy -->
+    <span class="ticker-item">PERTH TANAPON</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">SANTA PONGSAPAK</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">PERTH SANTA CONCERT</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">PARAGON HALL</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">18-19 JUL 2026</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">GMMTV</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<!-- countdown -->
+<div class="countdown-section">
+  <p class="countdown-label" data-i18n="countdown-label">🎵 FALTAN PARA EL CONCIERTO</p>
+  <div class="countdown" id="countdown">
+    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-unit" data-i18n="cd-unit-days">DÍAS</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-unit" data-i18n="cd-unit-hours">HORAS</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-min">--</div><div class="cd-unit">MIN</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-sec">--</div><div class="cd-unit" data-i18n="cd-unit-sec">SEG</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════ HORARIOS ══════════════════ -->
+<div class="tz-section">
+  <div class="tz-inner">
+    <div class="tz-header">
+      <div class="section-tag" data-i18n="tz-tag">✦ HORARIOS</div>
+      <h2 class="section-title" data-i18n="tz-title">¿A qué hora es en tu país?</h2>
+      <p style="color:var(--muted);font-size:.95rem;" data-i18n="tz-subtitle">Horario por confirmar. Se actualizará cuando esté disponible.</p>
+      <div class="tz-origin">🇹🇭&nbsp; Bangkok (UTC+7) &nbsp;·&nbsp; Horario TBC</div>
+    </div>
+
+    <p class="tz-note" data-i18n="tz-note">Los horarios se publicarán una vez confirmados oficialmente para el <span>18 y 19 de julio de 2026</span>.</p>
+  </div>
+</div>
+
+<!-- ══════════════════ QUÉ INCLUYE ══════════════════ -->
+<div class="section">
+  <div class="section-tag" data-i18n="includes-tag">✦ INCLUYE</div>
+  <h2 class="section-title" data-i18n="includes-title">Todo lo que obtienes</h2>
+  <p class="section-desc" data-i18n="includes-desc">Cada entrada da acceso a lo siguiente, sin costos ocultos.</p>
+
+  <div class="includes-grid">
+    <div class="include-card">
+      <div class="icon">🖥️</div>
+      <h3 data-i18n="inc-stream-title">LIVE STREAMING PRIVADO</h3>
+      <p data-i18n="inc-stream-desc">Transmisión en vivo exclusiva del concierto en plataforma privada de alta calidad.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">📸</div>
+      <h3>E-PHOTOS</h3>
+      <p data-i18n="inc-photos-desc">Fotos digitales oficiales del evento (e-photos) incluidas en tu compra.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">🎟️</div>
+      <h3 data-i18n="inc-access-title">ACCESO EXCLUSIVO</h3>
+      <p data-i18n="inc-access-desc">Link de acceso personal e intransferible enviado previo al evento.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">🎤</div>
+      <h3 data-i18n="inc-exp-title">EXPERIENCIA COMPLETA</h3>
+      <p data-i18n="inc-exp-desc">Perth y Santa en vivo desde el Paragon Hall, Bangkok. El concierto más esperado.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">🎬</div>
+      <h3 data-i18n="inc-rec-title">GRABACIÓN DEL EVENTO</h3>
+      <p data-i18n="inc-rec-desc">Una vez finalizado el evento, tendrás acceso a la grabación completa para verla cuando quieras.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PRECIOS ══════════════════ -->
+<div class="section" style="padding-top:1rem;">
+  <div class="section-tag" data-i18n="tickets-tag">✦ TICKETS</div>
+  <h2 class="section-title" data-i18n="tickets-title">Precios</h2>
+  <p class="section-desc" data-i18n="tickets-desc">Precios en dólares + equivalencia automática al tipo de cambio del día.</p>
+
+  <!-- rate bar -->
+  <div class="rate-bar">
+    <div class="rate-bar-info">
+      <div class="rate-indicator"></div>
+      <span class="rate-text"><span data-i18n="rate-label">Tipo de cambio:</span> <strong id="rate-status">Cargando...</strong></span>
+    </div>
+    <button class="rate-refresh" onclick="fetchRates()" data-i18n="rate-refresh-btn">⟳ ACTUALIZAR</button>
+  </div>
+
+  <div class="prices-grid">
+
+    <!-- 1 DÍA -->
+    <div class="price-card">
+      <div class="price-days" data-i18n="price1-day">🎵 DÍA</div>
+      <div class="price-nights" data-i18n="price1-func">1 FUNCIÓN</div>
+      <div class="price-usd"><span>US$</span> 2</div>
+      <div class="price-dates" data-i18n="price1-dates">Elige 1 fecha: 18 o 19 Julio</div>
+      <div class="price-divider"></div>
+      <div id="currencies-2"></div>
+    </div>
+
+    <!-- 2 DÍAS -->
+    <div class="price-card featured">
+      <div class="price-days" data-i18n="price2-days">🎵🎵 DÍAS</div>
+      <div class="price-nights" data-i18n="price2-func">2 FUNCIONES · COMPLETO</div>
+      <div class="price-usd"><span>US$</span> 3</div>
+      <div class="price-dates" data-i18n="price2-dates">18 + 19 Julio 2026</div>
+      <div class="price-divider"></div>
+      <div id="currencies-3"></div>
+    </div>
+
+  </div>
+
+  <!-- refund policy -->
+  <div class="refund-notice">
+    <span class="ri-icon">⚠️</span>
+    <span data-i18n="refund-notice"><strong>Pago no reembolsable.</strong> Una vez confirmado el pago, no se realizan devoluciones. Ante cualquier inconveniente técnico durante el evento, se garantiza acceso a la grabación completa.</span>
+  </div>
+
+  <!-- deadline -->
+  <div class="deadline-banner">
+    <div class="deadline-icon">⏰</div>
+    <div class="deadline-text">
+      <h3 data-i18n="deadline-title">FECHA LÍMITE DE PAGO</h3>
+      <p data-i18n="deadline-text">Se reciben pagos hasta el <strong>17 de Julio de 2026</strong>.<br>
+        Asegúrate de realizar tu pago antes de esa fecha para garantizar tu acceso.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PAGOS ══════════════════ -->
+<div class="section" style="padding-top:1rem; padding-bottom:3rem;">
+  <div class="section-tag" data-i18n="payments-tag">✦ MÉTODOS DE PAGO</div>
+  <h2 class="section-title" data-i18n="payments-title">¿Cómo puedes pagar?</h2>
+  <p class="section-desc" data-i18n="payments-desc">Múltiples opciones según tu país, sin complicaciones.</p>
+
+  <div class="payments-grid">
+    <div class="payment-card">
+      <div class="payment-icon">🌐</div>
+      <div class="payment-info">
+        <h4>PAYPAL</h4>
+        <p data-i18n="pay-paypal-desc">Internacional. Aceptado desde cualquier país con cuenta PayPal.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇵🇪</div>
+      <div class="payment-info">
+        <h4>PERÚ</h4>
+        <p data-i18n="pay-peru-desc">Pagos nacionales disponibles. Consultar método exacto al contactar.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇨🇱</div>
+      <div class="payment-info">
+        <h4>CHILE</h4>
+        <p data-i18n="pay-chile-desc">Pagos nacionales disponibles. Transferencia o plataforma local.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇦🇷</div>
+      <div class="payment-info">
+        <h4>ARGENTINA</h4>
+        <p data-i18n="pay-arg-desc">Pago vía <strong style="color:var(--blue)">PREX</strong> Argentina.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇺🇾</div>
+      <div class="payment-info">
+        <h4>URUGUAY</h4>
+        <p data-i18n="pay-uru-desc">Pago vía <strong style="color:var(--blue)">PREX</strong> Uruguay.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇲🇽</div>
+      <div class="payment-info">
+        <h4>MÉXICO</h4>
+        <p data-i18n="pay-mex-desc">Pagos nacionales disponibles. Consultar al contactar.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇺🇸</div>
+      <div class="payment-info">
+        <h4>ESTADOS UNIDOS</h4>
+        <p data-i18n="pay-usa-desc">PayPal o transferencia directa en USD.</p>
+      </div>
+    </div>
+    <div class="payment-card">
+      <div class="payment-icon">🇪🇺</div>
+      <div class="payment-info">
+        <h4>EUROPA</h4>
+        <p data-i18n="pay-eu-desc">Transferencia bancaria vía <strong style="color:var(--blue)">IBAN</strong>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ FAQ ══════════════════ -->
+<div class="faq-section">
+  <div class="section-tag" data-i18n="faq-tag">✦ PREGUNTAS FRECUENTES</div>
+  <h2 class="section-title" style="margin-bottom:2rem;" data-i18n="faq-title">FAQ</h2>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q1" onclick="toggleFaq(this)">¿Cómo accedo al stream el día del evento?</div>
+    <div class="faq-answer" data-i18n="faq-a1">Una vez confirmado tu pago, recibirás una clave personal por Telegram o correo electrónico antes del evento. Con esa clave ingresas a <a href="stream.html">stream.html</a> el día del show.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q2" onclick="toggleFaq(this)">¿Puedo compartir mi clave con otras personas?</div>
+    <div class="faq-answer" data-i18n="faq-a2">No. El acceso es personal e intransferible. Cada clave es válida para un solo dispositivo a la vez. Compartirla puede resultar en la cancelación del acceso sin reembolso.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q3" onclick="toggleFaq(this)">¿Qué pasa si tengo problemas técnicos durante el stream?</div>
+    <div class="faq-answer" data-i18n="faq-a3">Si experimentas cortes o problemas técnicos, contáctanos de inmediato por Telegram (@Panchoenlared). Además, todos los compradores tienen acceso garantizado a la grabación completa del evento una vez finalizado.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q4" onclick="toggleFaq(this)">¿El pago es reembolsable?</div>
+    <div class="faq-answer" data-i18n="faq-a4">No. Todos los pagos son no reembolsables una vez confirmados. En caso de cancelación del evento por parte de los organizadores, se informará sobre alternativas. Ante problemas técnicos del stream, se garantiza acceso a la grabación.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q5" onclick="toggleFaq(this)">¿Cuándo recibiré mi clave de acceso?</div>
+    <div class="faq-answer" data-i18n="faq-a5">Las claves se envían entre 24 y 48 horas antes del evento. Si no recibes la tuya, escríbenos por Telegram antes del 17 de Julio de 2026.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q6" onclick="toggleFaq(this)">¿Puedo ver el stream desde mi celular?</div>
+    <div class="faq-answer" data-i18n="faq-a6">Sí. La plataforma es compatible con celulares, tablets y computadoras. Recomendamos una conexión estable de al menos 10 Mbps para la mejor calidad de imagen.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q7" onclick="toggleFaq(this)">¿Hasta cuándo puedo pagar?</div>
+    <div class="faq-answer" data-i18n="faq-a7">Se aceptan pagos hasta el <strong>17 de Julio de 2026</strong>. No se garantiza acceso para pagos realizados después de esa fecha.</div>
+  </div>
+</div>
+
+<!-- ══════════════════ CONTACT ══════════════════ -->
+<div class="contact-section">
+  <div class="section-tag" style="display:inline-block;" data-i18n="contact-tag">✦ CONTACTO</div>
+  <h2 class="section-title" style="margin-top:.5rem;" data-i18n="contact-title">¿Te interesa? ¡Escríbenos!</h2>
+  <p class="contact-note" data-i18n="contact-note">
+    Para reservar tu lugar, consultar métodos de pago específicos o cualquier duda sobre el evento, contáctanos directamente:
+  </p>
+
+  <div class="social-buttons">
+    <a class="contact-handle tg" href="https://t.me/Panchoenlared" target="_blank" rel="noopener">
+      💬 Telegram &nbsp;<span style="opacity:.6;">@Panchoenlared</span>
+    </a>
+    <a class="contact-handle ig" href="https://instagram.com/Panchoenlaredd" target="_blank" rel="noopener">
+      📸 Instagram &nbsp;<span style="opacity:.6;">@Panchoenlaredd</span>
+    </a>
+    <a class="contact-handle tw" href="https://twitter.com/Panchoenlared" target="_blank" rel="noopener">
+      🐦 X / Twitter &nbsp;<span style="opacity:.6;">@Panchoenlared</span>
+    </a>
+  </div>
+
+  <p class="contact-note" style="font-size:.85rem;">
+    <span style="color:var(--pink);" data-i18n="contact-deadline">⚠ Pagos hasta el 17 de Julio de 2026</span>
+  </p>
+</div>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <div class="footer-logo">PERTH SANTA CONCERT · 2026</div>
+  <div class="footer-sub">
+    <span data-i18n="footer-sub">Reseller no oficial · Streaming por plataforma privada · GMMTV</span><br>
+    <span style="font-size:.75rem; opacity:.5;" data-i18n="footer-rate">Tipo de cambio obtenido de open.er-api.com</span>
+  </div>
+  <div class="deco-footer"></div>
+</footer>
+
+
+<script>
+  /* ─── I18N ─────────────────────────────────────── */
+  const TRANSLATIONS = {
+    es: {
+      'label-dates':     '📅 Fechas',
+      'label-time':      '🕔 Horario',
+      'label-time-value':'POR CONFIRMAR',
+      'local-time-label':'🌍 El evento en tu país será a las',
+      'hero-btn-enter':  'INGRESAR AL EVENTO',
+      'hero-btn-reserve':'🎫 RESERVAR AHORA',
+      'modal-msg':       'El enlace de ingreso estará disponible<br><b>1 hora antes del inicio del evento.</b><br><br>Asegúrate de tener tu clave lista y revisa tu Telegram a tiempo.',
+      'countdown-label': '🎵 FALTAN PARA EL CONCIERTO',
+      'cd-unit-days':    'DÍAS',
+      'cd-unit-hours':   'HORAS',
+      'cd-unit-sec':     'SEG',
+      'countdown-live':  '🎉 EN VIVO',
+      'tz-tag':          '✦ HORARIOS',
+      'tz-title':        '¿A qué hora es en tu país?',
+      'tz-subtitle':     'Horario por confirmar. Se actualizará cuando esté disponible.',
+      'tz-note':         'Los horarios se publicarán una vez confirmados oficialmente para el <span>18 y 19 de julio de 2026</span>.',
+      'includes-tag':    '✦ INCLUYE',
+      'includes-title':  'Todo lo que obtienes',
+      'includes-desc':   'Cada entrada da acceso a lo siguiente, sin costos ocultos.',
+      'inc-stream-title':'LIVE STREAMING PRIVADO',
+      'inc-stream-desc': 'Transmisión en vivo exclusiva del concierto en plataforma privada de alta calidad.',
+      'inc-photos-desc': 'Fotos digitales oficiales del evento (e-photos) incluidas en tu compra.',
+      'inc-access-title':'ACCESO EXCLUSIVO',
+      'inc-access-desc': 'Link de acceso personal e intransferible enviado previo al evento.',
+      'inc-exp-title':   'EXPERIENCIA COMPLETA',
+      'inc-exp-desc':    'Perth y Santa en vivo desde el Paragon Hall, Bangkok. El concierto más esperado.',
+      'inc-rec-title':   'GRABACIÓN DEL EVENTO',
+      'inc-rec-desc':    'Una vez finalizado el evento, tendrás acceso a la grabación completa para verla cuando quieras.',
+      'tickets-tag':     '✦ TICKETS',
+      'tickets-title':   'Precios',
+      'tickets-desc':    'Precios en dólares + equivalencia automática al tipo de cambio del día.',
+      'rate-label':      'Tipo de cambio:',
+      'rate-refresh-btn':'⟳ ACTUALIZAR',
+      'price1-day':      '🎵 DÍA',
+      'price1-func':     '1 FUNCIÓN',
+      'price1-dates':    'Elige 1 fecha: 18 o 19 Julio',
+      'price2-days':     '🎵🎵 DÍAS',
+      'price2-func':     '2 FUNCIONES · COMPLETO',
+      'price2-dates':    '18 + 19 Julio 2026',
+      'deadline-title':  'FECHA LÍMITE DE PAGO',
+      'deadline-text':   'Se reciben pagos hasta el <strong>17 de Julio de 2026</strong>.<br>Asegúrate de realizar tu pago antes de esa fecha para garantizar tu acceso.',
+      'payments-tag':    '✦ MÉTODOS DE PAGO',
+      'payments-title':  '¿Cómo puedes pagar?',
+      'payments-desc':   'Múltiples opciones según tu país, sin complicaciones.',
+      'pay-paypal-desc': 'Internacional. Aceptado desde cualquier país con cuenta PayPal.',
+      'pay-peru-desc':   'Pagos nacionales disponibles. Consultar método exacto al contactar.',
+      'pay-chile-desc':  'Pagos nacionales disponibles. Transferencia o plataforma local.',
+      'pay-arg-desc':    'Pago vía <strong style="color:var(--blue)">PREX</strong> Argentina.',
+      'pay-uru-desc':    'Pago vía <strong style="color:var(--blue)">PREX</strong> Uruguay.',
+      'pay-mex-desc':    'Pagos nacionales disponibles. Consultar al contactar.',
+      'pay-usa-desc':    'PayPal o transferencia directa en USD.',
+      'pay-eu-desc':     'Transferencia bancaria vía <strong style="color:var(--blue)">IBAN</strong>.',
+      'contact-tag':     '✦ CONTACTO',
+      'contact-title':   '¿Te interesa? ¡Escríbenos!',
+      'contact-note':    'Para reservar tu lugar, consultar métodos de pago específicos o cualquier duda sobre el evento, contáctanos directamente:',
+      'contact-deadline':'⚠ Pagos hasta el 17 de Julio de 2026',
+      'refund-notice':   '<strong>Pago no reembolsable.</strong> Una vez confirmado el pago, no se realizan devoluciones. Ante cualquier inconveniente técnico durante el evento, se garantiza acceso a la grabación completa.',
+      'faq-tag':         '✦ PREGUNTAS FRECUENTES',
+      'faq-title':       'FAQ',
+      'faq-q1': '¿Cómo accedo al stream el día del evento?',
+      'faq-a1': 'Una vez confirmado tu pago, recibirás una clave personal por Telegram o correo electrónico antes del evento. Con esa clave ingresas a <a href="stream.html">stream.html</a> el día del show.',
+      'faq-q2': '¿Puedo compartir mi clave con otras personas?',
+      'faq-a2': 'No. El acceso es personal e intransferible. Cada clave es válida para un solo dispositivo a la vez. Compartirla puede resultar en la cancelación del acceso sin reembolso.',
+      'faq-q3': '¿Qué pasa si tengo problemas técnicos durante el stream?',
+      'faq-a3': 'Si experimentas cortes o problemas técnicos, contáctanos de inmediato por Telegram (@Panchoenlared). Además, todos los compradores tienen acceso garantizado a la grabación completa del evento una vez finalizado.',
+      'faq-q4': '¿El pago es reembolsable?',
+      'faq-a4': 'No. Todos los pagos son no reembolsables una vez confirmados. En caso de cancelación del evento por parte de los organizadores, se informará sobre alternativas. Ante problemas técnicos del stream, se garantiza acceso a la grabación.',
+      'faq-q5': '¿Cuándo recibiré mi clave de acceso?',
+      'faq-a5': 'Las claves se envían entre 24 y 48 horas antes del evento. Si no recibes la tuya, escríbenos por Telegram antes del 17 de Julio de 2026.',
+      'faq-q6': '¿Puedo ver el stream desde mi celular?',
+      'faq-a6': 'Sí. La plataforma es compatible con celulares, tablets y computadoras. Recomendamos una conexión estable de al menos 10 Mbps para la mejor calidad de imagen.',
+      'faq-q7': '¿Hasta cuándo puedo pagar?',
+      'faq-a7': 'Se aceptan pagos hasta el <strong>17 de Julio de 2026</strong>. No se garantiza acceso para pagos realizados después de esa fecha.',
+      'footer-sub':      'Reseller no oficial · Streaming por plataforma privada · GMMTV',
+      'footer-rate':     'Tipo de cambio obtenido de open.er-api.com',
+      'cur-ars': 'Peso argentino', 'cur-mxn': 'Peso mexicano',
+      'cur-clp': 'Peso chileno',   'cur-pen': 'Sol peruano',
+      'cur-uyu': 'Peso uruguayo',  'cur-eur': 'Euro (España)',
+    },
+    en: {
+      'label-dates':     '📅 Dates',
+      'label-time':      '🕔 Showtime',
+      'label-time-value':'TO BE CONFIRMED',
+      'local-time-label':'🌍 The event in your country will be at',
+      'hero-btn-enter':  'ENTER EVENT',
+      'hero-btn-reserve':'🎫 RESERVE NOW',
+      'modal-msg':       'The access link will be available<br><b>1 hour before the event starts.</b><br><br>Make sure you have your key ready and check your Telegram on time.',
+      'countdown-label': '🎵 TIME LEFT TO THE CONCERT',
+      'cd-unit-days':    'DAYS',
+      'cd-unit-hours':   'HOURS',
+      'cd-unit-sec':     'SEC',
+      'countdown-live':  '🎉 LIVE NOW',
+      'tz-tag':          '✦ SHOWTIMES',
+      'tz-title':        'What time is it in your country?',
+      'tz-subtitle':     'Schedule to be confirmed. Will be updated when available.',
+      'tz-note':         'Showtimes will be published once officially confirmed for <span>July 18 and 19, 2026</span>.',
+      'includes-tag':    '✦ INCLUDES',
+      'includes-title':  'Everything you get',
+      'includes-desc':   'Each ticket gives access to the following, with no hidden costs.',
+      'inc-stream-title':'PRIVATE LIVE STREAMING',
+      'inc-stream-desc': 'Exclusive live broadcast of the concert on a private high-quality platform.',
+      'inc-photos-desc': 'Official digital photos of the event (e-photos) included with your purchase.',
+      'inc-access-title':'EXCLUSIVE ACCESS',
+      'inc-access-desc': 'Personal, non-transferable access link sent prior to the event.',
+      'inc-exp-title':   'FULL EXPERIENCE',
+      'inc-exp-desc':    'Perth and Santa live from Paragon Hall, Bangkok. The most anticipated concert.',
+      'inc-rec-title':   'EVENT RECORDING',
+      'inc-rec-desc':    'Once the event is over, you will have access to the full recording to watch whenever you want.',
+      'tickets-tag':     '✦ TICKETS',
+      'tickets-title':   'Prices',
+      'tickets-desc':    'Prices in USD + automatic conversion at the day\'s exchange rate.',
+      'rate-label':      'Exchange rate:',
+      'rate-refresh-btn':'⟳ REFRESH',
+      'price1-day':      '🎵 DAY',
+      'price1-func':     '1 SHOW',
+      'price1-dates':    'Choose 1 date: July 18 or 19',
+      'price2-days':     '🎵🎵 DAYS',
+      'price2-func':     '2 SHOWS · FULL PASS',
+      'price2-dates':    '18 + 19 July 2026',
+      'deadline-title':  'PAYMENT DEADLINE',
+      'deadline-text':   'Payments are accepted until <strong>July 17, 2026</strong>.<br>Make sure to complete your payment before that date to secure your access.',
+      'payments-tag':    '✦ PAYMENT METHODS',
+      'payments-title':  'How can you pay?',
+      'payments-desc':   'Multiple options depending on your country, hassle-free.',
+      'pay-paypal-desc': 'International. Accepted from any country with a PayPal account.',
+      'pay-peru-desc':   'Domestic payments available. Ask for the exact method when contacting.',
+      'pay-chile-desc':  'Domestic payments available. Bank transfer or local platform.',
+      'pay-arg-desc':    'Payment via <strong style="color:var(--blue)">PREX</strong> Argentina.',
+      'pay-uru-desc':    'Payment via <strong style="color:var(--blue)">PREX</strong> Uruguay.',
+      'pay-mex-desc':    'Domestic payments available. Ask when contacting.',
+      'pay-usa-desc':    'PayPal or direct USD transfer.',
+      'pay-eu-desc':     'Bank transfer via <strong style="color:var(--blue)">IBAN</strong>.',
+      'contact-tag':     '✦ CONTACT',
+      'contact-title':   'Interested? Write to us!',
+      'contact-note':    'To reserve your spot, ask about specific payment methods or any question about the event, contact us directly:',
+      'contact-deadline':'⚠ Payments until July 17, 2026',
+      'refund-notice':   '<strong>Non-refundable payment.</strong> Once payment is confirmed, no refunds are issued. In case of technical issues during the event, access to the full recording is guaranteed.',
+      'faq-tag':         '✦ FREQUENTLY ASKED QUESTIONS',
+      'faq-title':       'FAQ',
+      'faq-q1': 'How do I access the stream on the day of the event?',
+      'faq-a1': 'Once your payment is confirmed, you will receive a personal key via Telegram or email before the event. Use that key to enter <a href="stream.html">stream.html</a> on show day.',
+      'faq-q2': 'Can I share my access key with others?',
+      'faq-a2': 'No. Access is personal and non-transferable. Each key is valid for one device at a time. Sharing it may result in access being revoked without a refund.',
+      'faq-q3': 'What happens if I have technical issues during the stream?',
+      'faq-a3': 'If you experience interruptions or technical issues, contact us immediately on Telegram (@Panchoenlared). All buyers are also guaranteed access to the full event recording once it ends.',
+      'faq-q4': 'Is the payment refundable?',
+      'faq-a4': 'No. All payments are non-refundable once confirmed. If the event is cancelled by the organizers, alternatives will be communicated. In case of stream technical issues, access to the recording is guaranteed.',
+      'faq-q5': 'When will I receive my access key?',
+      'faq-a5': 'Keys are sent 24–48 hours before the event. If you haven\'t received yours, message us on Telegram before July 17, 2026.',
+      'faq-q6': 'Can I watch the stream on my phone?',
+      'faq-a6': 'Yes. The platform works on phones, tablets, and computers. We recommend a stable connection of at least 10 Mbps for the best quality.',
+      'faq-q7': 'What is the payment deadline?',
+      'faq-a7': 'Payments are accepted until <strong>July 17, 2026</strong>. Access cannot be guaranteed for payments made after that date.',
+      'footer-sub':      'Unofficial reseller · Streaming via private platform · GMMTV',
+      'footer-rate':     'Exchange rate from open.er-api.com',
+      'cur-ars': 'Argentine Peso', 'cur-mxn': 'Mexican Peso',
+      'cur-clp': 'Chilean Peso',   'cur-pen': 'Peruvian Sol',
+      'cur-uyu': 'Uruguayan Peso', 'cur-eur': 'Euro (Spain)',
+    }
+  };
+
+  let currentLang = localStorage.getItem('ps-lang') || 'es';
+  function t(key) { return TRANSLATIONS[currentLang][key] ?? TRANSLATIONS.es[key] ?? key; }
+
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('ps-lang', lang);
+    document.documentElement.lang = lang;
+    document.documentElement.className = 'lang-' + lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const val = TRANSLATIONS[lang][el.dataset.i18n];
+      if (val !== undefined) el.innerHTML = val;
+    });
+    document.getElementById('lang-btn-es').classList.toggle('active', lang === 'es');
+    document.getElementById('lang-btn-en').classList.toggle('active', lang === 'en');
+    renderCurrencies();
+  }
+
+  (function initLang() {
+    document.documentElement.lang = currentLang;
+    document.documentElement.className = 'lang-' + currentLang;
+    if (currentLang === 'en') {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const val = TRANSLATIONS.en[el.dataset.i18n];
+        if (val !== undefined) el.innerHTML = val;
+      });
+      document.getElementById('lang-btn-es').classList.remove('active');
+      document.getElementById('lang-btn-en').classList.add('active');
+    }
+  })();
+
+  /* ─── COUNTDOWN ── (usando fecha tentativa, 18 jul 17:00 Bangkok) ── */
+  const eventDate = new Date('2026-07-18T10:00:00Z'); // 17:00 Bangkok UTC+7
+  function updateCountdown() {
+    const now  = new Date();
+    const diff = eventDate - now;
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML =
+        `<div class="cd-box" style="min-width:200px"><div class="cd-num" style="font-size:1.3rem;color:var(--blue)">${t('countdown-live')}</div></div>`;
+      return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000)  /   60000);
+    const secs  = Math.floor((diff %   60000)  /    1000);
+    document.getElementById('cd-days').textContent  = String(days).padStart(3,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-min').textContent   = String(mins).padStart(2,'0');
+    document.getElementById('cd-sec').textContent   = String(secs).padStart(2,'0');
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  /* ─── CURRENCIES ─────────────────────────── */
+  const prices = [2, 3];
+
+  function getCurrencies() {
+    return [
+      { code:'ARS', flag:'🇦🇷', name: t('cur-ars'), format: v => fmtAmt(v,'es-AR','ARS') },
+      { code:'MXN', flag:'🇲🇽', name: t('cur-mxn'), format: v => fmtAmt(v,'es-MX','MXN') },
+      { code:'CLP', flag:'🇨🇱', name: t('cur-clp'), format: v => fmtAmt(v,'es-CL','CLP') },
+      { code:'PEN', flag:'🇵🇪', name: t('cur-pen'), format: v => fmtAmt(v,'es-PE','PEN') },
+      { code:'UYU', flag:'🇺🇾', name: t('cur-uyu'), format: v => fmtAmt(v,'es-UY','UYU') },
+      { code:'EUR', flag:'🇪🇺', name: t('cur-eur'), format: v => fmtAmt(v,'es-ES','EUR', 2) },
+    ];
+  }
+
+  function fmtAmt(value, locale, currency, decimals = 0) {
+    try {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency', currency,
+        minimumFractionDigits: decimals, maximumFractionDigits: decimals
+      }).format(value);
+    } catch(e) { return currency + ' ' + (decimals ? value.toFixed(decimals) : Math.round(value)).toLocaleString(); }
+  }
+
+  let rates = {};
+
+  function renderCurrencies() {
+    const currencies = getCurrencies();
+    prices.forEach(price => {
+      const container = document.getElementById(`currencies-${price}`);
+      if (!container) return;
+      container.innerHTML = '';
+      currencies.forEach(cur => {
+        const row = document.createElement('div');
+        row.className = 'currency-row';
+        const rate = rates[cur.code];
+        const amountStr = rate
+          ? `<span class="currency-amount">${cur.format(price * rate)}</span>`
+          : `<span class="currency-amount loading">cargando…</span>`;
+        row.innerHTML = `
+          <span class="currency-flag">${cur.flag}</span>
+          <span class="currency-code">${cur.code}</span>
+          <span class="currency-name">${cur.name}</span>
+          ${amountStr}`;
+        container.appendChild(row);
+      });
+    });
+  }
+
+  async function fetchRates() {
+    const statusEl = document.getElementById('rate-status');
+    statusEl.textContent = 'Actualizando…';
+    renderCurrencies();
+    try {
+      const response = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
+      const data = await response.json();
+      if (data && data.rates) {
+        rates = data.rates;
+        const now = new Date();
+        statusEl.innerHTML = `<strong>1 USD actualizado</strong>&nbsp;·&nbsp; ${now.toLocaleTimeString('es', {hour:'2-digit',minute:'2-digit'})}`;
+        renderCurrencies();
+      } else {
+        statusEl.textContent = 'No se pudieron obtener los datos';
+      }
+    } catch(err) {
+      statusEl.textContent = 'Error de conexión – usando estimados';
+      rates = { ARS: 1050, MXN: 17.2, CLP: 940, PEN: 3.75, UYU: 42, EUR: 0.93 };
+      renderCurrencies();
+    }
+  }
+
+  renderCurrencies();
+  fetchRates();
+  setInterval(fetchRates, 30 * 60 * 1000);
+
+  /* ─── FAQ TOGGLE ─── */
+  function toggleFaq(questionEl) {
+    const item = questionEl.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
