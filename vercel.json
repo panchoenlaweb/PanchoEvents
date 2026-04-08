@@ -17,7 +17,9 @@
     { "source": "/starlympic",         "destination": "/starlympic/index.html" },
     { "source": "/starlympic/stream",  "destination": "/starlympic/stream.html" },
     { "source": "/dmdland3",           "destination": "/dmdland3/index.html" },
-    { "source": "/dmdland3/stream",    "destination": "/dmdland3/stream.html" }
+    { "source": "/dmdland3/stream",    "destination": "/dmdland3/stream.html" },
+    { "source": "/sotus",              "destination": "/sotus/index.html" },
+    { "source": "/sotus/stream",       "destination": "/sotus/stream.html" }
   ],
   "headers": [
     {
