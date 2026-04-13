@@ -1893,10 +1893,16 @@
     const count  = checks.length;
     const raw    = checks.reduce((s, c) => s + parseFloat(c.dataset.price), 0);
 
-    /* Discount: 3+ events get 10% off */
+    /* Discount: all 8 → Pack Total fixed $18; 3+ → 10% off */
     let discount = 0;
-    if (count >= 3) discount = Math.round(raw * 0.10 * 100) / 100;
-    const final = Math.round((raw - discount) * 100) / 100;
+    let final;
+    if (count === BB_EVENTS.length) {
+      final    = 18;
+      discount = Math.round((raw - final) * 100) / 100;
+    } else {
+      if (count >= 3) discount = Math.round(raw * 0.10 * 100) / 100;
+      final = Math.round((raw - discount) * 100) / 100;
+    }
 
     const amountEl    = document.getElementById('bb-amount');
     const oldEl       = document.getElementById('bb-old-price');
