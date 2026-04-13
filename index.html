@@ -1893,7 +1893,7 @@
     const count  = checks.length;
     const raw    = checks.reduce((s, c) => s + parseFloat(c.dataset.price), 0);
 
-    /* Discount: all 8 → Pack Total fixed $18; 3+ → 10% off */
+    /* Discount: all 8 → Pack Total fixed $18; 3+ → 10% off; 2 → $0.50 off */
     let discount = 0;
     let final;
     if (count === BB_EVENTS.length) {
@@ -1901,6 +1901,7 @@
       discount = Math.round((raw - final) * 100) / 100;
     } else {
       if (count >= 3) discount = Math.round(raw * 0.10 * 100) / 100;
+      else if (count === 2) discount = 0.50;
       final = Math.round((raw - discount) * 100) / 100;
     }
 
