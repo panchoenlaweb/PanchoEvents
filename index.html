@@ -951,6 +951,68 @@
       .b-foot { flex-direction: column; text-align: center; }
       .b-feat-right { width: 100%; }
     }
+    /* ── Bundle Builder ── */
+    .bb-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background .18s, border-color .18s;
+      user-select: none;
+    }
+    .bb-item:hover { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.06); }
+    .bb-item.selected { background: rgba(245,197,24,.05); border-color: rgba(245,197,24,.2); }
+    .bb-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px; height: 17px;
+      border: 2px solid #444;
+      background: transparent;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: border-color .18s, background .18s;
+    }
+    .bb-check:checked {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+    .bb-check:checked::after {
+      content: '';
+      position: absolute;
+      top: 1px; left: 4px;
+      width: 5px; height: 9px;
+      border: 2px solid #000;
+      border-top: none; border-left: none;
+      transform: rotate(45deg);
+    }
+    .bb-info { flex: 1; min-width: 0; }
+    .bb-ename {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      color: #ddd;
+      letter-spacing: .04em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bb-edetail {
+      font-family: 'Orbitron', monospace;
+      font-size: .44rem;
+      letter-spacing: .1em;
+      color: #555;
+      margin-top: 2px;
+    }
+    .bb-eprice {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -1472,10 +1534,91 @@
 
     </div>
 
-    <!-- NOTA PACK PERSONALIZADO -->
-    <div class="b-custom">
-      <p>💡 ¿Quieres combinar otros eventos? <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener">Escríbenos por Telegram</a> y te armamos un pack a tu medida con precio especial.</p>
+    <!-- ARMA TU BUNDLE -->
+    <div id="bundle-builder" style="margin-top:52px;">
+
+      <div style="text-align:center;margin-bottom:32px;">
+        <div style="display:inline-block;font-family:'Orbitron',monospace;font-size:.55rem;font-weight:900;letter-spacing:.25em;color:var(--gold);border:1px solid rgba(245,197,24,.35);padding:5px 20px;margin-bottom:14px;">✦ PERSONALIZA</div>
+        <h3 style="font-family:'Cinzel',serif;font-size:clamp(1.2rem,2.8vw,1.8rem);font-weight:900;letter-spacing:.1em;color:#fff;margin-bottom:8px;">Arma Tu Propio Bundle</h3>
+        <p style="font-size:.95rem;color:#777;letter-spacing:.04em;">Selecciona los eventos que quieres — el descuento se aplica automáticamente al elegir 3 o más.</p>
+      </div>
+
+      <div style="
+        background:var(--card);
+        border:1px solid var(--border);
+        position:relative;
+        overflow:hidden;
+      ">
+        <!-- top accent line -->
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--red-l),var(--gold),transparent);"></div>
+
+        <!-- event checkboxes -->
+        <div id="bb-events" style="
+          display:grid;
+          grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+          gap:2px;
+          padding:28px 24px;
+        ">
+          <!-- items injected by JS -->
+        </div>
+
+        <!-- summary bar -->
+        <div style="
+          border-top:1px solid var(--border);
+          background:rgba(0,0,0,.35);
+          padding:24px 28px;
+          display:flex;
+          flex-wrap:wrap;
+          align-items:center;
+          justify-content:space-between;
+          gap:20px;
+        ">
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:.52rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">Total a pagar</div>
+            <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+              <span id="bb-old-price" style="font-size:.95rem;color:#555;text-decoration:line-through;display:none;"></span>
+              <span id="bb-price" style="font-family:'Cinzel',serif;font-size:2.8rem;font-weight:900;color:#fff;line-height:1;">
+                <sup style="font-size:1rem;color:var(--gold);vertical-align:super;">$</sup><span id="bb-amount">0</span><sup style="font-size:.75rem;color:var(--gold);"> USD</sup>
+              </span>
+              <span id="bb-discount-badge" style="display:none;font-family:'Orbitron',monospace;font-size:.5rem;letter-spacing:.1em;padding:4px 10px;background:rgba(0,200,80,.12);border:1px solid rgba(0,200,80,.4);color:#00c850;"></span>
+            </div>
+            <div id="bb-currencies" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
+            <div id="bb-select-hint" style="font-size:.82rem;color:#555;letter-spacing:.03em;margin-top:6px;">Selecciona al menos 1 evento para ver el precio.</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0;">
+            <a id="bb-telegram-btn" href="https://t.me/Panchoenlared" target="_blank" rel="noopener" style="
+              display:inline-block;
+              font-family:'Orbitron',monospace;
+              font-size:.62rem;
+              font-weight:700;
+              letter-spacing:.14em;
+              text-transform:uppercase;
+              padding:13px 28px;
+              background:var(--gold);
+              color:#000;
+              text-decoration:none;
+              box-shadow:0 0 22px rgba(245,197,24,.25);
+              white-space:nowrap;
+              opacity:.35;
+              pointer-events:none;
+              transition:opacity .2s,box-shadow .2s;
+            ">🎫 QUIERO ESTE BUNDLE</a>
+            <button onclick="document.querySelectorAll('.bb-check').forEach(c=>c.checked=false);updateBuilder();" style="
+              background:none;border:1px solid rgba(255,255,255,.1);color:#666;
+              font-family:'Orbitron',monospace;font-size:.48rem;letter-spacing:.12em;
+              padding:6px 14px;cursor:pointer;text-transform:uppercase;
+              transition:border-color .2s,color .2s;
+            " onmouseover="this.style.borderColor='rgba(255,255,255,.3)';this.style.color='#aaa';"
+               onmouseout="this.style.borderColor='rgba(255,255,255,.1)';this.style.color='#666';">
+              Limpiar selección
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
+    <!-- / ARMA TU BUNDLE -->
 
   </div>
 </section>
@@ -1710,23 +1853,115 @@
   });
 
   /* ── Bundle currency conversion ── */
+  let bbRates = {};
+
+  /* Define all events for the builder */
+  const BB_EVENTS = [
+    { id:'starlympic', name:'Starlympic 2026',       detail:'Sport Day · 28 Nov',           price:2.50, color:'rgba(255,215,0,.7)',   icon:'🏆' },
+    { id:'lol3',       name:'Love Out Loud',          detail:'Concierto · 22-24 May · 3 días', price:4.00, color:'rgba(245,197,24,.8)', icon:'❤' },
+    { id:'dmd2',       name:'DMD Land 3',             detail:'Concierto · 2-3 May · 2 días',  price:3.00, color:'rgba(0,180,255,.7)',  icon:'⚡' },
+    { id:'perth2',     name:'Perth Santa Concert',    detail:'Concierto · 18-19 Jul · 2 días', price:3.00, color:'rgba(232,115,138,.8)',icon:'🎵' },
+    { id:'surfjava',   name:'Surf Java Fan Meeting',  detail:'Fan Meet · 25 Abr',             price:2.00, color:'rgba(245,182,58,.7)',  icon:'🌿' },
+    { id:'seakeen',    name:'Sea Keen Fan Meeting',   detail:'Fan Meet · 26 Abr',             price:2.00, color:'rgba(0,201,177,.7)',   icon:'🌊' },
+    { id:'olympop',    name:'Olympop 2 Sport Day',    detail:'Sport Day · 9 May',             price:2.00, color:'rgba(77,148,255,.7)',  icon:'🏅' },
+    { id:'sotus',      name:'Sotus',                  detail:'Concierto · TBC',               price:2.50, color:'rgba(160,120,255,.8)', icon:'🎓' },
+  ];
+
+  /* Render checkboxes */
+  (function renderBuilder() {
+    const grid = document.getElementById('bb-events');
+    BB_EVENTS.forEach(ev => {
+      const label = document.createElement('label');
+      label.className = 'bb-item';
+      label.innerHTML = `
+        <input type="checkbox" class="bb-check" data-id="${ev.id}" data-price="${ev.price}" onchange="updateBuilder()">
+        <div class="bb-info">
+          <div class="bb-ename">${ev.icon} ${ev.name}</div>
+          <div class="bb-edetail">${ev.detail}</div>
+        </div>
+        <div class="bb-eprice">$${ev.price % 1 === 0 ? ev.price.toFixed(0) : ev.price.toFixed(2)}</div>
+      `;
+      label.querySelector('.bb-check').addEventListener('change', () => {
+        label.classList.toggle('selected', label.querySelector('.bb-check').checked);
+      });
+      grid.appendChild(label);
+    });
+  })();
+
+  function updateBuilder() {
+    const checks = [...document.querySelectorAll('.bb-check:checked')];
+    const count  = checks.length;
+    const raw    = checks.reduce((s, c) => s + parseFloat(c.dataset.price), 0);
+
+    /* Discount: 3+ events get 10% off */
+    let discount = 0;
+    if (count >= 3) discount = Math.round(raw * 0.10 * 100) / 100;
+    const final = Math.round((raw - discount) * 100) / 100;
+
+    const amountEl    = document.getElementById('bb-amount');
+    const oldEl       = document.getElementById('bb-old-price');
+    const badgeEl     = document.getElementById('bb-discount-badge');
+    const hintEl      = document.getElementById('bb-select-hint');
+    const curEl       = document.getElementById('bb-currencies');
+    const btn         = document.getElementById('bb-telegram-btn');
+
+    if (count === 0) {
+      amountEl.textContent = '0';
+      oldEl.style.display = 'none';
+      badgeEl.style.display = 'none';
+      hintEl.style.display = 'block';
+      curEl.innerHTML = '';
+      btn.style.opacity = '.35';
+      btn.style.pointerEvents = 'none';
+      return;
+    }
+
+    hintEl.style.display = 'none';
+    amountEl.textContent = final % 1 === 0 ? final.toFixed(0) : final.toFixed(2);
+
+    if (discount > 0) {
+      oldEl.textContent = '$' + raw.toFixed(2) + ' USD';
+      oldEl.style.display = 'inline';
+      badgeEl.textContent = '✓ −$' + discount.toFixed(2) + ' descuento (10%)';
+      badgeEl.style.display = 'inline';
+    } else {
+      oldEl.style.display = 'none';
+      badgeEl.style.display = 'none';
+    }
+
+    /* Currency conversions */
+    if (bbRates.MXN) {
+      curEl.innerHTML = `
+        <span class="b-cur">🇲🇽 <b>$${Math.round(final * bbRates.MXN)} MXN</b></span>
+        <span class="b-cur">🇪🇺 <b>€${(final * bbRates.EUR).toFixed(2)} EUR</b></span>
+        <span class="b-cur">🇨🇱 <b>$${(final * bbRates.CLP).toLocaleString('es-CL',{maximumFractionDigits:0})} CLP</b></span>
+      `;
+    }
+
+    /* Build Telegram message */
+    const names = checks.map(c => BB_EVENTS.find(e => e.id === c.dataset.id).name).join(', ');
+    const msg = encodeURIComponent(`Hola! Quiero armar mi bundle: ${names}. Total: $${final} USD`);
+    btn.href = `https://t.me/Panchoenlared?text=${msg}`;
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+
   (async function loadBundleRates() {
     try {
       const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
       const data = await res.json();
       if (data.result !== 'success') return;
-      const MXN = data.rates.MXN;
-      const EUR = data.rates.EUR;
-      const CLP = data.rates.CLP;
+      bbRates = { MXN: data.rates.MXN, EUR: data.rates.EUR, CLP: data.rates.CLP };
 
+      /* Fixed bundle cards */
       document.querySelectorAll('[data-usd]').forEach(el => {
         const usd = parseFloat(el.dataset.usd);
         const container = el.querySelector('[data-currencies]');
         if (!container) return;
         container.innerHTML = `
-          <span class="b-cur">🇲🇽 <b>$${Math.round(usd * MXN)} MXN</b></span>
-          <span class="b-cur">🇪🇺 <b>€${(usd * EUR).toFixed(2)} EUR</b></span>
-          <span class="b-cur">🇨🇱 <b>$${(usd * CLP).toLocaleString('es-CL', {maximumFractionDigits:0})} CLP</b></span>
+          <span class="b-cur">🇲🇽 <b>$${Math.round(usd * bbRates.MXN)} MXN</b></span>
+          <span class="b-cur">🇪🇺 <b>€${(usd * bbRates.EUR).toFixed(2)} EUR</b></span>
+          <span class="b-cur">🇨🇱 <b>$${(usd * bbRates.CLP).toLocaleString('es-CL',{maximumFractionDigits:0})} CLP</b></span>
         `;
       });
     } catch (e) { /* silently fail */ }
