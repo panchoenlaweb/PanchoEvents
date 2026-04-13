@@ -1723,7 +1723,7 @@
         const container = el.querySelector('[data-currencies]');
         if (!container) return;
         container.innerHTML = `
-          <span class="b-cur">🇲🇽 <b>$${(usd * MXN).toFixed(0)} MXN</b></span>
+          <span class="b-cur">🇲🇽 <b>$${Math.round(usd * MXN)} MXN</b></span>
           <span class="b-cur">🇪🇺 <b>€${(usd * EUR).toFixed(2)} EUR</b></span>
           <span class="b-cur">🇨🇱 <b>$${(usd * CLP).toLocaleString('es-CL', {maximumFractionDigits:0})} CLP</b></span>
         `;
