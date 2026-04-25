@@ -708,7 +708,7 @@
             <div class="p-card featured">
                 <div class="feat-badge">MEJOR OPCIÓN</div>
                 <p class="p-card-name">2 Días</p>
-                <p class="p-usd"><sup>$</sup>3 <sup style="font-size:.7rem">USD</sup></p>
+                <p class="p-usd"><sup>$</sup>3.50 <sup style="font-size:.7rem">USD</sup></p>
                 <p class="p-desc">Día 1 + Día 2</p>
             </div>
         </div>
@@ -986,7 +986,7 @@ function renderTable(rates, note, live) {
         CURRENCIES.filter(c => c.region === reg).forEach(c => {
             const r  = rates[c.code] ?? FB[c.code] ?? 1;
             const p1 = c.fmt(2 * r);
-            const p2 = c.fmt(3 * r);
+            const p2 = c.fmt(3.5 * r);
             rows += `<tr>
                 <td><span class="c-flag">${c.flag}</span><span class="c-name">${c.name}</span></td>
                 <td><span class="c-code">${c.code}</span></td>
@@ -1002,7 +1002,7 @@ function renderTable(rates, note, live) {
                 <thead><tr>
                     <th>Moneda</th><th>Código</th>
                     <th>1 Día &nbsp;(USD 2)</th>
-                    <th>2 Días (USD 3)</th>
+                    <th>2 Días (USD 3.50)</th>
                 </tr></thead>
                 <tbody>${rows}</tbody>
             </table>
@@ -1010,7 +1010,7 @@ function renderTable(rates, note, live) {
 
     document.getElementById('rate-note').innerHTML =
         `${live ? '🟢 Tasas en tiempo real' : '🟡 Tasas de referencia aproximadas'} &nbsp;·&nbsp; ${note}
-        <br><small>* Peso Argentino: tasa oficial. &nbsp;Precios base: 1 día = USD 2 &nbsp;|&nbsp; 2 días = USD 3</small>`;
+        <br><small>* Peso Argentino: tasa oficial. &nbsp;Precios base: 1 día = USD 2 &nbsp;|&nbsp; 2 días = USD 3.50</small>`;
 }
 
 async function loadRates() {
