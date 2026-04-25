@@ -613,6 +613,7 @@ async function checkPwd() {
    LIVE BADGE
 ═══════════════════════════════════ */
 const EV = new Date('2026-04-25T10:00:00Z');  // 5pm Bangkok UTC+7
+const EARLY = 15 * 60 * 1000;  // activar 15 min antes
 
 function initLiveBadge() {
   const badge = document.getElementById('live-indicator');
@@ -623,7 +624,7 @@ function initLiveBadge() {
     const now  = Date.now();
     const diff = EV - now;
 
-    if (diff <= 0 && now - EV < GRACE) {
+    if (diff <= EARLY && now - EV < GRACE) {
       // Live!
       badge.classList.remove('offline');
       label.textContent = '● EN VIVO';
@@ -690,7 +691,7 @@ function pad(n) { return String(n).padStart(2, '0'); }
 function startPlayerCountdown() {
   function tick() {
     const diff = EV - Date.now();
-    if (diff <= 0) {
+    if (diff <= EARLY) {
       ['pcd','pch','pcm','pcs'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = '00';
