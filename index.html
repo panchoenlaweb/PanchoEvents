@@ -1824,6 +1824,15 @@
     { id:'sotus',      name:'Sotus',                  detail:'Concierto · TBC',               price:2.50, color:'rgba(160,120,255,.8)', icon:'🎓' },
   ];
 
+  const makePackKey = ids => [...ids].sort().join('|');
+  const FIXED_PACKS = {
+    [makePackKey(BB_EVENTS.map(ev => ev.id))]: { name: 'Pack Total',      price: 17.5 },
+    [makePackKey(['starlympic', 'lol3', 'dmd2', 'perth2'])]: { name: 'Pack Mega',       price: 11 },
+    [makePackKey(['lol3', 'perth2', 'dmd2', 'sotus'])]:      { name: 'Pack Conciertos', price: 11 },
+    [makePackKey(['dmd2', 'lol3', 'olympop'])]:              { name: 'Pack Mayo',       price: 8 },
+    [makePackKey(['starlympic', 'olympop'])]:                { name: 'Pack Sport Day',  price: 4 },
+  };
+
   /* Render checkboxes */
   (function renderBuilder() {
     const grid = document.getElementById('bb-events');
@@ -1850,15 +1859,26 @@
     const count  = checks.length;
     const raw    = checks.reduce((s, c) => s + parseFloat(c.dataset.price), 0);
 
-    /* Discount: all 7 → Pack Total fixed $17.5; 3+ → 10% off; 2 → $0.50 off */
+    const selectedIds = checks.map(c => c.dataset.id);
+    const fixedPack   = FIXED_PACKS[makePackKey(selectedIds)];
+
+    /* Fixed packs keep exact listed price. Otherwise: 3+ → 10% off; 2 → $0.50 off */
     let discount = 0;
     let final;
-    if (count === BB_EVENTS.length) {
-      final    = 17.5;
+    let badgeText = '';
+
+    if (fixedPack) {
+      final    = fixedPack.price;
       discount = Math.round((raw - final) * 100) / 100;
+      badgeText = `✓ Precio ${fixedPack.name}`;
     } else {
-      if (count >= 3) discount = Math.round(raw * 0.10 * 100) / 100;
-      else if (count === 2) discount = 0.50;
+      if (count >= 3) {
+        discount = Math.round(raw * 0.10 * 100) / 100;
+        badgeText = `✓ −$${discount.toFixed(2)} descuento (10%)`;
+      } else if (count === 2) {
+        discount = 0.50;
+        badgeText = `✓ −$${discount.toFixed(2)} descuento`;
+      }
       final = Math.round((raw - discount) * 100) / 100;
     }
 
@@ -1886,7 +1906,7 @@
     if (discount > 0) {
       oldEl.textContent = '$' + raw.toFixed(2) + ' USD';
       oldEl.style.display = 'inline';
-      badgeEl.textContent = '✓ −$' + discount.toFixed(2) + ' descuento (10%)';
+      badgeEl.textContent = badgeText;
       badgeEl.style.display = 'inline';
     } else {
       oldEl.style.display = 'none';
