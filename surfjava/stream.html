@@ -664,9 +664,11 @@ function activateTestMode() {
 
 function injectPlayer() {
   const isTest   = sessionStorage.getItem('sj_test') === '1';
+  const EVENT_ID = '5892983';
   const VIDEO_ID = '';
   const src      = isTest ? 'https://vimeo.com/event/5810147/embed/interaction'
-                          : (VIDEO_ID ? `https://player.vimeo.com/video/${VIDEO_ID}?autoplay=1&color=f5b63a&title=0&byline=0&portrait=0` : null);
+                          : (EVENT_ID ? `https://vimeo.com/event/${EVENT_ID}/embed/interaction`
+                                      : (VIDEO_ID ? `https://player.vimeo.com/video/${VIDEO_ID}?autoplay=1&color=f5b63a&title=0&byline=0&portrait=0` : null));
   const box = document.getElementById('player-box');
   if (!src || !box || box.querySelector('iframe')) return;
   const iframe = document.createElement('iframe');
