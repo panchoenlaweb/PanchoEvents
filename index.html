@@ -1332,13 +1332,13 @@
               <span class="b-tag" style="border-color:rgba(160,120,255,.4);color:rgba(160,120,255,.8);">🎓 Sotus</span>
             </div>
           </div>
-          <div class="b-feat-right" data-usd="18">
+          <div class="b-feat-right" data-usd="17.5">
             <div style="font-family:'Orbitron',monospace;font-size:.6rem;letter-spacing:.25em;color:var(--gold);margin-bottom:6px;text-transform:uppercase;">Pack Total</div>
             <div style="font-family:'Cinzel',serif;font-size:clamp(3rem,7vw,4.5rem);font-weight:900;color:#fff;line-height:1;text-shadow:0 0 40px rgba(245,197,24,.4);">
-              <sup style="font-size:1.4rem;vertical-align:super;color:var(--gold);">$</sup>18<sup style="font-size:1rem;color:var(--gold);">USD</sup>
+              <sup style="font-size:1.4rem;vertical-align:super;color:var(--gold);">$</sup>17<sup style="font-size:1rem;color:var(--gold);">.50 USD</sup>
             </div>
             <div class="bp-old" style="margin:8px 0 2px;">$19.50 USD</div>
-            <div class="bp-save">✓ Ahorras $1.50 USD</div>
+            <div class="bp-save">✓ Ahorras $2.00 USD</div>
             <div class="b-feat-currencies" data-currencies></div>
             <div style="margin-top:18px;"></div>
             <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="b-btn" style="padding:14px 34px;">🎫 QUIERO EL PACK TOTAL</a>
@@ -1850,11 +1850,11 @@
     const count  = checks.length;
     const raw    = checks.reduce((s, c) => s + parseFloat(c.dataset.price), 0);
 
-    /* Discount: all 7 → Pack Total fixed $18; 3+ → 10% off; 2 → $0.50 off */
+    /* Discount: all 7 → Pack Total fixed $17.5; 3+ → 10% off; 2 → $0.50 off */
     let discount = 0;
     let final;
     if (count === BB_EVENTS.length) {
-      final    = 18;
+      final    = 17.5;
       discount = Math.round((raw - final) * 100) / 100;
     } else {
       if (count >= 3) discount = Math.round(raw * 0.10 * 100) / 100;
