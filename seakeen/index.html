@@ -258,6 +258,7 @@
         /* ── LOCAL TIME BANNER ── */
         .local-time-banner {
             margin-top: 2rem;
+            margin-bottom: 1.35rem;
             display: inline-flex; flex-direction: column; align-items: center; gap: .4rem;
             background: rgba(0,0,0,.45);
             border: 1px solid rgba(0,201,177,.4);
@@ -282,7 +283,14 @@
         .local-time-tz span { color: #fff; }
 
         /* Buttons */
-        .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .hero-btns {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
         .btn-primary {
             font-family: 'Orbitron', monospace;
@@ -321,6 +329,8 @@
             box-shadow: 0 0 26px rgba(0, 201, 177, .45);
         }
         .btn-stream .lock-icon { margin-right: 8px; }
+        .btn-primary,
+        .btn-stream { min-width: 380px; text-align: center; }
         .btn-stream-tip {
             display: none;
             position: absolute; bottom: calc(100% + 10px); left: 50%;
@@ -604,9 +614,9 @@
             .hero-tag { letter-spacing: .4em; font-size: .62rem; }
             .hero-datebadge { padding: 10px 18px; }
 
-            .hero-btns { flex-direction: column; align-items: stretch; padding: 0 8px; }
-            .btn-primary { clip-path: none; width: 100%; }
-            .btn-stream  { clip-path: none; width: 100%; }
+            .hero-btns { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 14px; padding: 0 8px; }
+            .btn-primary { clip-path: none; width: 100%; min-width: 0; }
+            .btn-stream  { clip-path: none; width: 100%; min-width: 0; }
             .btn-stream-wrap { width: 100%; }
             .btn-stream-tip {
                 white-space: normal; text-align: center;
@@ -683,8 +693,8 @@
                 🎟 VER ENTRADAS
             </button>
             <div class="btn-stream-wrap">
-                <a class="btn-stream active" href="stream.html">
-                    <span class="lock-icon">�</span>INGRESAR AL EVENTO
+                <a class="btn-stream active" href="https://www.panchoenlared.com/seakeen/stream">
+                    <span class="lock-icon">🔓</span>INGRESAR AL EVENTO
                 </a>
                 <div class="btn-stream-tip">Disponible solo para compradores — recibirás la clave con tu entrada</div>
             </div>
