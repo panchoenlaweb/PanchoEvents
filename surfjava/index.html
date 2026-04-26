@@ -686,11 +686,11 @@
 <section id="hero">
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-inner">
-    <div class="event-badge">🌿 &nbsp; G · MM · TV · 2026 &nbsp; 🌿</div>
+    <div class="event-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">✅ &nbsp; EVENTO FINALIZADO &nbsp; ✅</div>
 
     <h1 class="hero-title">Surf Java</h1>
     <h2 class="hero-subtitle">1st Fan Meeting in Thailand</h2>
-    <p  class="hero-tagline">— &nbsp; L I V E &nbsp; S T R E A M &nbsp; —</p>
+    <p  class="hero-tagline">— &nbsp; E V E N T O &nbsp; F I N A L I Z A D O &nbsp; —</p>
 
     <div class="date-badge-wrap">
       <div class="date-badge">
@@ -712,14 +712,14 @@
     </div>
 
     <div class="hero-btns">
-      <button class="btn-reserve" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">
-        🌸 Reservar Acceso Online
+      <button class="btn-reserve" disabled style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;cursor:default;opacity:.65;">
+        🌸 Evento Finalizado
       </button>
       <div class="btn-stream-wrap">
-        <button class="btn-stream" disabled>
-          🔒 Ver Transmisión
+        <button class="btn-stream" disabled style="cursor:default;">
+          ✅ Finalizado
         </button>
-        <div class="btn-stream-tip">Disponible el 25 de Abril · 5:00 PM Bangkok</div>
+        <div class="btn-stream-tip">El fan meeting ha concluido. ¡Gracias por acompañarnos!</div>
       </div>
     </div>
   </div>
@@ -752,16 +752,7 @@
     <h2 class="section-title">Cuenta Regresiva</h2>
     <div class="cd-card" id="cd1">
       <p class="cd-label">🌿 Sábado 25 de Abril, 2026</p>
-      <div class="timer">
-        <div class="t-block"><span class="t-num" id="d1d">--</span><span class="t-lbl">días</span></div>
-        <span class="t-sep">:</span>
-        <div class="t-block"><span class="t-num" id="d1h">--</span><span class="t-lbl">horas</span></div>
-        <span class="t-sep">:</span>
-        <div class="t-block"><span class="t-num" id="d1m">--</span><span class="t-lbl">min</span></div>
-        <span class="t-sep">:</span>
-        <div class="t-block"><span class="t-num" id="d1s">--</span><span class="t-lbl">seg</span></div>
-      </div>
-      <p class="cd-status" id="st1">5:00 PM · Bangkok (UTC+7)</p>
+      <p class="cd-status" id="st1" style="font-size:1.2rem;padding:20px 0;">✅ El evento ha finalizado. ¡Gracias a todos por acompañarnos!</p>
     </div>
   </div>
 </section>
@@ -780,59 +771,47 @@
   <div class="wrapper">
     <h2 class="section-title">Acceso Live Stream</h2>
 
-    <div class="notice-banner">
-      <span class="ni">📌</span>
+    <div class="notice-banner" style="background:rgba(0,100,0,.08);border-color:#0a0;">
+      <span class="ni">✅</span>
       <span>
-        Esta es una página de <strong>reventa de acceso al live stream</strong>.
-        Reserva directo con nosotros por Telegram.
-        Recibirás tu <strong>contraseña de acceso</strong> antes del evento.
+        Este evento ha <strong>finalizado</strong>.
+        ¡Gracias a todos los que nos acompañaron!
+        Sigue atento a nuestros próximos eventos.
       </span>
     </div>
 
     <div class="info-grid">
-      <div class="info-card">
+      <div class="info-card" style="opacity:.6;">
         <div class="icon">📺</div>
-        <h3>¿Qué incluye?</h3>
-        <p>Acceso completo al live stream del 1st Fan Meeting de Surf Java. Disfrútalo desde cualquier país.</p>
+        <h3>¿Qué incluía?</h3>
+        <p>Acceso completo al live stream del 1st Fan Meeting de Surf Java desde cualquier país.</p>
       </div>
-      <div class="info-card">
-        <div class="icon">📱</div>
-        <h3>¿Cómo funciona?</h3>
-        <p>Escríbenos en Telegram para reservar. Recibirás una clave privada para ingresar al stream.</p>
+      <div class="info-card" style="opacity:.6;">
+        <div class="icon">�</div>
+        <h3>Fecha del evento</h3>
+        <p>Sábado, 25 de Abril de 2026 · 5:00 PM Bangkok (ICT · UTC+7)</p>
       </div>
-      <div class="info-card">
-        <div class="icon">💳</div>
-        <h3>¿Cómo pagar?</h3>
-        <p>Pagos vía PayPal y opciones de pago locales disponibles en varios países. Consúltanos por Telegram para conocer la mejor opción según tu país.</p>
+      <div class="info-card" style="opacity:.6;">
+        <div class="icon">�</div>
+        <h3>Ubicación</h3>
+        <p>MCC Hall FL.3 · The Mall Lifestore Bangkae · Bangkok, Thailand</p>
       </div>
-      <div class="info-card">
-        <div class="icon">⏰</div>
-        <h3>¿Cuándo recibirlo?</h3>
-        <p>La contraseña de acceso se entrega en las horas previas al evento. Asegura tu lugar con anticipación.</p>
+      <div class="info-card" style="opacity:.6;">
+        <div class="icon">✅</div>
+        <h3>Estado</h3>
+        <p>Evento finalizado. La transmisión ha concluido.</p>
       </div>
     </div>
-
-    <!-- Price card -->
-    <div class="price-highlight">
-      <div class="best-lbl">⭐ PRECIO ESPECIAL</div>
-      <p class="ph-type">🌸 Live Stream &nbsp;·&nbsp; Online Worldwide</p>
-      <p class="ph-price"><sup>$</sup>2 <sub>USD</sub></p>
-      <p class="ph-desc">Acceso completo al fan meeting · Sin importar tu país</p>
-    </div>
-
-    <!-- Currency conversion table -->
-    <div id="prices-box"><div class="spinner">Cargando precios actualizados</div></div>
-    <p class="price-note" id="rate-note"></p>
   </div>
 </section>
 
 <!-- ══════════════════ CONTACT ══════════════════ -->
 <section id="contact">
   <div class="wrapper">
-    <h2 class="section-title">Reservar / Contacto</h2>
+    <h2 class="section-title">Contacto</h2>
     <p class="contact-note">
-      ¿Listo para ver el fan meeting de Surf Java desde tu país?
-      Escríbenos para reservar tu acceso.
+      El evento de Surf Java ha finalizado.
+      Escríbenos para conocer nuestros próximos eventos.
       Respondemos en minutos.
     </p>
     <div class="social-btns">
