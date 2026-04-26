@@ -564,6 +564,22 @@ if (sessionStorage.getItem('sk_access') === '1') {
 
 /* ── EVENT TIME ── */
 const EVENT_TIME = new Date('2026-04-26T17:00:00+07:00');
+const LIVE_EVENT_ID = '5894254';
+
+function injectPlayer(src) {
+    const area = document.getElementById('player-area');
+    if (!src || !area || area.querySelector('iframe')) return;
+    const ph = document.getElementById('stream-placeholder');
+    if (ph) ph.remove();
+    const ifr = document.createElement('iframe');
+    ifr.src = src;
+    ifr.setAttribute('frameborder','0');
+    ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
+    ifr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+    ifr.allowFullscreen = true;
+    ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+    area.appendChild(ifr);
+}
 
 /* ── LIVE INDICATOR ── */
 function updateLiveIndicator() {
@@ -573,6 +589,7 @@ function updateLiveIndicator() {
     const lbl = document.getElementById('live-label');
     if (now >= EVENT_TIME && now <= end) {
         ind.classList.remove('offline'); lbl.textContent = 'EN VIVO';
+        injectPlayer(`https://vimeo.com/event/${LIVE_EVENT_ID}/embed/interaction`);
     } else if (now > end) {
         ind.classList.add('offline'); lbl.textContent = 'FINALIZADO';
     } else {
@@ -586,6 +603,7 @@ function tickMini() {
     if (diff <= 0) {
         const cd = document.getElementById('mini-cd');
         if (cd) cd.innerHTML = '<div class="cd-live-msg">🔴 ¡EN VIVO AHORA!</div>';
+        injectPlayer(`https://vimeo.com/event/${LIVE_EVENT_ID}/embed/interaction`);
         return;
     }
     const d = Math.floor(diff / 86400000);
@@ -640,19 +658,7 @@ function activateTestMode() {
     const lbl = document.getElementById('live-label');
     if (ind) ind.classList.remove('offline');
     if (lbl) lbl.textContent = 'EN VIVO';
-    const ph = document.getElementById('stream-placeholder');
-    if (ph) ph.remove();
-    const area = document.getElementById('player-area');
-    if (area && !area.querySelector('iframe')) {
-        const ifr = document.createElement('iframe');
-        ifr.src = 'https://vimeo.com/event/5810147/embed/interaction';
-        ifr.setAttribute('frameborder','0');
-        ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
-        ifr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
-        ifr.allowFullscreen = true;
-        ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
-        area.appendChild(ifr);
-    }
+    injectPlayer('https://vimeo.com/event/5810147/embed/interaction');
     buildTZList();
 }
 
