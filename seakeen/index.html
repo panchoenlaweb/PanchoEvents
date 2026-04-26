@@ -306,6 +306,19 @@
             background: transparent;
             color: #3a5a60; border: 1px solid #2a4048; cursor: not-allowed;
             clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-stream.active {
+            background: linear-gradient(135deg, #00c9b1 0%, #0a7d9e 100%);
+            color: #fff;
+            border: 1px solid rgba(0, 201, 177, .7);
+            cursor: pointer;
+            transition: filter .25s, box-shadow .25s;
+        }
+        .btn-stream.active:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 26px rgba(0, 201, 177, .45);
         }
         .btn-stream .lock-icon { margin-right: 8px; }
         .btn-stream-tip {
@@ -670,9 +683,9 @@
                 🎟 VER ENTRADAS
             </button>
             <div class="btn-stream-wrap">
-                <button class="btn-stream" disabled>
-                    <span class="lock-icon">🔒</span>INGRESAR AL EVENTO
-                </button>
+                <a class="btn-stream active" href="stream.html">
+                    <span class="lock-icon">�</span>INGRESAR AL EVENTO
+                </a>
                 <div class="btn-stream-tip">Disponible solo para compradores — recibirás la clave con tu entrada</div>
             </div>
         </div>

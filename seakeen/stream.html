@@ -564,6 +564,7 @@ if (sessionStorage.getItem('sk_access') === '1') {
 
 /* ── EVENT TIME ── */
 const EVENT_TIME = new Date('2026-04-26T17:00:00+07:00');
+const EARLY = 15 * 60 * 1000;
 const LIVE_EVENT_ID = '5894254';
 
 function injectPlayer(src) {
@@ -584,10 +585,11 @@ function injectPlayer(src) {
 /* ── LIVE INDICATOR ── */
 function updateLiveIndicator() {
     const now = Date.now();
+    const diff = EVENT_TIME - now;
     const end = EVENT_TIME.getTime() + 4 * 3600000;
     const ind = document.getElementById('live-indicator');
     const lbl = document.getElementById('live-label');
-    if (now >= EVENT_TIME && now <= end) {
+    if (diff <= EARLY && now <= end) {
         ind.classList.remove('offline'); lbl.textContent = 'EN VIVO';
         injectPlayer(`https://vimeo.com/event/${LIVE_EVENT_ID}/embed/interaction`);
     } else if (now > end) {
@@ -600,7 +602,7 @@ function updateLiveIndicator() {
 /* ── MINI COUNTDOWN ── */
 function tickMini() {
     const diff = EVENT_TIME - Date.now();
-    if (diff <= 0) {
+    if (diff <= EARLY) {
         const cd = document.getElementById('mini-cd');
         if (cd) cd.innerHTML = '<div class="cd-live-msg">🔴 ¡EN VIVO AHORA!</div>';
         injectPlayer(`https://vimeo.com/event/${LIVE_EVENT_ID}/embed/interaction`);
