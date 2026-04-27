@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blush Blossom Fan Fest 2026 — Live Stream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #ff9edb;
+      --rose: #ff4fbd;
+      --purple: #9d5cff;
+      --blue: #6ddcff;
+      --gold: #f8dc68;
+      --dark: #050511;
+      --card: rgba(19,15,44,.82);
+      --border: rgba(255,158,219,.28);
+      --text: #fff4fb;
+      --muted: #9589ad;
+      --glow: rgba(255,79,189,.35);
+    }
+
+    html { font-size: 16px; }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255,79,189,.12), transparent 34%),
+        radial-gradient(circle at 85% 25%, rgba(109,220,255,.08), transparent 32%),
+        radial-gradient(circle at 50% 100%, rgba(157,92,255,.12), transparent 38%),
+        var(--dark);
+    }
+
+    #bg-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    #gate {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.96);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+    }
+
+    .gate-box {
+      width: min(92vw, 440px);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 52px 38px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(145deg, rgba(255,158,219,.10), rgba(109,220,255,.035)),
+        var(--card);
+      box-shadow: 0 28px 90px rgba(0,0,0,.55), 0 0 70px rgba(255,79,189,.15);
+    }
+    .gate-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--pink), var(--gold), var(--blue), transparent);
+    }
+    .gate-lock { font-size: 3rem; margin-bottom: 18px; animation: glowPulse 2.2s ease-in-out infinite; }
+    @keyframes glowPulse { 50% { filter: drop-shadow(0 0 22px var(--glow)); } }
+
+    .gate-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 6px;
+      text-shadow: 0 0 22px rgba(255,79,189,.28);
+    }
+    .gate-sub {
+      font-family: 'Orbitron', monospace;
+      font-size: .64rem;
+      color: var(--muted);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .gate-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(5,5,17,.92);
+      border: 1px solid rgba(255,158,219,.24);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.05rem;
+      letter-spacing: .24em;
+      text-align: center;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .gate-input:focus { border-color: var(--pink); box-shadow: 0 0 22px rgba(255,79,189,.16); }
+    .gate-input.err { border-color: #ff5a7a; animation: shake .3s ease; }
+    @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+    .gate-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, var(--rose), var(--purple));
+      font-family: 'Orbitron', monospace;
+      font-size: .78rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      box-shadow: 0 0 30px rgba(255,79,189,.22);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .gate-btn:hover { transform: translateY(-2px); box-shadow: 0 0 42px rgba(255,79,189,.36); }
+    .gate-err { min-height: 18px; margin-top: 14px; color: #ff5a7a; font-size: .78rem; letter-spacing: .08em; }
+    .gate-hint { margin-top: 18px; color: rgba(149,137,173,.62); font-size: .72rem; letter-spacing: .06em; }
+
+    #main-content { display: none; position: relative; z-index: 1; }
+    .top-bar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,5,17,.78);
+      backdrop-filter: blur(10px);
+    }
+    .top-bar-logo {
+      font-family: 'Cinzel', serif;
+      font-size: .9rem;
+      letter-spacing: .24em;
+      color: #fff;
+    }
+    .top-bar-logo span { color: var(--pink); }
+    .live-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 14px;
+      border: 1px solid var(--pink);
+      background: rgba(255,79,189,.16);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: .68rem;
+      letter-spacing: .15em;
+    }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); animation: liveblink .9s steps(1) infinite; }
+    @keyframes liveblink { 50% { opacity: 0; } }
+    .live-badge.offline { background: rgba(40,40,50,.4); border-color: #3c3150; color: #716681; }
+    .live-badge.offline .live-dot { background: #716681; animation: none; }
+    .top-bar-back, .btn-logout {
+      font-family: 'Orbitron', monospace;
+      font-size: .64rem;
+      letter-spacing: .18em;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid rgba(255,158,219,.16);
+      background: transparent;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+    .top-bar-back:hover, .btn-logout:hover { color: var(--pink); border-color: var(--pink); }
+
+    #test-banner {
+      display: none;
+      max-width: 980px;
+      margin: .8rem auto 0;
+      background: linear-gradient(135deg, rgba(255,165,0,.12), rgba(255,100,0,.08));
+      border: 2px dashed rgba(255,165,0,.55);
+      border-radius: 6px;
+      padding: .9rem 1.4rem;
+      align-items: center;
+      gap: .8rem;
+    }
+    #test-banner .tb-icon { font-size: 1.4rem; }
+    #test-banner .tb-title { font-family: 'Orbitron', monospace; font-size: .72rem; color: #ffaa00; letter-spacing: .12em; text-transform: uppercase; }
+    #test-banner .tb-sub { color: #cca060; font-size: .8rem; margin-top: .15rem; }
+
+    .player-section { padding: 0; background: #000; }
+    .player-wrap { max-width: 980px; margin: 0 auto; position: relative; box-shadow: 0 26px 85px rgba(0,0,0,.45); }
+    .vimeo-embed { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
+    .vimeo-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .stream-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 24px;
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(255,79,189,.20), transparent 35%),
+        radial-gradient(ellipse at 60% 65%, rgba(109,220,255,.10), transparent 42%),
+        #000;
+    }
+    .placeholder-icon { font-size: 3.5rem; margin-bottom: 18px; filter: drop-shadow(0 0 18px var(--glow)); }
+    .placeholder-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      letter-spacing: .2em;
+      color: var(--pink);
+      margin-bottom: 10px;
+      text-shadow: 0 0 22px rgba(255,79,189,.25);
+    }
+    .placeholder-sub { color: var(--muted); font-size: .88rem; letter-spacing: .08em; max-width: 420px; line-height: 1.6; }
+    .placeholder-sub b { color: var(--text); }
+
+    .countdown-inline { display: flex; justify-content: center; gap: 10px; margin: 22px 0 0; flex-wrap: wrap; }
+    .cd-block { display: flex; flex-direction: column; align-items: center; min-width: 62px; }
+    .cd-num { font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 900; color: var(--pink); line-height: 1; text-shadow: 0 0 16px var(--glow); }
+    .cd-lbl { font-family: 'Orbitron', monospace; font-size: .52rem; letter-spacing: .2em; color: var(--muted); text-transform: uppercase; margin-top: 5px; }
+    .cd-sep { font-family: 'Orbitron', monospace; font-size: 1.6rem; color: var(--rose); line-height: 1; margin-top: 4px; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .cd-live-msg { font-family: 'Orbitron', monospace; font-size: .9rem; color: var(--pink); letter-spacing: .2em; margin-top: 18px; text-shadow: 0 0 10px var(--glow); }
+
+    .info-strip {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,8,28,.92);
+    }
+    .info-strip-day { font-family: 'Cinzel', serif; font-size: .92rem; letter-spacing: .18em; }
+    .info-strip-time { font-family: 'Orbitron', monospace; font-size: .72rem; letter-spacing: .12em; color: var(--muted); }
+    .info-strip-time b { color: var(--pink); }
+
+    .details-section { max-width: 980px; margin: 0 auto; padding: 38px 20px 60px; }
+    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 36px; }
+    .d-card {
+      position: relative; overflow: hidden;
+      padding: 24px;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, rgba(255,158,219,.08), rgba(109,220,255,.025)), var(--card);
+      box-shadow: 0 18px 50px rgba(0,0,0,.22);
+    }
+    .d-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--pink), transparent); }
+    .d-card-title { font-family: 'Orbitron', monospace; font-size: .72rem; letter-spacing: .26em; color: var(--pink); text-transform: uppercase; margin-bottom: 14px; }
+    .d-card p { font-size: .92rem; line-height: 1.75; color: #c9bddd; }
+    .d-card p b { color: var(--text); }
+    .tz-quick { list-style: none; }
+    .tz-quick li { display: flex; justify-content: space-between; gap: 14px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.05); font-size: .88rem; }
+    .tz-quick li:last-child { border: none; }
+    .tzq-n { color: #c9bddd; }
+    .tzq-t { font-family: 'Orbitron', monospace; font-size: .7rem; color: var(--text); }
+    .chat-note {
+      text-align: center;
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      background: rgba(255,79,189,.06);
+      color: var(--muted);
+      font-size: .85rem;
+      letter-spacing: .06em;
+    }
+    .chat-note a, footer a { color: var(--pink); text-decoration: none; }
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 28px 20px; color: var(--muted); font-size: .75rem; letter-spacing: .1em; }
+
+    @media (max-width: 640px) {
+      .gate-box { padding: 38px 20px; }
+      .gate-title { font-size: 1rem; letter-spacing: .18em; }
+      .top-bar { padding: 10px 14px; }
+      .top-bar-logo { font-size: .76rem; letter-spacing: .13em; }
+      .details-grid { grid-template-columns: 1fr; }
+      .details-section { padding: 24px 14px 48px; }
+      .info-strip { flex-direction: column; align-items: flex-start; padding: 12px 16px; }
+      .placeholder-title { font-size: .95rem; letter-spacing: .12em; }
+      .cd-num { font-size: 1.4rem; }
+      .cd-block { min-width: 44px; }
+      .tz-quick li { flex-direction: column; gap: 2px; }
+    }
+  </style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-lock">🔐</div>
+    <h1 class="gate-title">Transmisión Privada</h1>
+    <p class="gate-sub">Blush Blossom Fan Fest · Midnight Bloom</p>
+    <input type="password" id="pwd-input" class="gate-input" placeholder="· · · · · ·" maxlength="40" autocomplete="off" onkeydown="if(event.key==='Enter') checkPwd()" />
+    <button class="gate-btn" onclick="checkPwd()">ENTRAR →</button>
+    <p class="gate-err" id="gate-err"></p>
+    <p class="gate-hint">Ingresa la clave que recibiste con tu entrada</p>
+  </div>
+</div>
+
+<div id="main-content">
+  <header class="top-bar">
+    <div class="top-bar-logo">BLUSH BLOSSOM &nbsp;<span>Midnight Bloom</span></div>
+    <div class="live-badge offline" id="live-indicator"><div class="live-dot"></div><span id="live-label">EN ESPERA</span></div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn-logout" onclick="logoutStream()">🔒 Cerrar sesión</button>
+      <a href="index.html" class="top-bar-back">← Volver</a>
+    </div>
+  </header>
+
+  <div id="test-banner">
+    <span class="tb-icon">🧪</span>
+    <div>
+      <div class="tb-title">SESIÓN DE PRUEBA</div>
+      <div class="tb-sub">Acceso de prueba activo. Este stream no es el evento real.</div>
+    </div>
+  </div>
+
+  <div class="player-section">
+    <div class="player-wrap">
+      <div class="vimeo-embed" id="player-area">
+        <div class="stream-placeholder" id="stream-placeholder">
+          <div class="placeholder-icon">🌌</div>
+          <h2 class="placeholder-title">La transmisión aún no ha comenzado</h2>
+          <p class="placeholder-sub">El stream estará disponible el <b>13 de Junio a las 17:00 Bangkok</b>. Vuelve en:</p>
+          <div class="countdown-inline" id="mini-cd">
+            <div class="cd-block"><span class="cd-num" id="mc-d">--</span><span class="cd-lbl">días</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-block"><span class="cd-num" id="mc-h">--</span><span class="cd-lbl">horas</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-block"><span class="cd-num" id="mc-m">--</span><span class="cd-lbl">min</span></div>
+            <span class="cd-sep">:</span>
+            <div class="cd-block"><span class="cd-num" id="mc-s">--</span><span class="cd-lbl">seg</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-strip">
+      <span class="info-strip-day">Blush Blossom Fan Fest 2026 — Sábado 13 y Domingo 14 de Junio</span>
+      <span class="info-strip-time">Inicio: <b>17:00 Bangkok (UTC+7)</b></span>
+    </div>
+  </div>
+
+  <div class="details-section">
+    <div class="details-grid">
+      <div class="d-card">
+        <p class="d-card-title">🎬 Sobre el Evento</p>
+        <p><b>Blush Blossom Fan Fest 2026 : Midnight Bloom</b> reúne a Milk–Love, Namtan–Film, Emi–Bonnie, View–Mim, Kapook–Ciize, Janhae–Jingjing, June–Mewnich y Pahn–Fond en un evento online especial desde Bangkok.</p>
+      </div>
+      <div class="d-card">
+        <p class="d-card-title">📅 Agenda</p>
+        <p><b>Sáb 13 Jun 2026</b><br>17:00 Bangkok · Día 1<br><br><b>Dom 14 Jun 2026</b><br>17:00 Bangkok · Día 2<br><br><span style="color:var(--muted);font-size:.85rem">* Horario sujeto a cambios</span></p>
+      </div>
+      <div class="d-card">
+        <p class="d-card-title">🌍 Hora en tu País</p>
+        <ul class="tz-quick" id="tz-quick-list"></ul>
+      </div>
+      <div class="d-card">
+        <p class="d-card-title">📺 Cómo Ver</p>
+        <p>La transmisión se realiza mediante reproductor privado.<br><br>✅ Compatible con celular, tablet y PC<br>✅ Incluye grabación, rerun y E-Photo<br><br>Si tienes problemas, recarga la página o intenta en otro navegador.</p>
+      </div>
+    </div>
+
+    <div class="chat-note">¿Problemas con el acceso? Escríbeme en Telegram: <a href="https://t.me/panchoenlared" target="_blank">@panchoenlared</a> &nbsp;·&nbsp; <span style="color:var(--pink);font-weight:600">#BlushBlossom2026</span></div>
+  </div>
+
+  <footer>
+    <p style="color:var(--pink);font-weight:600">#BlushBlossom2026 &nbsp;·&nbsp; #MidnightBloom &nbsp;·&nbsp; #GMMTV</p>
+    <p style="margin-top:8px">Soporte por Telegram: <a href="https://t.me/panchoenlared" target="_blank">@panchoenlared</a></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const cv = document.getElementById('bg-canvas');
+  const ctx = cv.getContext('2d');
+  let W, H, pts;
+  function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+  function mkPts(n) {
+    pts = Array.from({ length: n }, () => ({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+.2, a: Math.random(), da: (Math.random()*.012+.003)*(Math.random()>.5?1:-1), c: Math.random() }));
+  }
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p => {
+      p.a += p.da; if(p.a>1||p.a<0) p.da*=-1;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      const a = Math.max(0, Math.min(1, p.a));
+      ctx.fillStyle = p.c > .66 ? `rgba(255,158,219,${a*.46})` : p.c > .33 ? `rgba(157,92,255,${a*.34})` : `rgba(109,220,255,${a*.24})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  resize(); mkPts(150); draw();
+  window.addEventListener('resize', () => { resize(); mkPts(150); });
+})();
+
+const VALID_HASH = '585d551f5da843665855cc19a8e4c775256f301e6a7e8fbbe5be9f1b362f33bf';
+const TEST_HASH  = 'de1ef4d4403b8a20739eed6bd6a8714e2d54ea4eed4f316f491d47df78c7e327';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPwd() {
+  const val = document.getElementById('pwd-input').value.trim();
+  const errEl = document.getElementById('gate-err');
+  const inp = document.getElementById('pwd-input');
+  if (!val) return;
+
+  const hash = await sha256(val);
+  if (hash === VALID_HASH || hash === TEST_HASH) {
+    const isTest = hash === TEST_HASH;
+    sessionStorage.setItem('bb_access', '1');
+    if (isTest) sessionStorage.setItem('bb_test', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    errEl.textContent = '';
+    if (isTest) activateTestMode(); else initContent();
+  } else {
+    errEl.textContent = 'Clave incorrecta. Inténtalo de nuevo.';
+    inp.classList.add('err');
+    inp.value = '';
+    setTimeout(() => inp.classList.remove('err'), 500);
+  }
+}
+
+function logoutStream() {
+  sessionStorage.removeItem('bb_access');
+  sessionStorage.removeItem('bb_test');
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('gate-err').textContent = '';
+}
+
+const EVENT_TIME = new Date('2026-06-13T17:00:00+07:00');
+const EARLY = 15 * 60 * 1000;
+const LIVE_EVENT_ID = '';
+
+function injectPlayer(src) {
+  const area = document.getElementById('player-area');
+  if (!src || !area || area.querySelector('iframe')) return;
+  const ph = document.getElementById('stream-placeholder');
+  if (ph) ph.remove();
+  const ifr = document.createElement('iframe');
+  ifr.src = src;
+  ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
+  ifr.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+  ifr.allowFullscreen = true;
+  ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+  area.appendChild(ifr);
+}
+
+function updateLiveIndicator() {
+  const now = Date.now();
+  const diff = EVENT_TIME - now;
+  const end = EVENT_TIME.getTime() + 6 * 3600000;
+  const ind = document.getElementById('live-indicator');
+  const lbl = document.getElementById('live-label');
+  if (diff <= EARLY && now <= end) {
+    ind.classList.remove('offline');
+    lbl.textContent = 'EN VIVO';
+    if (LIVE_EVENT_ID) injectPlayer(`https://vimeo.com/event/${LIVE_EVENT_ID}/embed/interaction`);
+  } else if (now > end) {
+    ind.classList.add('offline');
+    lbl.textContent = 'FINALIZADO';
+  } else {
+    ind.classList.add('offline');
+    lbl.textContent = 'EN ESPERA';
+  }
+}
+
+function tickMini() {
+  const diff = EVENT_TIME - Date.now();
+  if (diff <= EARLY) {
+    const cd = document.getElementById('mini-cd');
+    if (cd) cd.innerHTML = '<div class="cd-live-msg">🔴 ¡EN VIVO AHORA!</div>';
+    if (LIVE_EVENT_ID) injectPlayer(`https://vimeo.com/event/${LIVE_EVENT_ID}/embed/interaction`);
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  const p = n => String(n).padStart(2,'0');
+  [['mc-d',d],['mc-h',h],['mc-m',m],['mc-s',s]].forEach(([id,v]) => { const el = document.getElementById(id); if(el) el.textContent = p(v); });
+}
+
+const TZ_LIST = [
+  { name:'Bangkok', tz:'Asia/Bangkok' },
+  { name:'México', tz:'America/Mexico_City' },
+  { name:'Colombia', tz:'America/Bogota' },
+  { name:'Perú', tz:'America/Lima' },
+  { name:'Chile', tz:'America/Santiago' },
+  { name:'Argentina', tz:'America/Argentina/Buenos_Aires' },
+  { name:'Brasil', tz:'America/Sao_Paulo' },
+  { name:'España', tz:'Europe/Madrid' },
+  { name:'Londres', tz:'Europe/London' },
+  { name:'Japón', tz:'Asia/Tokyo' },
+  { name:'Corea del Sur', tz:'Asia/Seoul' },
+  { name:'Singapur', tz:'Asia/Singapore' },
+  { name:'Filipinas', tz:'Asia/Manila' },
+  { name:'India', tz:'Asia/Kolkata' }
+];
+
+function fmtTZ(date, tz) {
+  return new Intl.DateTimeFormat('es', { timeZone: tz, weekday:'short', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit', hour12: true }).format(date);
+}
+
+function buildTZList() {
+  const ul = document.getElementById('tz-quick-list');
+  ul.innerHTML = '';
+  TZ_LIST.forEach(z => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="tzq-n">${z.name}</span><span class="tzq-t">${fmtTZ(EVENT_TIME, z.tz)}</span>`;
+    ul.appendChild(li);
+  });
+}
+
+function activateTestMode() {
+  sessionStorage.setItem('bb_test', '1');
+  const testBanner = document.getElementById('test-banner');
+  if (testBanner) testBanner.style.display = 'flex';
+  const ind = document.getElementById('live-indicator');
+  const lbl = document.getElementById('live-label');
+  if (ind) ind.classList.remove('offline');
+  if (lbl) lbl.textContent = 'EN VIVO';
+  buildTZList();
+}
+
+function initContent() {
+  updateLiveIndicator();
+  buildTZList();
+  tickMini();
+  setInterval(tickMini, 1000);
+  setInterval(updateLiveIndicator, 30000);
+}
+
+if (sessionStorage.getItem('bb_access') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  if (sessionStorage.getItem('bb_test') === '1') activateTestMode(); else initContent();
+}
+</script>
+</body>
+</html>
