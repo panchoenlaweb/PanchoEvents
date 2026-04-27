@@ -275,6 +275,112 @@
             50% { opacity: .4; top: 18px; }
         }
 
+        .local-time-banner {
+            max-width: 430px;
+            margin: 0 auto 24px;
+            background: rgba(232,164,208,.08);
+            border: 1px solid var(--border);
+            padding: 16px 22px;
+            box-shadow: 0 0 30px rgba(232,164,208,.08);
+        }
+        .local-time-label {
+            font-family: 'Orbitron', monospace;
+            font-size: .55rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .local-time-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--bloom-pink);
+            line-height: 1.1;
+        }
+        .local-time-tz {
+            font-size: .8rem;
+            color: #b8a8c8;
+            letter-spacing: .04em;
+        }
+
+        #countdown {
+            background: linear-gradient(180deg, rgba(212,120,184,.04), transparent);
+        }
+        .cd-single {
+            max-width: 760px;
+            margin: 0 auto;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 42px 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(232,164,208,.10);
+        }
+        .cd-single::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(to right, transparent, var(--bloom-rose), var(--gold), var(--bloom-rose), transparent);
+        }
+        .cd-label {
+            font-family: 'Orbitron', monospace;
+            font-size: .62rem;
+            letter-spacing: .32em;
+            color: var(--bloom-pink);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .cd-date-str {
+            font-size: .9rem;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+        .timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .t-block {
+            min-width: 82px;
+            padding: 12px 10px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(232,164,208,.16);
+        }
+        .t-num {
+            display: block;
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text);
+            line-height: 1;
+        }
+        .t-lbl {
+            display: block;
+            margin-top: 6px;
+            font-family: 'Orbitron', monospace;
+            font-size: .55rem;
+            letter-spacing: .18em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+        .t-sep {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: var(--bloom-rose);
+        }
+        .cd-status {
+            margin-top: 24px;
+            font-family: 'Orbitron', monospace;
+            font-size: .76rem;
+            letter-spacing: .1em;
+            color: var(--bloom-pink);
+        }
+
         /* ═══════════════════════════════
            LINEUP
         ═══════════════════════════════ */
@@ -543,6 +649,7 @@
 <!-- NAV DOTS -->
 <nav class="nav-dots" aria-label="Navegación">
     <div class="nav-dot active" title="Inicio" onclick="scrollSec('hero')"></div>
+    <div class="nav-dot" title="Cuenta regresiva" onclick="scrollSec('countdown')"></div>
     <div class="nav-dot" title="Line Up" onclick="scrollSec('lineup')"></div>
     <div class="nav-dot" title="Entradas" onclick="scrollSec('tickets')"></div>
     <div class="nav-dot" title="Horarios" onclick="scrollSec('timezones')"></div>
@@ -591,6 +698,12 @@
             <span class="loc">📍 Impact Arena, Bangkok</span>
         </div>
 
+        <div class="local-time-banner" id="local-time-banner">
+            <div class="local-time-label">🌍 El evento en tu país será a las</div>
+            <div class="local-time-value" id="local-time-value">--:--</div>
+            <div class="local-time-tz" id="local-time-tz">Detectando tu zona horaria…</div>
+        </div>
+
         <div class="hero-btns">
             <button class="btn-primary" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">
                 🎟 VER ENTRADAS
@@ -602,6 +715,42 @@
     </div>
 
     <div class="scroll-hint"><span></span></div>
+</section>
+
+<!-- ══════════════════ COUNTDOWN ══════════════════ -->
+<section id="countdown">
+    <div class="wrapper">
+        <h2 class="section-title">Cuenta Regresiva</h2>
+
+        <div class="cd-single" id="cd-card">
+            <div class="cd-label">⏳ tiempo restante para el día 1</div>
+            <div class="cd-date-str">SAT, 13 JUNE 2026 · 17:00 ICT (GMT+7)</div>
+
+            <div class="timer" id="timer">
+                <div class="t-block">
+                    <span class="t-num" id="t-days">--</span>
+                    <span class="t-lbl">Días</span>
+                </div>
+                <div class="t-sep">:</div>
+                <div class="t-block">
+                    <span class="t-num" id="t-hours">--</span>
+                    <span class="t-lbl">Horas</span>
+                </div>
+                <div class="t-sep">:</div>
+                <div class="t-block">
+                    <span class="t-num" id="t-mins">--</span>
+                    <span class="t-lbl">Min</span>
+                </div>
+                <div class="t-sep">:</div>
+                <div class="t-block">
+                    <span class="t-num" id="t-secs">--</span>
+                    <span class="t-lbl">Seg</span>
+                </div>
+            </div>
+
+            <div class="cd-status" id="cd-status">Cargando...</div>
+        </div>
+    </div>
 </section>
 
 <!-- ══════════════════ LINEUP ══════════════════ -->
@@ -694,36 +843,179 @@
             <table class="ctbl">
                 <thead>
                     <tr>
-                        <th>PAÍS</th>
-                        <th>1 DÍA</th>
-                        <th>2 DÍAS</th>
+                        <th>País / Región</th>
+                        <th>Moneda</th>
+                        <th>1 día</th>
+                        <th>2 días</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr class="reg-sep"><td colspan="4">🌎 &nbsp; LATINOAMÉRICA</td></tr>
                     <tr>
-                        <td><span class="c-flag">🇨🇱</span><span class="c-name">Chile</span> <span class="c-code">CLP</span></td>
-                        <td class="p-amt">$1.830</td>
-                        <td class="p-amt">$3.200</td>
+                        <td><span class="c-name">México</span></td>
+                        <td><span class="c-code">MXN</span></td>
+                        <td><span class="p-amt">$36</span></td>
+                        <td><span class="p-amt">$63</span></td>
                     </tr>
                     <tr>
-                        <td><span class="c-flag">🇦🇷</span><span class="c-name">Argentina</span> <span class="c-code">ARS</span></td>
-                        <td class="p-amt">$2.830</td>
-                        <td class="p-amt">$4.950</td>
+                        <td><span class="c-flag">🇨🇴</span><span class="c-name">Colombia</span></td>
+                        <td><span class="c-code">COP</span></td>
+                        <td><span class="p-amt">COP$ 8,400</span></td>
+                        <td><span class="p-amt">COP$ 14,700</span></td>
                     </tr>
                     <tr>
-                        <td><span class="c-flag">🇺🇾</span><span class="c-name">Uruguay</span> <span class="c-code">UYU</span></td>
-                        <td class="p-amt">$80</td>
-                        <td class="p-amt">$140</td>
+                        <td><span class="c-flag">🇵🇪</span><span class="c-name">Perú</span></td>
+                        <td><span class="c-code">PEN</span></td>
+                        <td><span class="p-amt">S/ 7.60</span></td>
+                        <td><span class="p-amt">S/ 13.30</span></td>
                     </tr>
                     <tr>
-                        <td><span class="c-flag">🇲🇽</span><span class="c-name">México</span> <span class="c-code">MXN</span></td>
-                        <td class="p-amt">$36</td>
-                        <td class="p-amt">$63</td>
+                        <td><span class="c-flag">🇦🇷</span><span class="c-name">Argentina</span></td>
+                        <td><span class="c-code">ARS</span></td>
+                        <td><span class="p-amt">$2.830</span></td>
+                        <td><span class="p-amt">$4.950</span></td>
                     </tr>
                     <tr>
-                        <td><span class="c-flag">🇪🇸</span><span class="c-name">España</span> <span class="c-code">EUR</span></td>
-                        <td class="p-amt">€1.85</td>
-                        <td class="p-amt">€3.25</td>
+                        <td><span class="c-name">Brasil</span></td>
+                        <td><span class="c-code">BRL</span></td>
+                        <td><span class="p-amt">R$ 11.00</span></td>
+                        <td><span class="p-amt">R$ 19.25</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇨🇱</span><span class="c-name">Chile</span></td>
+                        <td><span class="c-code">CLP</span></td>
+                        <td><span class="p-amt">$1.830</span></td>
+                        <td><span class="p-amt">$3.200</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-name">Uruguay</span></td>
+                        <td><span class="c-code">UYU</span></td>
+                        <td><span class="p-amt">$80</span></td>
+                        <td><span class="p-amt">$140</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇻🇪</span><span class="c-name">Venezuela</span></td>
+                        <td><span class="c-code">USD</span></td>
+                        <td><span class="p-amt">$2.00</span></td>
+                        <td><span class="p-amt">$3.50</span></td>
+                    </tr>
+
+                    <tr class="reg-sep"><td colspan="4">🌏 &nbsp; ASIA</td></tr>
+                    <tr>
+                        <td><span class="c-name">Tailandia</span></td>
+                        <td><span class="c-code">THB</span></td>
+                        <td><span class="p-amt">฿ 70.00</span></td>
+                        <td><span class="p-amt">฿ 122.50</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇯🇵</span><span class="c-name">Japón</span></td>
+                        <td><span class="c-code">JPY</span></td>
+                        <td><span class="p-amt">¥ 300</span></td>
+                        <td><span class="p-amt">¥ 525</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇰🇷</span><span class="c-name">Corea del Sur</span></td>
+                        <td><span class="c-code">KRW</span></td>
+                        <td><span class="p-amt">₩ 2,800</span></td>
+                        <td><span class="p-amt">₩ 4,900</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇨🇳</span><span class="c-name">China</span></td>
+                        <td><span class="c-code">CNY</span></td>
+                        <td><span class="p-amt">¥ 14.40</span></td>
+                        <td><span class="p-amt">¥ 25.20</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇸🇬</span><span class="c-name">Singapur</span></td>
+                        <td><span class="c-code">SGD</span></td>
+                        <td><span class="p-amt">S$ 2.70</span></td>
+                        <td><span class="p-amt">S$ 4.70</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇮🇩</span><span class="c-name">Indonesia</span></td>
+                        <td><span class="c-code">IDR</span></td>
+                        <td><span class="p-amt">Rp 32,000</span></td>
+                        <td><span class="p-amt">Rp 56,000</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇵🇭</span><span class="c-name">Filipinas</span></td>
+                        <td><span class="c-code">PHP</span></td>
+                        <td><span class="p-amt">₱ 112.00</span></td>
+                        <td><span class="p-amt">₱ 196.00</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇮🇳</span><span class="c-name">India</span></td>
+                        <td><span class="c-code">INR</span></td>
+                        <td><span class="p-amt">₹ 167.00</span></td>
+                        <td><span class="p-amt">₹ 292.00</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇲🇾</span><span class="c-name">Malasia</span></td>
+                        <td><span class="c-code">MYR</span></td>
+                        <td><span class="p-amt">RM 9.30</span></td>
+                        <td><span class="p-amt">RM 16.30</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-name">Taiwán</span></td>
+                        <td><span class="c-code">TWD</span></td>
+                        <td><span class="p-amt">NT$ 65.00</span></td>
+                        <td><span class="p-amt">NT$ 114.00</span></td>
+                    </tr>
+
+                    <tr class="reg-sep"><td colspan="4">🌍 &nbsp; EUROPA</td></tr>
+                    <tr>
+                        <td><span class="c-flag">🇪🇺</span><span class="c-name">Eurozona</span></td>
+                        <td><span class="c-code">EUR</span></td>
+                        <td><span class="p-amt">€1.85</span></td>
+                        <td><span class="p-amt">€3.25</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇬🇧</span><span class="c-name">Reino Unido</span></td>
+                        <td><span class="c-code">GBP</span></td>
+                        <td><span class="p-amt">£ 1.58</span></td>
+                        <td><span class="p-amt">£ 2.77</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇵🇱</span><span class="c-name">Polonia</span></td>
+                        <td><span class="c-code">PLN</span></td>
+                        <td><span class="p-amt">zł 8.00</span></td>
+                        <td><span class="p-amt">zł 14.00</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇸🇪</span><span class="c-name">Suecia</span></td>
+                        <td><span class="c-code">SEK</span></td>
+                        <td><span class="p-amt">kr 21.00</span></td>
+                        <td><span class="p-amt">kr 36.75</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇳🇴</span><span class="c-name">Noruega</span></td>
+                        <td><span class="c-code">NOK</span></td>
+                        <td><span class="p-amt">kr 22.00</span></td>
+                        <td><span class="p-amt">kr 38.50</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇷🇴</span><span class="c-name">Rumanía</span></td>
+                        <td><span class="c-code">RON</span></td>
+                        <td><span class="p-amt">lei 9.20</span></td>
+                        <td><span class="p-amt">lei 16.10</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇭🇺</span><span class="c-name">Hungría</span></td>
+                        <td><span class="c-code">HUF</span></td>
+                        <td><span class="p-amt">Ft 720</span></td>
+                        <td><span class="p-amt">Ft 1,260</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇨🇿</span><span class="c-name">Rep. Checa</span></td>
+                        <td><span class="c-code">CZK</span></td>
+                        <td><span class="p-amt">Kč 46.00</span></td>
+                        <td><span class="p-amt">Kč 80.50</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="c-flag">🇹🇷</span><span class="c-name">Turquía</span></td>
+                        <td><span class="c-code">TRY</span></td>
+                        <td><span class="p-amt">₺ 68.00</span></td>
+                        <td><span class="p-amt">₺ 119.00</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -767,6 +1059,13 @@
                         <div class="tz-times">
                             <div class="tz-t1">05:00 AM</div>
                             <div class="tz-t2">GMT-5</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">Venezuela</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">06:00 AM</div>
+                            <div class="tz-t2">GMT-4</div>
                         </div>
                     </li>
                     <li class="tz-item">
@@ -833,7 +1132,14 @@
                         </div>
                     </li>
                     <li class="tz-item">
-                        <span class="tz-name">🇯🇵 Japón (Tokio)</span>
+                        <span class="tz-name">Taiwán</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">18:00 PM</div>
+                            <div class="tz-t2">GMT+8 (CST)</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">Japón (Tokio)</span>
                         <div class="tz-times">
                             <div class="tz-t1">19:00 PM</div>
                             <div class="tz-t2">GMT+9 (JST)</div>
@@ -844,6 +1150,13 @@
                         <div class="tz-times">
                             <div class="tz-t1">19:00 PM</div>
                             <div class="tz-t2">GMT+9 (KST)</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">🇮🇳 India (Mumbai)</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">15:30 PM</div>
+                            <div class="tz-t2">GMT+5:30 (IST)</div>
                         </div>
                     </li>
                 </ul>
@@ -882,10 +1195,38 @@
                         </div>
                     </li>
                     <li class="tz-item">
-                        <span class="tz-name">🇮🇹 Italia (Roma)</span>
+                        <span class="tz-name">Polonia</span>
                         <div class="tz-times">
                             <div class="tz-t1">12:00 PM</div>
                             <div class="tz-t2">GMT+2 (CEST)</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">🇸🇪 Suecia</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">12:00 PM</div>
+                            <div class="tz-t2">GMT+2 (CEST)</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">🇷🇴 Rumanía</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">13:00 PM</div>
+                            <div class="tz-t2">GMT+3 (EEST)</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">🇷🇺 Moscú</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">13:00 PM</div>
+                            <div class="tz-t2">GMT+3 (MSK)</div>
+                        </div>
+                    </li>
+                    <li class="tz-item">
+                        <span class="tz-name">🇹🇷 Turquía</span>
+                        <div class="tz-times">
+                            <div class="tz-t1">13:00 PM</div>
+                            <div class="tz-t2">GMT+3 (TRT)</div>
                         </div>
                     </li>
                 </ul>
@@ -920,7 +1261,7 @@ function scrollSec(id) {
     document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
 }
 
-const sections = ['hero','lineup','tickets','timezones'];
+const sections = ['hero','countdown','lineup','tickets','timezones'];
 const dots = document.querySelectorAll('.nav-dot');
 const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -931,6 +1272,71 @@ const observer = new IntersectionObserver(entries => {
     });
 }, { threshold: 0.4 });
 sections.forEach(id => { const el = document.getElementById(id); if(el) observer.observe(el); });
+
+/* ── COUNTDOWN ── */
+// June 13, 2026 17:00 Bangkok time (ICT = UTC+7)
+const EVENT_TIME = new Date('2026-06-13T17:00:00+07:00').getTime();
+
+const elDays  = document.getElementById('t-days');
+const elHours = document.getElementById('t-hours');
+const elMins  = document.getElementById('t-mins');
+const elSecs  = document.getElementById('t-secs');
+const elStatus = document.getElementById('cd-status');
+const cdCard   = document.getElementById('cd-card');
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function animateNum(el, val) {
+    const str = pad(val);
+    if (el.textContent !== str) {
+        el.textContent = str;
+    }
+}
+
+function tick() {
+    const now  = Date.now();
+    const diff = EVENT_TIME - now;
+
+    if (diff <= 0) {
+        if (diff > -7200000) {
+            elDays.textContent  = '00';
+            elHours.textContent = '00';
+            elMins.textContent  = '00';
+            elSecs.textContent  = '00';
+            elStatus.textContent = '🔴 EN VIVO AHORA — Blush Blossom Fan Fest está comenzando';
+        } else {
+            [elDays, elHours, elMins, elSecs].forEach(el => { el.textContent = '00'; });
+            elStatus.textContent = '✅ El primer día ha finalizado. Recuerda revisar el día 2.';
+            cdCard.classList.add('ended');
+        }
+        return;
+    }
+
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000)  / 60000);
+    const secs  = Math.floor((diff % 60000)    / 1000);
+
+    animateNum(elDays,  days);
+    animateNum(elHours, hours);
+    animateNum(elMins,  mins);
+    animateNum(elSecs,  secs);
+
+    if (days > 30) {
+        elStatus.textContent = `Faltan ${days} días para Midnight Bloom en Bangkok`;
+    } else if (days > 7) {
+        elStatus.textContent = `¡Solo ${days} días! Blush Blossom se acerca`;
+    } else if (days > 1) {
+        elStatus.textContent = `🌸 ¡${days} días restantes! Prepárate para el Fan Fest`;
+    } else if (days === 1) {
+        elStatus.textContent = '🌌 ¡MAÑANA es el día! Blush Blossom Fan Fest 2026';
+    } else {
+        elStatus.textContent = `🌸 ¡HOY es el día! Faltan ${hours}h ${mins}m`;
+    }
+}
+
+tick();
+setInterval(tick, 1000);
 
 /* ── ANIMATED BACKGROUND CANVAS ── */
 const canvas = document.getElementById('bg-canvas');
@@ -992,6 +1398,19 @@ function drawFrame() {
     requestAnimationFrame(drawFrame);
 }
 drawFrame();
+
+/* ── LOCAL TIME AUTO-DETECT ── */
+(function(){
+    try {
+        const ev = new Date('2026-06-13T17:00:00+07:00');
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const t = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
+        const s = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value||tz;
+        const r = tz.replace(/_/g,' ');
+        document.getElementById('local-time-value').textContent = t+' hs';
+        document.getElementById('local-time-tz').innerHTML = '<span>'+s+'</span> &nbsp;·&nbsp; '+r;
+    } catch(e){ document.getElementById('local-time-tz').textContent='No se pudo detectar tu zona horaria'; }
+})();
 </script>
 
 </body>
