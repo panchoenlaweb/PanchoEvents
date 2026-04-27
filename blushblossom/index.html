@@ -11,23 +11,30 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bloom-pink:     #e8a4d0;
-            --bloom-rose:     #d478b8;
-            --bloom-purple:   #9b6db5;
-            --midnight:       #0a0a1a;
-            --midnight-light: #121228;
-            --card:           #151530;
-            --card2:          #1a1a3d;
-            --border:         rgba(232,164,208,0.25);
-            --gold:           #f5d742;
-            --text:           #e8e4f0;
-            --muted:          #8a80a0;
+            --bloom-pink:     #ff9edb;
+            --bloom-rose:     #ff4fbd;
+            --bloom-purple:   #9d5cff;
+            --bloom-blue:     #6ddcff;
+            --midnight:       #050511;
+            --midnight-light: #0d0b22;
+            --card:           rgba(19,15,44,.78);
+            --card2:          rgba(31,20,62,.88);
+            --border:         rgba(255,158,219,0.28);
+            --gold:           #f8dc68;
+            --text:           #fff4fb;
+            --muted:          #9589ad;
+            --glow-pink:      rgba(255,79,189,.35);
+            --glow-purple:    rgba(157,92,255,.32);
         }
 
         html { scroll-behavior: smooth; font-size: 16px; }
 
         body {
-            background: var(--midnight);
+            background:
+                radial-gradient(circle at 15% 10%, rgba(255,79,189,.10), transparent 34%),
+                radial-gradient(circle at 85% 25%, rgba(109,220,255,.08), transparent 32%),
+                radial-gradient(circle at 50% 100%, rgba(157,92,255,.12), transparent 38%),
+                var(--midnight);
             color: var(--text);
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
@@ -54,6 +61,7 @@
             text-align: center;
             margin-bottom: 60px;
             color: var(--bloom-pink);
+            text-shadow: 0 0 22px rgba(255,79,189,.32);
         }
         .section-title::after {
             content: '';
@@ -96,9 +104,10 @@
         .hero-bg {
             position: absolute; inset: 0;
             background:
-                radial-gradient(ellipse at 30% 20%, rgba(155,109,181,.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 70%, rgba(212,120,184,.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(232,164,208,.05) 0%, transparent 60%),
+                radial-gradient(circle at 50% 40%, rgba(255,158,219,.10) 0%, transparent 24%),
+                radial-gradient(ellipse at 30% 20%, rgba(157,92,255,.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 70%, rgba(255,79,189,.14) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(5,5,17,.75), rgba(18,7,34,.88), rgba(5,5,17,.95)),
                 var(--midnight);
             z-index: 0;
         }
@@ -115,6 +124,51 @@
             z-index: 1;
         }
 
+        #hero::after {
+            content: '';
+            position: absolute;
+            inset: 10%;
+            background:
+                linear-gradient(90deg, transparent, rgba(255,158,219,.12), transparent),
+                linear-gradient(0deg, transparent, rgba(109,220,255,.07), transparent);
+            filter: blur(34px);
+            opacity: .8;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(14px);
+            z-index: 1;
+            pointer-events: none;
+            opacity: .58;
+            animation: orbPulse 7s ease-in-out infinite;
+        }
+        .orb-a {
+            width: 180px; height: 180px;
+            left: 7%; top: 18%;
+            background: radial-gradient(circle, rgba(255,79,189,.38), transparent 68%);
+        }
+        .orb-b {
+            width: 220px; height: 220px;
+            right: 8%; bottom: 16%;
+            background: radial-gradient(circle, rgba(109,220,255,.22), transparent 68%);
+            animation-delay: 2s;
+        }
+        .orb-c {
+            width: 140px; height: 140px;
+            right: 23%; top: 12%;
+            background: radial-gradient(circle, rgba(248,220,104,.20), transparent 70%);
+            animation-delay: 4s;
+        }
+
+        @keyframes orbPulse {
+            0%, 100% { transform: scale(1); opacity: .45; }
+            50% { transform: scale(1.12); opacity: .78; }
+        }
+
         /* floating petals */
         .hero-petals {
             position: absolute; inset: 0; z-index: 1;
@@ -122,8 +176,9 @@
         }
         .petal-float {
             position: absolute;
-            font-size: 2rem;
-            opacity: .15;
+            font-size: 2.2rem;
+            opacity: .20;
+            text-shadow: 0 0 18px rgba(255,158,219,.32);
             animation: petalDrift 20s ease-in-out infinite;
         }
         .petal-float:nth-child(1) { top: 10%; left: 8%; animation-delay: 0s; }
@@ -143,7 +198,25 @@
 
         .hero-inner {
             position: relative; z-index: 2;
-            padding: 24px; max-width: 900px;
+            padding: 42px 34px;
+            max-width: 980px;
+            border: 1px solid rgba(255,158,219,.18);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+                rgba(7,7,22,.30);
+            box-shadow:
+                0 26px 90px rgba(0,0,0,.45),
+                inset 0 1px 0 rgba(255,255,255,.08),
+                0 0 80px rgba(255,79,189,.12);
+            backdrop-filter: blur(12px);
+        }
+        .hero-inner::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(120deg, transparent, rgba(255,158,219,.35), transparent, rgba(109,220,255,.18), transparent);
+            opacity: .55;
+            z-index: -1;
         }
 
         .event-badge {
@@ -153,24 +226,29 @@
             letter-spacing: .5em;
             color: var(--bloom-pink);
             border: 1px solid rgba(232,164,208,.45);
-            padding: 5px 20px;
-            margin-bottom: 14px;
-            background: rgba(232,164,208,.06);
+            padding: 7px 22px;
+            margin-bottom: 18px;
+            background: rgba(255,158,219,.08);
             backdrop-filter: blur(4px);
             text-transform: uppercase;
+            box-shadow: 0 0 24px rgba(255,79,189,.16);
         }
 
         .hero-title {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2.8rem, 9vw, 6rem);
+            font-size: clamp(3.1rem, 9.6vw, 7.2rem);
             font-weight: 900;
-            letter-spacing: .08em;
+            letter-spacing: .075em;
             color: var(--text);
             line-height: 1.1;
             margin-bottom: 8px;
+            text-shadow:
+                0 0 10px rgba(255,255,255,.14),
+                0 0 34px rgba(255,79,189,.28),
+                0 0 70px rgba(157,92,255,.22);
         }
         .hero-title span {
-            background: linear-gradient(135deg, var(--bloom-pink), var(--bloom-rose), var(--bloom-pink));
+            background: linear-gradient(135deg, #fff, var(--bloom-pink), var(--bloom-rose), var(--bloom-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -183,6 +261,7 @@
             letter-spacing: .28em;
             color: var(--bloom-rose);
             margin-bottom: 6px;
+            text-shadow: 0 0 24px rgba(255,79,189,.25);
         }
 
         .hero-tag {
@@ -190,7 +269,7 @@
             font-size: clamp(.6rem, 1.8vw, .9rem);
             letter-spacing: .55em;
             color: var(--muted);
-            margin-bottom: 30px;
+            margin-bottom: 34px;
         }
 
         .hero-dates {
@@ -198,10 +277,17 @@
             margin-bottom: 28px;
         }
         .date-badge {
-            background: var(--card);
+            background: linear-gradient(135deg, rgba(255,158,219,.10), rgba(109,220,255,.045));
             border: 1px solid var(--border);
-            padding: 14px 28px;
+            padding: 16px 28px;
             display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 12px 34px rgba(0,0,0,.24);
+            transition: transform .2s, border-color .2s, box-shadow .2s;
+        }
+        .date-badge:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,158,219,.55);
+            box-shadow: 0 18px 46px rgba(255,79,189,.12);
         }
         .date-badge .flag { font-size: 1.6rem; }
         .date-badge .dt small {
@@ -237,6 +323,7 @@
             border: none;
             cursor: pointer;
             transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 0 30px rgba(255,79,189,.22);
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,120,184,.4); }
 
@@ -251,6 +338,7 @@
             padding: 16px 38px;
             text-decoration: none;
             transition: background .2s, color .2s;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
         }
         .btn-outline:hover { background: rgba(232,164,208,.1); color: #fff; }
 
@@ -396,22 +484,35 @@
         }
 
         .cp-card {
-            background: var(--card);
+            background:
+                linear-gradient(145deg, rgba(255,158,219,.09), rgba(109,220,255,.025)),
+                var(--card);
             border: 1px solid var(--border);
             padding: 28px 24px;
             text-align: center;
             position: relative;
             overflow: hidden;
             transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 18px 46px rgba(0,0,0,.22);
         }
         .cp-card::before {
             content: '';
             position: absolute; top: 0; left: 0; right: 0; height: 2px;
             background: linear-gradient(to right, transparent, var(--bloom-rose), transparent);
         }
+        .cp-card::after {
+            content: '';
+            position: absolute;
+            width: 110px; height: 110px;
+            right: -45px; bottom: -45px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,79,189,.16), transparent 70%);
+            pointer-events: none;
+        }
         .cp-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(232,164,208,.12);
+            transform: translateY(-6px);
+            box-shadow: 0 22px 56px rgba(255,79,189,.16);
+            border-color: rgba(255,158,219,.50);
         }
 
         .cp-names {
@@ -459,22 +560,31 @@
         }
 
         .ticket-card {
-            background: var(--card);
+            background:
+                linear-gradient(145deg, rgba(255,158,219,.10), rgba(157,92,255,.04)),
+                var(--card);
             border: 1px solid var(--border);
             padding: 36px 28px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 20px 58px rgba(0,0,0,.28);
+            transition: transform .2s, border-color .2s, box-shadow .2s;
         }
         .ticket-card.featured {
             border-color: var(--bloom-rose);
-            box-shadow: 0 0 40px rgba(232,164,208,.15);
+            box-shadow: 0 0 54px rgba(255,79,189,.20), 0 18px 60px rgba(0,0,0,.30);
+        }
+        .ticket-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,158,219,.58);
+            box-shadow: 0 26px 70px rgba(255,79,189,.16);
         }
         .ticket-card.featured::before {
             content: '⭐ MEJOR VALOR';
             position: absolute; top: 0; left: 0; right: 0;
-            background: var(--bloom-rose);
-            color: #000;
+            background: linear-gradient(90deg, var(--gold), var(--bloom-pink), var(--bloom-blue));
+            color: #12081a;
             font-family: 'Orbitron', monospace;
             font-size: .55rem;
             letter-spacing: .2em;
@@ -506,6 +616,7 @@
             font-weight: 900;
             color: var(--bloom-pink);
             line-height: 1;
+            text-shadow: 0 0 34px rgba(255,79,189,.25);
         }
         .tk-price sup { font-size: 1.2rem; color: var(--gold); vertical-align: super; }
         .tk-perks {
@@ -525,6 +636,9 @@
             border: 1px solid var(--border);
             border-radius: 2px;
             max-width: 800px; margin: 0 auto;
+            background: rgba(10,8,28,.42);
+            box-shadow: 0 18px 55px rgba(0,0,0,.25);
+            backdrop-filter: blur(8px);
         }
         .ctbl { width: 100%; border-collapse: collapse; font-size: .92rem; }
         .ctbl thead tr { background: rgba(155,109,181,.14); }
@@ -566,10 +680,13 @@
         }
 
         .region-card {
-            background: var(--card);
+            background:
+                linear-gradient(145deg, rgba(255,158,219,.08), rgba(109,220,255,.025)),
+                var(--card);
             border: 1px solid var(--border);
             border-radius: 4px;
             overflow: hidden;
+            box-shadow: 0 18px 50px rgba(0,0,0,.22);
         }
         .region-header {
             background: rgba(155,109,181,.12);
@@ -625,10 +742,13 @@
             .wrapper { padding: 0 16px; }
             .section-title { letter-spacing: .18em; margin-bottom: 34px; }
 
-            .hero-inner { padding: 80px 16px 48px; }
+            #hero { padding: 0 12px; }
+            .hero-inner { padding: 72px 16px 44px; }
+            .hero-title { letter-spacing: .03em; }
             .event-badge { font-size: .58rem; letter-spacing: .3em; padding: 5px 14px; }
             .hero-subtitle { letter-spacing: .22em; }
             .hero-tag { letter-spacing: .4em; font-size: .62rem; }
+            .date-badge { width: 100%; justify-content: center; }
 
             .hero-btns { flex-direction: column; align-items: stretch; gap: 12px; }
             .btn-primary, .btn-outline { width: 100%; }
@@ -658,6 +778,9 @@
 <!-- ══════════════════ HERO ══════════════════ -->
 <section id="hero">
     <div class="hero-bg"></div>
+    <div class="hero-orb orb-a"></div>
+    <div class="hero-orb orb-b"></div>
+    <div class="hero-orb orb-c"></div>
     
     <div class="hero-petals">
         <div class="petal-float">🌸</div>
