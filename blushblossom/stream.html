@@ -381,7 +381,10 @@
   window.addEventListener('resize', () => { resize(); mkPts(150); });
 })();
 
-const VALID_HASH = '585d551f5da843665855cc19a8e4c775256f301e6a7e8fbbe5be9f1b362f33bf';
+const VALID_HASHES = [
+  '40933859ca3fdb56750183a7788f2f2f3ccf5e84525e054d59b84ff0a4150e4a', // blushblossom2026d1 (Día 1)
+  'f3260836471b965dde94b618e28917078729370e75e96673ffe3f588b0aeae77', // blushblossom2026day2 (Día 2)
+];
 const TEST_HASH  = 'de1ef4d4403b8a20739eed6bd6a8714e2d54ea4eed4f316f491d47df78c7e327';
 
 async function sha256(str) {
@@ -396,7 +399,7 @@ async function checkPwd() {
   if (!val) return;
 
   const hash = await sha256(val);
-  if (hash === VALID_HASH || hash === TEST_HASH) {
+  if (VALID_HASHES.includes(hash) || hash === TEST_HASH) {
     const isTest = hash === TEST_HASH;
     sessionStorage.setItem('bb_access', '1');
     if (isTest) sessionStorage.setItem('bb_test', '1');
