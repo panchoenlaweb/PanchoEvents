@@ -607,14 +607,16 @@
       color: var(--gold);
     }
     .status-urgent {
-      background: rgba(255,80,80,.18);
-      border: 1px solid #ff5050;
-      color: #ff8a8a;
-      animation: urgentPulse 1.5s ease-in-out infinite;
+      background: linear-gradient(135deg, #ff2030, #c2002a);
+      border: 1px solid #ff6680;
+      color: #fff;
+      font-weight: 900;
+      text-shadow: 0 1px 2px rgba(0,0,0,.4);
+      animation: urgentPulse 1.4s ease-in-out infinite;
     }
     @keyframes urgentPulse {
-      0%,100% { box-shadow: 0 0 8px rgba(255,80,80,.3); }
-      50%     { box-shadow: 0 0 18px rgba(255,80,80,.6); }
+      0%,100% { box-shadow: 0 0 10px rgba(255,40,80,.55), 0 2px 6px rgba(0,0,0,.4); transform: scale(1); }
+      50%     { box-shadow: 0 0 24px rgba(255,40,80,.9),  0 2px 6px rgba(0,0,0,.4); transform: scale(1.04); }
     }
 
     /* ── HOW IT WORKS ── */
