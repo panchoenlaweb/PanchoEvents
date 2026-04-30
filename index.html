@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PanchoEvents – Reventa de Boletos</title>
+  <title>YPass – Tu acceso al BL/GL Tailándes en vivo</title>
+  <meta name="description" content="YPass: streaming privado en español para conciertos, fancons y fanmeets de Y-series Thai BL/GL. Boletos accesibles, pago en tu moneda local.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,16 +12,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --red:       #cc0000;
-      --red-l:     #ff3333;
-      --red-glow:  rgba(200,0,0,.5);
+      --red:       #ff2d8a;
+      --red-l:     #ff5fa3;
+      --red-glow:  rgba(255,45,138,.5);
       --gold:      #f5c518;
-      --dark:      #080808;
-      --card:      #111111;
-      --card2:     #161616;
-      --border:    rgba(180,0,0,.25);
-      --text:      #e4e4e4;
-      --muted:     #666;
+      --violet:    #8b3dff;
+      --dark:      #0a0612;
+      --card:      #14101c;
+      --card2:     #19131f;
+      --border:    rgba(255,45,138,.22);
+      --text:      #efe4ec;
+      --muted:     #6e5d6c;
     }
 
     html { scroll-behavior: smooth; font-size: 16px; }
@@ -144,7 +146,7 @@
         padding: 8px 0 20px;
       }
       .nav-links li {
-        border-bottom: 1px solid rgba(180,0,0,.1);
+        border-bottom: 1px solid rgba(255,45,138,.1);
       }
       .nav-links li:last-child { border-bottom: none; }
       .nav-links a {
@@ -154,7 +156,7 @@
         letter-spacing: .2em;
         color: var(--muted);
       }
-      .nav-links a:hover { color: var(--red-l); background: rgba(180,0,0,.05); }
+      .nav-links a:hover { color: var(--red-l); background: rgba(255,45,138,.05); }
 
       .nav-mobile-cta {
         display: block;
@@ -188,8 +190,8 @@
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 70% 60% at 50% 45%, rgba(180,0,0,.22) 0%, transparent 70%),
-        linear-gradient(180deg, #080808 0%, #0d0000 50%, #080808 100%);
+        radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255,45,138,.22) 0%, transparent 70%),
+        linear-gradient(180deg, #0a0612 0%, #170820 50%, #0a0612 100%);
       z-index: 1;
     }
 
@@ -233,7 +235,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 0 50px rgba(200,0,0,.5));
+      filter: drop-shadow(0 0 50px rgba(255,45,138,.5));
       margin-bottom: 12px;
     }
 
@@ -294,7 +296,7 @@
       background: var(--red);
       color: #fff;
       border: 2px solid var(--red);
-      box-shadow: 0 0 20px rgba(200,0,0,.3);
+      box-shadow: 0 0 20px rgba(255,45,138,.3);
     }
     .btn-primary:hover {
       background: var(--red-l);
@@ -429,13 +431,13 @@
     .event-card::before {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(145deg, rgba(180,0,0,.06) 0%, transparent 60%);
+      background: linear-gradient(145deg, rgba(255,45,138,.06) 0%, transparent 60%);
       pointer-events: none; z-index: 0;
     }
     .event-card:hover {
       transform: translateY(-6px);
       border-color: var(--red);
-      box-shadow: 0 12px 45px rgba(180,0,0,.25);
+      box-shadow: 0 12px 45px rgba(255,45,138,.25);
     }
 
     .card-image {
@@ -589,7 +591,7 @@
       font-family: 'Orbitron', monospace;
       font-size: 3rem;
       font-weight: 900;
-      color: rgba(200,0,0,.18);
+      color: rgba(255,45,138,.18);
       line-height: 1;
       margin-bottom: 16px;
     }
@@ -630,7 +632,7 @@
     }
     .trust-card:hover {
       border-color: var(--red);
-      box-shadow: 0 4px 25px rgba(180,0,0,.15);
+      box-shadow: 0 4px 25px rgba(255,45,138,.15);
     }
     .trust-icon svg {
       width: 34px; height: 34px;
@@ -1013,6 +1015,351 @@
       color: var(--gold);
       flex-shrink: 0;
     }
+
+    /* ── GLOBAL COUNTDOWN BANNER ── */
+    #global-banner {
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      z-index: 250;
+      background: linear-gradient(90deg, rgba(20,0,0,.96), rgba(40,0,5,.95) 50%, rgba(20,0,0,.96));
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 20px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; flex-wrap: wrap;
+      font-family: 'Orbitron', monospace;
+      transform: translateY(-100%);
+      transition: transform .35s ease;
+    }
+    #global-banner.show { transform: translateY(0); }
+    .gb-pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red-l);
+      box-shadow: 0 0 10px var(--red-l);
+      animation: gbPulse 1.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes gbPulse { 0%,100% { opacity:.4; transform:scale(.85); } 50% { opacity:1; transform:scale(1.15); } }
+    .gb-label {
+      font-size: .55rem;
+      letter-spacing: .25em;
+      color: var(--red-l);
+      text-transform: uppercase;
+    }
+    .gb-event {
+      font-size: .72rem;
+      letter-spacing: .12em;
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .gb-timer {
+      display: flex; gap: 6px; align-items: center;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      color: var(--gold);
+    }
+    .gb-timer b {
+      color: #fff;
+      font-weight: 900;
+      font-size: .82rem;
+      min-width: 26px;
+      text-align: center;
+      display: inline-block;
+    }
+    .gb-cta {
+      background: var(--red);
+      color: #fff;
+      font-size: .55rem;
+      letter-spacing: .15em;
+      padding: 6px 14px;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: background .2s, box-shadow .2s;
+    }
+    .gb-cta:hover { background: var(--red-l); box-shadow: 0 0 18px var(--red-glow); }
+    .gb-close {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 1rem; padding: 0 4px;
+      line-height: 1;
+    }
+    .gb-close:hover { color: #fff; }
+    body.has-banner { padding-top: 44px; }
+    @media (max-width: 700px) {
+      #global-banner { padding: 6px 12px; gap: 8px; }
+      .gb-label { display: none; }
+      .gb-event { font-size: .58rem; letter-spacing: .08em; }
+      .gb-timer { font-size: .58rem; }
+      .gb-timer b { font-size: .68rem; min-width: 20px; }
+      .gb-cta { font-size: .48rem; padding: 5px 10px; }
+    }
+
+    /* ── NAV SWITCHERS (FX + LANG) ── */
+    .nav-tools {
+      display: flex; gap: 6px; align-items: center;
+      margin-right: 12px;
+    }
+    .nav-select {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #ddd;
+      font-family: 'Orbitron', monospace;
+      font-size: .58rem;
+      letter-spacing: .14em;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+      text-transform: uppercase;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--red-l) 50%), linear-gradient(135deg, var(--red-l) 50%, transparent 50%);
+      background-position: calc(100% - 11px) 50%, calc(100% - 6px) 50%;
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 22px;
+    }
+    .nav-select:hover { border-color: var(--red); color: #fff; }
+    .nav-select:focus { outline: none; border-color: var(--red); }
+    .nav-select option { background: #111; color: #ddd; }
+    @media (max-width: 700px) {
+      .nav-tools { gap: 4px; margin-right: 6px; }
+      .nav-select { font-size: .5rem; padding: 5px 16px 5px 6px; letter-spacing: .08em; }
+    }
+    @media (max-width: 380px) {
+      #lang-select { display: none; }
+    }
+
+    /* ── SAVINGS CALCULATOR ── */
+    #savings {
+      background: linear-gradient(180deg, var(--card) 0%, var(--dark) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 70px 24px;
+    }
+    .sv-wrap { max-width: 900px; margin: 0 auto; text-align: center; }
+    .sv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      margin-top: 36px;
+    }
+    @media (max-width: 700px) { .sv-grid { grid-template-columns: 1fr; } }
+    .sv-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      padding: 28px 20px;
+      position: relative;
+    }
+    .sv-box.sv-highlight {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(245,197,24,.05), var(--card2));
+      box-shadow: 0 0 30px rgba(245,197,24,.08);
+    }
+    .sv-lbl {
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .25em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .sv-val {
+      font-family: 'Cinzel', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .sv-val .small { font-size: 1rem; color: var(--muted); }
+    .sv-box.sv-highlight .sv-val { color: var(--gold); }
+    .sv-pct {
+      font-family: 'Orbitron', monospace;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      color: #00c850;
+      margin-top: 8px;
+      font-weight: 700;
+    }
+    .sv-controls {
+      display: flex; gap: 10px; align-items: center; justify-content: center;
+      flex-wrap: wrap;
+      margin: 24px 0 8px;
+    }
+    .sv-controls label {
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+    }
+    .sv-controls select {
+      background: var(--card);
+      border: 1px solid var(--red);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      padding: 8px 14px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 30px;
+      background-image: linear-gradient(45deg, transparent 50%, var(--red-l) 50%), linear-gradient(135deg, var(--red-l) 50%, transparent 50%);
+      background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+    }
+    .sv-controls select option { background: #111; }
+
+    /* ── CALENDAR ── */
+    #calendar { background: var(--dark); }
+    .cal-month {
+      max-width: 720px; margin: 0 auto 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 22px;
+    }
+    .cal-month-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--red-l);
+      margin-bottom: 18px;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-dow {
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      text-align: center;
+      padding: 6px 0;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,.04);
+      background: rgba(0,0,0,.2);
+      font-size: .82rem;
+      color: #555;
+      position: relative;
+      transition: border-color .2s, background .2s;
+    }
+    .cal-day.in-month { color: var(--text); }
+    .cal-day.today { border-color: var(--red); color: var(--red-l); font-weight: 700; }
+    .cal-day.has-event {
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(255,45,138,.15), rgba(255,45,138,.06));
+      border-color: var(--red);
+    }
+    .cal-day.has-event:hover {
+      background: rgba(255,45,138,.25);
+      transform: scale(1.05);
+      z-index: 3;
+    }
+    .cal-day .cal-icon {
+      font-size: .85rem;
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .cal-day .cal-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: #0a0a0a;
+      border: 1px solid var(--red);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .1em;
+      padding: 6px 10px;
+      white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+      z-index: 10;
+    }
+    .cal-day.has-event:hover .cal-tooltip { opacity: 1; }
+    .cal-day.finished {
+      opacity: .35;
+      background: rgba(255,255,255,.02);
+      border-color: rgba(255,255,255,.04);
+    }
+    .cal-day.finished.has-event {
+      background: rgba(80,80,80,.1);
+      border-color: rgba(120,120,120,.2);
+    }
+
+    /* ── REFERRAL ── */
+    #referral {
+      background: linear-gradient(135deg, #0c0010 0%, #15001a 50%, #0c0010 100%);
+      border-top: 1px solid rgba(245,197,24,.18);
+      border-bottom: 1px solid rgba(245,197,24,.18);
+      padding: 80px 24px;
+      position: relative; overflow: hidden;
+    }
+    #referral::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(-45deg, rgba(245,197,24,.02) 0, rgba(245,197,24,.02) 1px, transparent 1px, transparent 14px);
+    }
+    .ref-wrap { max-width: 760px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .ref-card {
+      background: rgba(0,0,0,.45);
+      border: 1px dashed rgba(245,197,24,.4);
+      padding: 36px 28px;
+      margin-top: 28px;
+    }
+    .ref-code {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: .25em;
+      color: var(--gold);
+      background: rgba(245,197,24,.06);
+      border: 1px solid var(--gold);
+      padding: 14px 28px;
+      display: inline-block;
+      margin: 14px 0;
+      cursor: pointer;
+      user-select: all;
+      transition: background .2s;
+    }
+    .ref-code:hover { background: rgba(245,197,24,.14); }
+    .ref-copied {
+      font-family: 'Orbitron', monospace;
+      font-size: .6rem;
+      letter-spacing: .15em;
+      color: #00c850;
+      margin-top: 6px;
+      opacity: 0;
+      transition: opacity .25s;
+      text-transform: uppercase;
+    }
+    .ref-copied.show { opacity: 1; }
+    .ref-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 26px;
+    }
+    @media (max-width: 700px) { .ref-steps { grid-template-columns: 1fr; } }
+    .ref-step {
+      background: rgba(0,0,0,.3);
+      border: 1px solid rgba(245,197,24,.12);
+      padding: 16px;
+      font-size: .85rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+    }
+    .ref-step b { color: var(--gold); display: block; font-family: 'Orbitron', monospace; font-size: .7rem; letter-spacing: .15em; margin-bottom: 6px; text-transform: uppercase; }
   </style>
 </head>
 <body>
@@ -1021,30 +1368,59 @@
 
 <!-- NAVBAR -->
 <nav>
-  <div class="nav-logo">Pancho<span>Events</span></div>
+  <div class="nav-logo">Y<span>Pass</span></div>
   <ul class="nav-links" id="nav-links">
-    <li><a href="#events">Eventos</a></li>
-    <li><a href="#bundles">Bundles</a></li>
-    <li><a href="#how">Cómo funciona</a></li>
-    <li><a href="#trust">Nosotros</a></li>
-    <li><a href="#contact">Contacto</a></li>
-    <li class="nav-mobile-cta"><a href="#events">Ver Boletos</a></li>
+    <li><a href="#events" data-i18n="navEvents">Eventos</a></li>
+    <li><a href="#bundles" data-i18n="navBundles">Bundles</a></li>
+    <li><a href="#calendar" data-i18n="navCalendar">Calendario</a></li>
+    <li><a href="#referral" data-i18n="navReferral">Referidos</a></li>
+    <li><a href="#how" data-i18n="navHow">Cómo funciona</a></li>
+    <li><a href="#contact" data-i18n="navContact">Contacto</a></li>
+    <li class="nav-mobile-cta"><a href="#events" data-i18n="navCta">Ver Boletos</a></li>
   </ul>
-  <a href="#events" class="nav-cta">Ver Boletos</a>
+  <div class="nav-tools">
+    <select class="nav-select" id="fx-select" aria-label="Moneda">
+      <option value="USD">$ USD</option>
+      <option value="MXN">$ MXN</option>
+      <option value="EUR">€ EUR</option>
+      <option value="CLP">$ CLP</option>
+      <option value="COP">$ COP</option>
+    </select>
+    <select class="nav-select" id="lang-select" aria-label="Language">
+      <option value="es">🇪🇸 ES</option>
+      <option value="en">🇬🇧 EN</option>
+    </select>
+  </div>
+  <a href="#events" class="nav-cta" data-i18n="navCta">Ver Boletos</a>
   <button class="nav-burger" id="nav-burger" aria-label="Abrir menú" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<!-- GLOBAL COUNTDOWN BANNER -->
+<div id="global-banner" role="status" aria-live="polite">
+  <div class="gb-pulse"></div>
+  <span class="gb-label" data-i18n="gbLabel">Próximo evento</span>
+  <span class="gb-event" id="gb-event">—</span>
+  <span class="gb-timer" id="gb-timer">
+    <b id="gb-d">00</b><span data-i18n="gbD">d</span>
+    <b id="gb-h">00</b><span data-i18n="gbH">h</span>
+    <b id="gb-m">00</b><span data-i18n="gbM">m</span>
+    <b id="gb-s">00</b><span data-i18n="gbS">s</span>
+  </span>
+  <a id="gb-cta" class="gb-cta" href="#events" data-i18n="gbCta">Ver detalles</a>
+  <button class="gb-close" onclick="closeBanner()" aria-label="Cerrar">✕</button>
+</div>
 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Tus eventos a los mejores precios</div>
     <h1 class="hero-title">
-      Pancho
-      <span>Events</span>
+      Y
+      <span>Pass</span>
     </h1>
-    <p class="hero-sub">Tu acceso a los mejores eventos</p>
+    <p class="hero-sub">Tu pase al BL &amp; GL Tailándes</p>
     <div class="hero-divider"></div>
     <p class="hero-desc">
       Consigue tus boletos para los eventos más exclusivos.<br>
@@ -1349,7 +1725,7 @@
             <p class="b-sub" style="color:var(--gold);">Todos los Eventos · Todos los Días</p>
             <p class="b-desc">
               Acceso completo a los <b style="color:#e4e4e4;">8 eventos</b> con todos sus días incluidos.
-              Conciertos, Fan Meetings, Fancons, Fan Fests y Sport Days — la experiencia definitiva de PanchoEvents.
+              Conciertos, Fan Meetings, Fancons, Fan Fests y Sport Days — la experiencia definitiva de YPass.
             </p>
             <div class="b-events" style="margin-top:18px;">
               <span class="b-tag" style="border-color:rgba(255,215,0,.4);color:rgba(255,215,0,.8);">🏆 Starlympic</span>
@@ -1364,7 +1740,7 @@
           </div>
           <div class="b-feat-right" data-usd="21">
             <div style="font-family:'Orbitron',monospace;font-size:.6rem;letter-spacing:.25em;color:var(--gold);margin-bottom:6px;text-transform:uppercase;">Pack Total</div>
-            <div style="font-family:'Cinzel',serif;font-size:clamp(3rem,7vw,4.5rem);font-weight:900;color:#fff;line-height:1;text-shadow:0 0 40px rgba(245,197,24,.4);">
+            <div class="js-fx-main" style="font-family:'Cinzel',serif;font-size:clamp(3rem,7vw,4.5rem);font-weight:900;color:#fff;line-height:1;text-shadow:0 0 40px rgba(245,197,24,.4);">
               <sup style="font-size:1.4rem;vertical-align:super;color:var(--gold);">$</sup>21<sup style="font-size:1rem;color:var(--gold);"> USD</sup>
             </div>
             <div class="bp-old" style="margin:8px 0 2px;">Antes: $23.50 USD</div>
@@ -1502,7 +1878,7 @@
         </div>
       </div>
 
-      <!-- �🏆 PACK SPORT -->
+      <!-- �� PACK SPORT -->
       <div class="bundle-card" style="--accent:#FFD700;">
         <div class="b-head">
           <div class="b-icon">🏆</div>
@@ -1699,6 +2075,36 @@
   </div>
 </section>
 
+<!-- SAVINGS CALCULATOR -->
+<section id="savings">
+  <div class="sv-wrap">
+    <p class="section-tag" data-i18n="svTag">Ahorra de verdad</p>
+    <h2 class="section-title" data-i18n="svTitle">Cuánto Ahorras</h2>
+    <p class="section-sub" data-i18n="svSub">Compara nuestro precio vs. el boleto oficial promedio ($35 USD por día)</p>
+
+    <div class="sv-controls">
+      <label data-i18n="svPick">Selecciona evento:</label>
+      <select id="sv-event"></select>
+    </div>
+
+    <div class="sv-grid">
+      <div class="sv-box">
+        <div class="sv-lbl" data-i18n="svOfficial">Precio Oficial</div>
+        <div class="sv-val" id="sv-official">$35<span class="small"> USD</span></div>
+      </div>
+      <div class="sv-box sv-highlight">
+        <div class="sv-lbl" data-i18n="svOurs">Nuestro Precio</div>
+        <div class="sv-val" id="sv-ours">$2.50<span class="small"> USD</span></div>
+      </div>
+      <div class="sv-box">
+        <div class="sv-lbl" data-i18n="svSave">Ahorras</div>
+        <div class="sv-val" id="sv-saved" style="color:#00c850;">$32.50<span class="small"> USD</span></div>
+        <div class="sv-pct" id="sv-pct">✓ 92% OFF</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- HOW IT WORKS -->
 <section id="how">
   <div class="wrapper">
@@ -1783,6 +2189,38 @@
   </div>
 </section>
 
+<!-- CALENDAR -->
+<section id="calendar">
+  <div class="wrapper">
+    <p class="section-tag" data-i18n="calTag">Agenda Completa</p>
+    <h2 class="section-title" data-i18n="calTitle">Calendario de Eventos</h2>
+    <p class="section-sub" data-i18n="calSub">Todos los eventos del año en un solo vistazo</p>
+    <div id="cal-container"></div>
+  </div>
+</section>
+
+<!-- REFERRAL -->
+<section id="referral">
+  <div class="ref-wrap">
+    <p class="section-tag" data-i18n="refTag">Trae a un amigo</p>
+    <h2 class="section-title" data-i18n="refTitle">Sistema de Referidos</h2>
+    <p class="section-sub" data-i18n="refSub">Comparte tu código y obtén <b style="color:var(--gold);">$0.50 USD de descuento</b> en tu próximo evento por cada amigo que compre</p>
+
+    <div class="ref-card">
+      <p style="font-size:.7rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;" data-i18n="refYourCode">Tu código único</p>
+      <div class="ref-code" id="ref-code" onclick="copyRefCode()">PE-XXXXXX</div>
+      <div class="ref-copied" id="ref-copied" data-i18n="refCopied">✓ Copiado al portapapeles</div>
+      <p style="font-size:.85rem;color:#888;letter-spacing:.04em;margin-top:14px;" data-i18n="refShare">Compártelo con tus amigos al reservar por Telegram</p>
+
+      <div class="ref-steps">
+        <div class="ref-step"><b data-i18n="refStep1Title">1 · Comparte</b><span data-i18n="refStep1">Envía tu código a tus amigos antes de que reserven</span></div>
+        <div class="ref-step"><b data-i18n="refStep2Title">2 · Compran</b><span data-i18n="refStep2">Tu amigo lo menciona al pagar por Telegram</span></div>
+        <div class="ref-step"><b data-i18n="refStep3Title">3 · Ahorras</b><span data-i18n="refStep3">Recibes $0.50 USD de descuento en tu próxima compra</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA BANNER -->
 <section id="cta-section">
   <h2 class="cta-title">¿Listo para vivir la experiencia?</h2>
@@ -1795,7 +2233,7 @@
 
 <!-- CONTACT / FOOTER -->
 <footer id="contact">
-  <div class="footer-logo">Pancho<span>Events</span></div>
+  <div class="footer-logo">Y<span>Pass</span></div>
   <p class="footer-text">
     Todos los eventos son <b style="color:#e4e4e4;">100% en línea</b>. Escríbenos por Telegram para disponibilidad, precios y proceso de pago.<br>
     <a href="https://t.me/panchoenlared" target="_blank" rel="noopener"
@@ -1805,7 +2243,7 @@
   </p>
   <div class="footer-divider"></div>
   <p class="footer-disclaimer">
-    PanchoEvents es un servicio de reventa de boletos. Los precios pueden variar respecto al precio original del evento.
+    YPass es un servicio de reventa de boletos. Los precios pueden variar respecto al precio original del evento.
     No estamos afiliados con las productoras ni organizadores oficiales de los eventos listados.
     Todos los nombres de eventos y artistas son propiedad de sus respectivos dueños.
   </p>
@@ -1939,6 +2377,321 @@
     });
   })();
 
+  /* ═══════════════════════════════════════════
+     CENTRAL EVENTS DATA (countdown, calendar, savings)
+  ═══════════════════════════════════════════ */
+  const EVENTS_DATA = [
+    { id:'dmd2',      name:{es:'DMD Land 3', en:'DMD Land 3'},     icon:'⚡', color:'#00b4ff',
+      days:['2026-05-02','2026-05-03'], start:new Date('2026-05-02T10:00:00+07:00'), price:3.50, url:'/dmdland3' },
+    { id:'olympop',   name:{es:'Olympop 2', en:'Olympop 2'},        icon:'🏅', color:'#4d94ff',
+      days:['2026-05-09'], start:new Date('2026-05-09T13:00:00+07:00'), price:2.00, url:'/olympop' },
+    { id:'lol3',      name:{es:'Love Out Loud', en:'Love Out Loud'},icon:'❤', color:'#f5c518',
+      days:['2026-05-22','2026-05-23','2026-05-24'], start:new Date('2026-05-22T17:00:00+07:00'), price:4.00, url:'/loveoutloud' },
+    { id:'poohpavel', name:{es:'Pooh Pavel', en:'Pooh Pavel'},      icon:'💖', color:'#FF6B9D',
+      days:['2026-06-07'], start:new Date('2026-06-07T17:00:00+07:00'), price:2.50, url:'/poohpavel' },
+    { id:'blush2',    name:{es:'Blush Blossom', en:'Blush Blossom'},icon:'🌸', color:'#ff9edb',
+      days:['2026-06-13','2026-06-14'], start:new Date('2026-06-13T17:00:00+07:00'), price:3.50, url:'/blushblossom' },
+    { id:'perth2',    name:{es:'Perth Santa Concert', en:'Perth Santa Concert'}, icon:'🎵', color:'#e8738a',
+      days:['2026-07-18','2026-07-19'], start:new Date('2026-07-18T17:00:00+07:00'), price:3.00, url:'/perthsanta' },
+    { id:'sotus',     name:{es:'SOTUS 10 Years', en:'SOTUS 10 Years'}, icon:'🎓', color:'#FF5252',
+      days:['2026-08-29'], start:new Date('2026-08-29T18:00:00+07:00'), price:2.50, url:'/sotus' },
+    { id:'starlympic',name:{es:'Starlympic 2026', en:'Starlympic 2026'}, icon:'🏆', color:'#FFD700',
+      days:['2026-11-28'], start:new Date('2026-11-28T14:00:00+07:00'), price:2.50, url:'/starlympic' },
+    { id:'joongdunk', name:{es:'Joong Dunk', en:'Joong Dunk'}, icon:'🎤', color:'#888',
+      days:['2026-04-05','2026-04-06'], start:new Date('2026-04-05T17:00:00+07:00'), price:3.00, url:'/joongdunk', finished:true },
+    { id:'surfjava',  name:{es:'Surf Java', en:'Surf Java'}, icon:'🌿', color:'#888',
+      days:['2026-04-25'], start:new Date('2026-04-25T17:00:00+07:00'), price:2.00, url:'/surfjava', finished:true },
+    { id:'seakeen',   name:{es:'Sea Keen', en:'Sea Keen'}, icon:'🌊', color:'#888',
+      days:['2026-04-26'], start:new Date('2026-04-26T17:00:00+07:00'), price:2.00, url:'/seakeen', finished:true },
+  ];
+
+  /* ═══════════════════════════════════════════
+     I18N — translations
+  ═══════════════════════════════════════════ */
+  const I18N = {
+    es: {
+      navEvents:'Eventos', navBundles:'Bundles', navCalendar:'Calendario',
+      navReferral:'Referidos', navHow:'Cómo funciona', navContact:'Contacto', navCta:'Ver Boletos',
+      gbLabel:'Próximo evento', gbCta:'Ver detalles',
+      gbD:'d', gbH:'h', gbM:'m', gbS:'s',
+      svTag:'Ahorra de verdad', svTitle:'Cuánto Ahorras',
+      svSub:'Compara nuestro precio vs. el boleto oficial promedio ($35 USD por día)',
+      svPick:'Selecciona evento:', svOfficial:'Precio Oficial', svOurs:'Nuestro Precio', svSave:'Ahorras',
+      calTag:'Agenda Completa', calTitle:'Calendario de Eventos',
+      calSub:'Todos los eventos del año en un solo vistazo',
+      refTag:'Trae a un amigo', refTitle:'Sistema de Referidos',
+      refSub:'Comparte tu código y obtén <b style="color:var(--gold);">$0.50 USD de descuento</b> en tu próximo evento por cada amigo que compre',
+      refYourCode:'Tu código único', refCopied:'✓ Copiado al portapapeles',
+      refShare:'Compártelo con tus amigos al reservar por Telegram',
+      refStep1Title:'1 · Comparte', refStep1:'Envía tu código a tus amigos antes de que reserven',
+      refStep2Title:'2 · Compran',  refStep2:'Tu amigo lo menciona al pagar por Telegram',
+      refStep3Title:'3 · Ahorras',  refStep3:'Recibes $0.50 USD de descuento en tu próxima compra',
+    },
+    en: {
+      navEvents:'Events', navBundles:'Bundles', navCalendar:'Calendar',
+      navReferral:'Referrals', navHow:'How it works', navContact:'Contact', navCta:'Get Tickets',
+      gbLabel:'Next event', gbCta:'View details',
+      gbD:'d', gbH:'h', gbM:'m', gbS:'s',
+      svTag:'Real savings', svTitle:'How Much You Save',
+      svSub:'Compare our price vs. the average official ticket ($35 USD per day)',
+      svPick:'Pick an event:', svOfficial:'Official Price', svOurs:'Our Price', svSave:'You Save',
+      calTag:'Full Schedule', calTitle:'Event Calendar',
+      calSub:'All events of the year at a glance',
+      refTag:'Refer a friend', refTitle:'Referral Program',
+      refSub:'Share your code and get <b style="color:var(--gold);">$0.50 USD off</b> your next event for every friend that purchases',
+      refYourCode:'Your unique code', refCopied:'✓ Copied to clipboard',
+      refShare:'Share it with your friends when they book via Telegram',
+      refStep1Title:'1 · Share',   refStep1:'Send your code to friends before they book',
+      refStep2Title:'2 · They buy', refStep2:'Your friend mentions it when paying via Telegram',
+      refStep3Title:'3 · You save', refStep3:'Get $0.50 USD off your next purchase',
+    }
+  };
+
+  let currentLang = localStorage.getItem('pe_lang') || 'es';
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('pe_lang', lang);
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      const val = I18N[lang]?.[key];
+      if (val !== undefined) el.innerHTML = val;
+    });
+    renderCalendar();
+    renderSavings();
+    applyFx();
+    updateBanner();
+  }
+
+  /* ═══════════════════════════════════════════
+     CURRENCY SWITCHER
+  ═══════════════════════════════════════════ */
+  const FX_INFO = {
+    USD: { sym:'$',    round:2, locale:'en-US' },
+    MXN: { sym:'MX$',  round:0, locale:'es-MX' },
+    EUR: { sym:'€',    round:2, locale:'de-DE' },
+    CLP: { sym:'$',    round:0, locale:'es-CL' },
+    COP: { sym:'$',    round:0, locale:'es-CO' },
+  };
+  let currentFx = localStorage.getItem('pe_fx') || 'USD';
+  let fxRates = { USD:1, MXN:18.2, EUR:0.91, CLP:965, COP:4300 };
+
+  function fmtFxNumber(usd, cur) {
+    const r = fxRates[cur] || 1;
+    const v = usd * r;
+    const info = FX_INFO[cur];
+    if (info.round === 0) return Math.round(v).toLocaleString(info.locale);
+    return v.toFixed(2);
+  }
+
+  function priceHTML(usd, cur) {
+    const info = FX_INFO[cur];
+    const text = fmtFxNumber(usd, cur);
+    if (text.includes('.')) {
+      const [whole, dec] = text.split('.');
+      return `<sup>${info.sym}</sup>${whole}<sup>.${dec} ${cur}</sup>`;
+    }
+    return `<sup>${info.sym}</sup>${text}<sup> ${cur}</sup>`;
+  }
+
+  function chipsHTML(usd) {
+    const others = Object.keys(FX_INFO).filter(c => c !== currentFx).slice(0, 3);
+    return others.map(c => `<span class="b-cur">${FX_INFO[c].sym}<b>${fmtFxNumber(usd, c)} ${c}</b></span>`).join('');
+  }
+
+  function applyFx() {
+    document.querySelectorAll('[data-usd]').forEach(parent => {
+      const usd = parseFloat(parent.dataset.usd);
+      if (isNaN(usd)) return;
+      const main = parent.querySelector('.bp-new, .js-fx-main');
+      if (main) main.innerHTML = priceHTML(usd, currentFx);
+      const cur = parent.querySelector('[data-currencies]');
+      if (cur) cur.innerHTML = chipsHTML(usd);
+    });
+    if (typeof updateBuilder === 'function') updateBuilder();
+  }
+
+  async function loadRates() {
+    try {
+      const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache:'no-store' });
+      const d = await res.json();
+      if (d.result !== 'success') throw 0;
+      fxRates = { USD:1, MXN:d.rates.MXN, EUR:d.rates.EUR, CLP:d.rates.CLP, COP:d.rates.COP };
+    } catch {}
+    applyFx();
+    renderSavings();
+  }
+
+  /* ═══════════════════════════════════════════
+     GLOBAL COUNTDOWN BANNER
+  ═══════════════════════════════════════════ */
+  function pad2(n) { return String(n).padStart(2,'0'); }
+
+  function getNextEvent() {
+    const now = Date.now();
+    return EVENTS_DATA
+      .filter(e => !e.finished && e.start.getTime() > now)
+      .sort((a,b) => a.start - b.start)[0];
+  }
+
+  function updateBanner() {
+    const banner = document.getElementById('global-banner');
+    if (!banner) return;
+    if (sessionStorage.getItem('pe_banner_closed') === '1') return;
+    const next = getNextEvent();
+    if (!next) {
+      banner.classList.remove('show');
+      document.body.classList.remove('has-banner');
+      return;
+    }
+    document.getElementById('gb-event').textContent = `${next.icon} ${next.name[currentLang]}`;
+    document.getElementById('gb-cta').href = next.url;
+
+    const diff = next.start - Date.now();
+    if (diff <= 0) return;
+    document.getElementById('gb-d').textContent = pad2(Math.floor(diff/86400000));
+    document.getElementById('gb-h').textContent = pad2(Math.floor((diff%86400000)/3600000));
+    document.getElementById('gb-m').textContent = pad2(Math.floor((diff%3600000)/60000));
+    document.getElementById('gb-s').textContent = pad2(Math.floor((diff%60000)/1000));
+
+    if (!banner.classList.contains('show')) {
+      banner.classList.add('show');
+      document.body.classList.add('has-banner');
+    }
+  }
+
+  function closeBanner() {
+    document.getElementById('global-banner').classList.remove('show');
+    document.body.classList.remove('has-banner');
+    sessionStorage.setItem('pe_banner_closed', '1');
+  }
+
+  /* ═══════════════════════════════════════════
+     CALENDAR
+  ═══════════════════════════════════════════ */
+  function renderCalendar() {
+    const container = document.getElementById('cal-container');
+    if (!container) return;
+    const dowEs = ['L','M','X','J','V','S','D'];
+    const dowEn = ['M','T','W','T','F','S','S'];
+    const dow = currentLang === 'en' ? dowEn : dowEs;
+    const monthNamesEs = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const monthNamesEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const monthNames = currentLang === 'en' ? monthNamesEn : monthNamesEs;
+
+    const months = new Set();
+    EVENTS_DATA.forEach(ev => ev.days.forEach(d => {
+      const dt = new Date(d + 'T12:00:00');
+      months.add(`${dt.getFullYear()}-${pad2(dt.getMonth())}`);
+    }));
+    const sortedMonths = [...months].sort();
+
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}`;
+
+    let html = '';
+    sortedMonths.forEach(mk => {
+      const [y, mStr] = mk.split('-');
+      const m = parseInt(mStr, 10);
+      const yNum = parseInt(y, 10);
+      const firstDay = new Date(yNum, m, 1);
+      const lastDay = new Date(yNum, m+1, 0);
+      const offset = (firstDay.getDay() + 6) % 7;
+      const totalDays = lastDay.getDate();
+
+      html += `<div class="cal-month">`;
+      html += `<div class="cal-month-title">${monthNames[m]} ${y}</div>`;
+      html += `<div class="cal-grid">`;
+      dow.forEach(d => html += `<div class="cal-dow">${d}</div>`);
+      for (let i = 0; i < offset; i++) html += `<div class="cal-day"></div>`;
+      for (let day = 1; day <= totalDays; day++) {
+        const key = `${y}-${pad2(m+1)}-${pad2(day)}`;
+        const evs = EVENTS_DATA.filter(ev => ev.days.includes(key));
+        const isFinished = evs.length && evs.every(ev => ev.finished);
+        let cls = 'cal-day in-month';
+        if (key === todayKey) cls += ' today';
+        if (evs.length) cls += ' has-event';
+        if (isFinished) cls += ' finished';
+        let icon = '', tip = '';
+        if (evs.length) {
+          icon = `<span class="cal-icon">${evs.map(e=>e.icon).join('')}</span>`;
+          tip = `<span class="cal-tooltip">${evs.map(e=>e.name[currentLang]).join(' · ')}</span>`;
+        }
+        const click = evs.length && !isFinished ? `onclick="window.location='${evs[0].url}'"` : '';
+        html += `<div class="${cls}" ${click}><span>${day}</span>${icon}${tip}</div>`;
+      }
+      html += `</div></div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  /* ═══════════════════════════════════════════
+     SAVINGS CALCULATOR
+  ═══════════════════════════════════════════ */
+  const OFFICIAL_PER_DAY = 35;
+
+  function renderSavings() {
+    const sel = document.getElementById('sv-event');
+    if (!sel) return;
+    if (!sel.options.length) {
+      EVENTS_DATA.filter(e => !e.finished).forEach(ev => {
+        const o = document.createElement('option');
+        o.value = ev.id;
+        o.textContent = `${ev.icon} ${ev.name[currentLang]} (${ev.days.length}d)`;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', updateSavings);
+    } else {
+      [...sel.options].forEach(o => {
+        const ev = EVENTS_DATA.find(e => e.id === o.value);
+        if (ev) o.textContent = `${ev.icon} ${ev.name[currentLang]} (${ev.days.length}d)`;
+      });
+    }
+    updateSavings();
+  }
+
+  function updateSavings() {
+    const sel = document.getElementById('sv-event');
+    if (!sel || !sel.value) return;
+    const ev = EVENTS_DATA.find(e => e.id === sel.value);
+    if (!ev) return;
+    const official = OFFICIAL_PER_DAY * ev.days.length;
+    const ours = ev.price;
+    const saved = official - ours;
+    const pct = Math.round((saved / official) * 100);
+    document.getElementById('sv-official').innerHTML = priceHTML(official, currentFx);
+    document.getElementById('sv-ours').innerHTML = priceHTML(ours, currentFx);
+    document.getElementById('sv-saved').innerHTML = priceHTML(saved, currentFx);
+    document.getElementById('sv-pct').textContent = `✓ ${pct}% OFF`;
+  }
+
+  /* ═══════════════════════════════════════════
+     REFERRAL CODE
+  ═══════════════════════════════════════════ */
+  function getRefCode() {
+    let code = localStorage.getItem('pe_ref_code');
+    if (!code) {
+      code = 'PE-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      localStorage.setItem('pe_ref_code', code);
+    }
+    return code;
+  }
+
+  function copyRefCode() {
+    const code = document.getElementById('ref-code').textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        const c = document.getElementById('ref-copied');
+        c.classList.add('show');
+        setTimeout(() => c.classList.remove('show'), 2000);
+      });
+    }
+  }
+
+  /* ═══════════════════════════════════════════
+     BUILDER PRICE UPDATE (uses currentFx)
+  ═══════════════════════════════════════════ */
   function updateBuilder() {
     const checks = [...document.querySelectorAll('.bb-check:checked')];
     const count  = checks.length;
@@ -1947,7 +2700,6 @@
     const selectedIds = checks.map(c => c.dataset.id);
     const fixedPack   = FIXED_PACKS[makePackKey(selectedIds)];
 
-    /* Fixed packs keep exact listed price. Otherwise: 3+ → 10% off; 2 → $0.50 off */
     let discount = 0;
     let final;
     let badgeText = '';
@@ -1955,19 +2707,19 @@
     if (fixedPack) {
       final    = fixedPack.price;
       discount = Math.round((raw - final) * 100) / 100;
-      badgeText = `✓ Precio ${fixedPack.name}`;
+      badgeText = `✓ ${fixedPack.name}`;
     } else {
       if (count >= 3) {
         discount = Math.round(raw * 0.10 * 100) / 100;
-        badgeText = `✓ −$${discount.toFixed(2)} descuento (10%)`;
+        badgeText = `✓ −${priceTextOnly(discount)} (10%)`;
       } else if (count === 2) {
         discount = 0.50;
-        badgeText = `✓ −$${discount.toFixed(2)} descuento`;
+        badgeText = `✓ −${priceTextOnly(discount)}`;
       }
       final = Math.round((raw - discount) * 100) / 100;
     }
 
-    const amountEl    = document.getElementById('bb-amount');
+    const priceWrap   = document.getElementById('bb-price');
     const oldEl       = document.getElementById('bb-old-price');
     const badgeEl     = document.getElementById('bb-discount-badge');
     const hintEl      = document.getElementById('bb-select-hint');
@@ -1975,7 +2727,7 @@
     const btn         = document.getElementById('bb-telegram-btn');
 
     if (count === 0) {
-      amountEl.textContent = '0';
+      if (priceWrap) priceWrap.innerHTML = `<sup style="font-size:1rem;color:var(--gold);vertical-align:super;">${FX_INFO[currentFx].sym}</sup>0<sup style="font-size:.75rem;color:var(--gold);"> ${currentFx}</sup>`;
       oldEl.style.display = 'none';
       badgeEl.style.display = 'none';
       hintEl.style.display = 'block';
@@ -1986,10 +2738,14 @@
     }
 
     hintEl.style.display = 'none';
-    amountEl.textContent = final % 1 === 0 ? final.toFixed(0) : final.toFixed(2);
+    if (priceWrap) {
+      const info = FX_INFO[currentFx];
+      const numText = fmtFxNumber(final, currentFx);
+      priceWrap.innerHTML = `<sup style="font-size:1rem;color:var(--gold);vertical-align:super;">${info.sym}</sup>${numText}<sup style="font-size:.75rem;color:var(--gold);"> ${currentFx}</sup>`;
+    }
 
     if (discount > 0) {
-      oldEl.textContent = '$' + raw.toFixed(2) + ' USD';
+      oldEl.innerHTML = priceHTML(raw, currentFx).replace(/<\/?sup>/g,'');
       oldEl.style.display = 'inline';
       badgeEl.textContent = badgeText;
       badgeEl.style.display = 'inline';
@@ -1998,43 +2754,38 @@
       badgeEl.style.display = 'none';
     }
 
-    /* Currency conversions */
-    if (bbRates.MXN) {
-      curEl.innerHTML = `
-        <span class="b-cur">🇲🇽 <b>$${Math.round(final * bbRates.MXN)} MXN</b></span>
-        <span class="b-cur">🇪🇺 <b>€${(final * bbRates.EUR).toFixed(2)} EUR</b></span>
-        <span class="b-cur">🇨🇱 <b>$${(final * bbRates.CLP).toLocaleString('es-CL',{maximumFractionDigits:0})} CLP</b></span>
-      `;
-    }
+    curEl.innerHTML = chipsHTML(final);
 
-    /* Build Telegram message */
     const names = checks.map(c => BB_EVENTS.find(e => e.id === c.dataset.id).name).join(', ');
-    const msg = encodeURIComponent(`Hola! Quiero armar mi bundle: ${names}. Total: $${final} USD`);
+    const msg = encodeURIComponent(`Hola! Quiero armar mi bundle: ${names}. Total: ${priceTextOnly(final)}`);
     btn.href = `https://t.me/Panchoenlared?text=${msg}`;
     btn.style.opacity = '1';
     btn.style.pointerEvents = 'auto';
   }
 
-  (async function loadBundleRates() {
-    try {
-      const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache: 'no-store' });
-      const data = await res.json();
-      if (data.result !== 'success') return;
-      bbRates = { MXN: data.rates.MXN, EUR: data.rates.EUR, CLP: data.rates.CLP };
+  function priceTextOnly(usd) {
+    return `${FX_INFO[currentFx].sym}${fmtFxNumber(usd, currentFx)} ${currentFx}`;
+  }
 
-      /* Fixed bundle cards */
-      document.querySelectorAll('[data-usd]').forEach(el => {
-        const usd = parseFloat(el.dataset.usd);
-        const container = el.querySelector('[data-currencies]');
-        if (!container) return;
-        container.innerHTML = `
-          <span class="b-cur">🇲🇽 <b>$${Math.round(usd * bbRates.MXN)} MXN</b></span>
-          <span class="b-cur">🇪🇺 <b>€${(usd * bbRates.EUR).toFixed(2)} EUR</b></span>
-          <span class="b-cur">🇨🇱 <b>$${(usd * bbRates.CLP).toLocaleString('es-CL',{maximumFractionDigits:0})} CLP</b></span>
-        `;
-      });
-    } catch (e) { /* silently fail */ }
-  })();
+  /* ═══════════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════════ */
+  document.getElementById('fx-select').value = currentFx;
+  document.getElementById('lang-select').value = currentLang;
+  document.getElementById('fx-select').addEventListener('change', e => {
+    currentFx = e.target.value;
+    localStorage.setItem('pe_fx', currentFx);
+    applyFx();
+  });
+  document.getElementById('lang-select').addEventListener('change', e => setLanguage(e.target.value));
+  document.getElementById('ref-code').textContent = getRefCode();
+
+  setLanguage(currentLang);
+  renderCalendar();
+  renderSavings();
+  updateBanner();
+  setInterval(updateBanner, 1000);
+  loadRates();
 </script>
 </body>
 </html>
