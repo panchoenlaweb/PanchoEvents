@@ -606,6 +606,16 @@
       border: 1px solid rgba(245,197,24,.5);
       color: var(--gold);
     }
+    .status-urgent {
+      background: rgba(255,80,80,.18);
+      border: 1px solid #ff5050;
+      color: #ff8a8a;
+      animation: urgentPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes urgentPulse {
+      0%,100% { box-shadow: 0 0 8px rgba(255,80,80,.3); }
+      50%     { box-shadow: 0 0 18px rgba(255,80,80,.6); }
+    }
 
     /* ── HOW IT WORKS ── */
     #how { background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -2782,9 +2792,26 @@
       const cardBody = card.querySelector('.card-body');
       if (!cardBody) return;
 
-      // Status badge
+      // Status badge — dynamic "Últimos días" when ≤ 7 days
       const status = card.querySelector('.card-status-badge');
-      if (status && ev.status) status.textContent = ev.status[currentLang];
+      if (status && ev.status) {
+        const diff = ev.start - Date.now();
+        const URGENT_MS = 7 * 86400000;
+        if (!ev.finished && diff > 0 && diff <= URGENT_MS) {
+          status.textContent = currentLang === 'en' ? '⚠ Last days!!' : '⚠ Últimos días!!';
+          status.classList.remove('status-available', 'status-limited');
+          status.classList.add('status-urgent');
+        } else {
+          status.textContent = ev.status[currentLang];
+          status.classList.remove('status-urgent');
+          // Re-apply original class based on text
+          if (!ev.finished) {
+            const isLimited = ev.status.es === 'Lugares Limitados';
+            status.classList.toggle('status-limited', isLimited);
+            status.classList.toggle('status-available', !isLimited);
+          }
+        }
+      }
 
       // Card badge
       const badge = cardBody.querySelector('.card-badge');
@@ -3150,11 +3177,27 @@
   document.getElementById('lang-select').addEventListener('change', e => setLanguage(e.target.value));
   document.getElementById('ref-code').textContent = getRefCode();
 
+  function sortEventCards() {
+    const grid = document.querySelector('#events .events-grid');
+    if (!grid) return;
+    const cards = [...grid.querySelectorAll('[data-event-id]')];
+    cards.sort((a, b) => {
+      const ea = EVENTS_DATA.find(e => e.id === a.dataset.eventId);
+      const eb = EVENTS_DATA.find(e => e.id === b.dataset.eventId);
+      if (!ea || !eb) return 0;
+      return ea.start - eb.start;
+    });
+    cards.forEach(c => grid.appendChild(c));
+  }
+
+  sortEventCards();
   setLanguage(currentLang);
   renderCalendar();
   renderSavings();
   updateBanner();
   setInterval(updateBanner, 1000);
+  // Refresh status badges every minute (for urgent transition)
+  setInterval(injectCardPrices, 60000);
   loadRates();
 </script>
 </body>
