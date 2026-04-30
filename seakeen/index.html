@@ -662,13 +662,13 @@
     <div class="hero-shimmer"></div>
 
     <div class="hero-inner">
-        <div class="event-badge">1ST FAN MEETING · THAILAND</div>
+        <div class="event-badge" style="background:rgba(100,100,100,.18);border-color:#555;color:#999;">✅ &nbsp; EVENTO FINALIZADO &nbsp; ✅</div>
 
         <h1 class="hero-title">SEA&nbsp;KEEN</h1>
         <h2 class="hero-subtitle">1st&nbsp;FAN&nbsp;MEETING</h2>
-        <p  class="hero-tag">— &nbsp; IN &nbsp; THAILAND &nbsp; —</p>
+        <p  class="hero-tag" style="color:#888;">— &nbsp; E V E N T O &nbsp; F I N A L I Z A D O &nbsp; —</p>
 
-        <div class="hero-datebadge">
+        <div class="hero-datebadge" style="opacity:.45;text-decoration:line-through;border-color:#555;background:rgba(100,100,100,.06);">
             <span class="flag">🇹🇭</span>
             <div class="dt">
                 <small>FECHA DEL EVENTO</small>
@@ -676,7 +676,7 @@
             </div>
         </div>
 
-        <div class="hero-meta">
+        <div class="hero-meta" style="opacity:.55;">
             <span>🕔 <b>17:00 ICT</b> — Bangkok, Thailand</span>
             <span class="loc">📍 Bangkok, Thailand</span>
         </div>
@@ -689,14 +689,14 @@
         </div>
 
         <div class="hero-btns">
-            <button class="btn-primary" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">
-                🎟 VER ENTRADAS
+            <button class="btn-primary" disabled style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;cursor:default;opacity:.65;box-shadow:none;">
+                � Evento Finalizado
             </button>
             <div class="btn-stream-wrap">
-                <a class="btn-stream active" href="https://www.panchoenlared.com/seakeen/stream">
-                    <span class="lock-icon">🔓</span>INGRESAR AL EVENTO
-                </a>
-                <div class="btn-stream-tip">Disponible solo para compradores — recibirás la clave con tu entrada</div>
+                <button class="btn-stream" disabled style="cursor:default;background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">
+                    ✅ Finalizado
+                </button>
+                <div class="btn-stream-tip">El fan meeting ha concluido. ¡Gracias por acompañarnos!</div>
             </div>
         </div>
     </div>
@@ -709,9 +709,9 @@
     <div class="wrapper">
         <h2 class="section-title">Cuenta Regresiva</h2>
 
-        <div class="cd-single" id="cd-card">
-            <div class="cd-label">⏳ tiempo restante para el evento</div>
-            <div class="cd-date-str">SUN, 26 APRIL 2026 · 17:00 ICT (GMT+7)</div>
+        <div class="cd-single ended" id="cd-card" style="opacity:.85;">
+            <div class="cd-label" style="color:#0f0;">✅ evento finalizado</div>
+            <div class="cd-date-str" style="text-decoration:line-through;opacity:.55;">SUN, 26 APRIL 2026 · 17:00 ICT (GMT+7)</div>
 
             <div class="timer" id="timer">
                 <div class="t-block">
@@ -953,8 +953,13 @@
     <div class="wrapper">
         <h2 class="section-title">Entradas &amp; Precios</h2>
 
+        <div style="max-width:680px;margin:-12px auto 36px;padding:18px 22px;background:rgba(0,100,0,.08);border:1px solid #0a0;border-radius:6px;text-align:center;">
+            <p style="font-family:'Orbitron',monospace;font-size:.72rem;letter-spacing:.22em;color:#4f4;text-transform:uppercase;">✅ Venta cerrada · Evento finalizado</p>
+            <p style="font-size:.88rem;color:#bcd;margin-top:8px;letter-spacing:.04em;">El fan meeting concluyó el 26 de Abril. ¡Gracias a todos los que nos acompañaron!</p>
+        </div>
+
         <!-- Featured ticket card -->
-        <div class="ticket-banner">
+        <div class="ticket-banner" style="opacity:.55;">
             <div class="tk-type">VISUALIZACIÓN ONLINE</div>
             <div class="tk-tag">LIVE STREAM · ONLINE TICKET</div>
             <div class="tk-price"><sup>$</sup>2<sup>.00</sup></div>
