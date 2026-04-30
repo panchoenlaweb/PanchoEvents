@@ -625,7 +625,7 @@
 
         <div class="hero-meta">
             <span>📍 <b>IMPACT Arena, Muang Thong Thani</b> &nbsp;·&nbsp; Bangkok, Thailand</span>
-            <span>⏰ Día 1: <b>10:00 AM</b> &nbsp;|&nbsp; Día 2: <b>4:00 PM</b> &nbsp;(GMT+7)</span>
+            <span>⏰ <b>4:00 PM</b> &nbsp;·&nbsp; ambos días &nbsp;(GMT+7)</span>
         </div>
 
         <!-- local time auto-detect -->
@@ -665,7 +665,7 @@
                     <span class="t-sep">:</span>
                     <div class="t-block"><span class="t-num" id="d1s">--</span><span class="t-lbl">seg</span></div>
                 </div>
-                <p class="cd-status" id="st1">10:00 AM · Bangkok (GMT+7)</p>
+                <p class="cd-status" id="st1">4:00 PM · Bangkok (GMT+7)</p>
             </div>
             <!-- Day 2 -->
             <div class="cd-card" id="cd2">
@@ -689,7 +689,7 @@
 <section id="timezones">
     <div class="wrapper">
         <h2 class="section-title">Horarios Mundiales</h2>
-        <p class="tz-subtitle">Día 1: 10:00 AM Bangkok (GMT+7) · Día 2: 4:00 PM Bangkok (GMT+7)</p>
+        <p class="tz-subtitle">4:00 PM Bangkok (GMT+7) · ambos días</p>
         <div class="region-grid" id="tz-grid"></div>
     </div>
 </section>
@@ -797,10 +797,10 @@ function scrollTo(id) { document.getElementById(id).scrollIntoView({ behavior: '
 
 /* ═══════════════════════════════════════
    COUNTDOWN
-   Day 1 → 2026-05-02 03:00 UTC  (10:00 AM Bangkok GMT+7)
+   Day 1 → 2026-05-02 09:00 UTC  (4:00 PM Bangkok GMT+7)
    Day 2 → 2026-05-03 09:00 UTC  (4:00 PM Bangkok GMT+7)
 ═══════════════════════════════════════ */
-const EV1 = new Date('2026-05-02T03:00:00Z');
+const EV1 = new Date('2026-05-02T09:00:00Z');
 const EV2 = new Date('2026-05-03T09:00:00Z');
 
 function pad(n) { return String(n).padStart(2, '0'); }
@@ -1037,7 +1037,7 @@ loadRates();
 /* ── LOCAL TIME AUTO-DETECT ── */
 (function(){
     try {
-        const ev = new Date('2026-05-02T10:00:00+07:00');
+        const ev = new Date('2026-05-02T16:00:00+07:00');
         const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const t = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
         const s = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value||tz;

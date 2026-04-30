@@ -420,7 +420,7 @@
                 <div class="stream-placeholder" id="stream-placeholder">
                     <div class="placeholder-icon">📡</div>
                     <h2 class="placeholder-title">La transmisión aún no ha comenzado</h2>
-                    <p class="placeholder-sub">El stream estará disponible el <b>02 de Mayo a las 10:00 AM Bangkok</b>. Vuelve en:</p>
+                    <p class="placeholder-sub">El stream estará disponible el <b>02 de Mayo a las 4:00 PM Bangkok</b>. Vuelve en:</p>
                     <div class="countdown-inline" id="mini-cd">
                         <div class="cd-block"><span class="cd-num" id="mc-d">--</span><span class="cd-lbl">días</span></div>
                         <span class="cd-sep">:</span>
@@ -437,7 +437,7 @@
         <!-- INFO STRIP -->
         <div class="info-strip" id="info-strip">
             <span class="info-strip-day" id="strip-day">Día 1 — Sábado 02 de Mayo 2026</span>
-            <span class="info-strip-time">Inicio: <b id="strip-time">10:00 AM Bangkok (GMT+7)</b></span>
+            <span class="info-strip-time">Inicio: <b id="strip-time">4:00 PM Bangkok (GMT+7)</b></span>
         </div>
     </div>
 
@@ -460,7 +460,7 @@
                 <p class="d-card-title">📅 Agenda</p>
                 <p>
                     <b>Día 1 — Sáb 02 May 2026</b><br>
-                    10:00 AM Bangkok (GMT+7)<br>
+                    4:00 PM Bangkok (GMT+7)<br>
                     Actuaciones, performances, shows<br><br>
                     <b>Día 2 — Dom 03 May 2026</b><br>
                     4:00 PM Bangkok (GMT+7)<br>
@@ -653,10 +653,10 @@ if (savedDay === 1 || savedDay === 2) {
 
 /* ═══════════════════════════════════════
    DAY TABS
-   Day 1 → 2026-05-02 03:00 UTC  (10:00 AM Bangkok GMT+7)
+   Day 1 → 2026-05-02 09:00 UTC  (4:00 PM Bangkok GMT+7)
    Day 2 → 2026-05-03 09:00 UTC  (4:00 PM Bangkok GMT+7)
 ═══════════════════════════════════════ */
-const EV1 = new Date('2026-05-02T03:00:00Z');
+const EV1 = new Date('2026-05-02T09:00:00Z');
 const EV2 = new Date('2026-05-03T09:00:00Z');
 
 let activeDay = 1;
@@ -670,9 +670,7 @@ function switchDay(d) {
     const label = d===1
         ? 'Día 1 — Sábado 02 de Mayo 2026'
         : 'Día 2 — Domingo 03 de Mayo 2026';
-    const time = d===1
-        ? '10:00 AM Bangkok (GMT+7)'
-        : '4:00 PM Bangkok (GMT+7)';
+    const time = '4:00 PM Bangkok (GMT+7)';
 
     document.getElementById('strip-day').textContent = label;
     document.getElementById('strip-time').textContent = time;
