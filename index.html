@@ -551,6 +551,42 @@
       box-shadow: 0 0 22px var(--red-glow);
     }
 
+    .card-price-block {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,45,138,.04);
+    }
+    .cpr-item {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 14px 8px;
+      text-align: center;
+    }
+    .cpr-item + .cpr-item {
+      border-left: 1px solid var(--border);
+    }
+    .cpr-val {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .cpr-val sup { font-size: .65rem; color: var(--muted); vertical-align: super; }
+    .cpr-item.bundle .cpr-val { color: var(--gold); }
+    .cpr-lbl {
+      font-family: 'Orbitron', monospace;
+      font-size: .5rem;
+      letter-spacing: .15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
     .card-status-badge {
       position: absolute; top: 14px; right: 14px;
       font-family: 'Orbitron', monospace;
@@ -1213,10 +1249,38 @@
     /* ── CALENDAR ── */
     #calendar { background: var(--dark); }
     .cal-month {
-      max-width: 720px; margin: 0 auto 36px;
+      max-width: 720px; margin: 0 auto;
       background: var(--card);
       border: 1px solid var(--border);
       padding: 22px;
+      position: relative;
+    }
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .cal-arrow {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--red-l);
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      transition: background .2s, border-color .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .cal-arrow:hover:not(:disabled) {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+      box-shadow: 0 0 18px var(--red-glow);
+    }
+    .cal-arrow:disabled {
+      opacity: .25;
+      cursor: not-allowed;
     }
     .cal-month-title {
       font-family: 'Cinzel', serif;
@@ -1226,8 +1290,29 @@
       text-transform: uppercase;
       text-align: center;
       color: var(--red-l);
-      margin-bottom: 18px;
+      flex: 1;
     }
+    .cal-pager {
+      display: flex; gap: 6px;
+      justify-content: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .cal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .2s;
+      padding: 0;
+    }
+    .cal-dot.active {
+      background: var(--red);
+      border-color: var(--red);
+      transform: scale(1.3);
+    }
+    .cal-dot:hover { border-color: var(--red-l); }
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -1415,20 +1500,20 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
-    <div class="hero-eyebrow">Tus eventos a los mejores precios</div>
+    <div class="hero-eyebrow" data-i18n="heroEyebrow">Tus eventos a los mejores precios</div>
     <h1 class="hero-title">
       Y
       <span>Pass</span>
     </h1>
-    <p class="hero-sub">Tu pase al BL &amp; GL Tailándes</p>
+    <p class="hero-sub" data-i18n="heroSub">Tu pase al BL &amp; GL Tailándes</p>
     <div class="hero-divider"></div>
-    <p class="hero-desc">
+    <p class="hero-desc" data-i18n="heroDesc">
       Consigue tus boletos para los eventos más exclusivos.<br>
       <b>Conciertos · Fancons · Shows en vivo</b> — todo en un solo lugar.
     </p>
     <div class="hero-btns">
-      <a href="#events" class="btn btn-primary">Ver Eventos Disponibles</a>
-      <a href="#how" class="btn btn-outline">¿Cómo Funciona?</a>
+      <a href="#events" class="btn btn-primary" data-i18n="heroBtnPrimary">Ver Eventos Disponibles</a>
+      <a href="#how" class="btn btn-outline" data-i18n="heroBtnOutline">¿Cómo Funciona?</a>
     </div>
   </div>
   <div class="scroll-hint">
@@ -1442,19 +1527,19 @@
   <div class="stats-inner">
     <div class="stat">
       <div class="stat-num">5+</div>
-      <div class="stat-label">Eventos Activos</div>
+      <div class="stat-label" data-i18n="statActive">Eventos Activos</div>
     </div>
     <div class="stat">
       <div class="stat-num">100%</div>
-      <div class="stat-label">Boletos Garantizados</div>
+      <div class="stat-label" data-i18n="statGuarantee">Boletos Garantizados</div>
     </div>
     <div class="stat">
       <div class="stat-num">24h</div>
-      <div class="stat-label">Soporte Disponible</div>
+      <div class="stat-label" data-i18n="statSupport">Soporte Disponible</div>
     </div>
     <div class="stat">
       <div class="stat-num">★ 5</div>
-      <div class="stat-label">Calificación de Servicio</div>
+      <div class="stat-label" data-i18n="statRating">Calificación de Servicio</div>
     </div>
   </div>
 </div>
@@ -1462,14 +1547,14 @@
 <!-- EVENTS SECTION -->
 <section id="events">
   <div class="wrapper">
-    <p class="section-tag">Disponibles Ahora</p>
-    <h2 class="section-title">Eventos Actuales</h2>
-    <p class="section-sub">Selecciona el evento de tu interés para ver disponibilidad y precios</p>
+    <p class="section-tag" data-i18n="evTag">Disponibles Ahora</p>
+    <h2 class="section-title" data-i18n="evTitle">Eventos Actuales</h2>
+    <p class="section-sub" data-i18n="evSub">Selecciona el evento de tu interés para ver disponibilidad y precios</p>
 
     <div class="events-grid">
 
       <!-- DMD LAND 3 CARD -->
-      <a href="/dmdland3" class="event-card">
+      <a href="/dmdland3" class="event-card" data-event-id="dmd2">
         <div class="card-status-badge status-available">Nuevo</div>
         <img class="card-image" src="dmdland3/dmdland3.jpg" alt="DMD LAND 3 : THE FINAL LAND — Land of Fusion">
         <div class="card-body">
@@ -1498,7 +1583,7 @@
       </a>
 
       <!-- OLYMPOP 2 CARD -->
-      <a href="/olympop" class="event-card">
+      <a href="/olympop" class="event-card" data-event-id="olympop">
         <div class="card-status-badge status-available">Disponible</div>
         <img class="card-image" src="olympop/olympop.jpg" alt="OLYMPOP 2 Sport Day 2026" style="object-position:center top">
         <div class="card-body">
@@ -1527,7 +1612,7 @@
       </a>
 
       <!-- PERTH SANTA CONCERT CARD -->
-      <a href="/perthsanta" class="event-card">
+      <a href="/perthsanta" class="event-card" data-event-id="perth2">
         <div class="card-status-badge status-available">Nuevo</div>
         <div class="card-image-placeholder" style="background:linear-gradient(135deg,#1a0a10,#0c0e14);color:#e8738a;">PERTH SANTA</div>
         <div class="card-body">
@@ -1556,7 +1641,7 @@
       </a>
 
       <!-- SOTUS CARD -->
-      <a href="/sotus" class="event-card">
+      <a href="/sotus" class="event-card" data-event-id="sotus">
         <div class="card-status-badge status-available">Nuevo</div>
         <div class="card-image-placeholder" style="background:linear-gradient(135deg,#0a0a0f,#1a1012);color:#FF5252;">SOTUS</div>
         <div class="card-body">
@@ -1585,7 +1670,7 @@
       </a>
 
       <!-- STARLYMPIC CARD -->
-      <a href="/starlympic" class="event-card">
+      <a href="/starlympic" class="event-card" data-event-id="starlympic">
         <div class="card-status-badge status-available">Nuevo</div>
         <div class="card-image-placeholder" style="background:linear-gradient(135deg,#0a0c0f,#111820);color:#FFD700;">STARLYMPIC</div>
         <div class="card-body">
@@ -1614,7 +1699,7 @@
       </a>
 
       <!-- POOH PAVEL CARD -->
-      <a href="/poohpavel" class="event-card">
+      <a href="/poohpavel" class="event-card" data-event-id="poohpavel">
         <div class="card-status-badge status-available">Nuevo</div>
         <div class="card-image-placeholder" style="background:linear-gradient(135deg,#1a0a14,#0f0710);color:#FF8FB7;">POOH PAVEL</div>
         <div class="card-body">
@@ -1643,7 +1728,7 @@
       </a>
 
       <!-- BLUSH BLOSSOM CARD -->
-      <a href="/blushblossom" class="event-card">
+      <a href="/blushblossom" class="event-card" data-event-id="blush2">
         <div class="card-status-badge status-available">Nuevo</div>
         <div class="card-image-placeholder" style="background:linear-gradient(135deg,#1a0a18,#0c0820);color:#ff9edb;">BLUSH BLOSSOM</div>
         <div class="card-body">
@@ -1672,7 +1757,7 @@
       </a>
 
       <!-- LOVE OUT LOUD CARD -->
-      <a href="/loveoutloud" class="event-card">
+      <a href="/loveoutloud" class="event-card" data-event-id="lol3">
         <div class="card-status-badge status-limited">Lugares Limitados</div>
         <img class="card-image" src="loveoutloud/LOL.png" alt="Love Out Loud 2026 – Heart Race">
         <div class="card-body">
@@ -1709,9 +1794,9 @@
 <!-- BUNDLES -->
 <section id="bundles">
   <div class="wrapper">
-    <p class="section-tag">Combina & Ahorra</p>
-    <h2 class="section-title">Packs & Bundles</h2>
-    <p class="section-sub">Elige el pack que más te convenga y obtén el mejor precio</p>
+    <p class="section-tag" data-i18n="bnTag">Combina & Ahorra</p>
+    <h2 class="section-title" data-i18n="bnTitle">Packs & Bundles</h2>
+    <p class="section-sub" data-i18n="bnSub">Elige el pack que más te convenga y obtén el mejor precio</p>
 
     <div class="bundles-grid">
 
@@ -2001,9 +2086,9 @@
 <!-- FINISHED EVENTS -->
 <section id="finished" style="padding-top:40px;">
   <div class="wrapper">
-    <p class="section-tag">Historial</p>
-    <h2 class="section-title">Eventos Finalizados</h2>
-    <p class="section-sub">Estos eventos ya concluyeron. ¡Gracias a todos los que participaron!</p>
+    <p class="section-tag" data-i18n="fnTag">Historial</p>
+    <h2 class="section-title" data-i18n="fnTitle">Eventos Finalizados</h2>
+    <p class="section-sub" data-i18n="fnSub">Estos eventos ya concluyeron. ¡Gracias a todos los que participaron!</p>
 
     <div class="events-grid">
 
@@ -2108,9 +2193,9 @@
 <!-- HOW IT WORKS -->
 <section id="how">
   <div class="wrapper">
-    <p class="section-tag">Proceso Simple</p>
-    <h2 class="section-title">¿Cómo Funciona?</h2>
-    <p class="section-sub">Consigue tus boletos en 4 pasos sencillos</p>
+    <p class="section-tag" data-i18n="hwTag">Proceso Simple</p>
+    <h2 class="section-title" data-i18n="hwTitle">¿Cómo Funciona?</h2>
+    <p class="section-sub" data-i18n="hwSub">Consigue tus boletos en 4 pasos sencillos</p>
 
     <div class="steps-grid">
       <div class="step">
@@ -2118,32 +2203,32 @@
         <div class="step-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
-        <div class="step-title">Elige tu Evento</div>
-        <p class="step-desc">Explora los eventos online disponibles y selecciona el que te interesa.</p>
+        <div class="step-title" data-i18n="hw1Title">Elige tu Evento</div>
+        <p class="step-desc" data-i18n="hw1Desc">Explora los eventos online disponibles y selecciona el que te interesa.</p>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div class="step-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
-        <div class="step-title">Escríbenos por Telegram</div>
-        <p class="step-desc">Contáctanos en <b>@panchoenlared</b> y dinos qué evento te interesa.</p>
+        <div class="step-title" data-i18n="hw2Title">Escríbenos por Telegram</div>
+        <p class="step-desc" data-i18n="hw2Desc">Contáctanos en <b>@panchoenlared</b> y dinos qué evento te interesa.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div class="step-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         </div>
-        <div class="step-title">Coordina tu Pago</div>
-        <p class="step-desc">Acordamos el método de pago más conveniente para ti directamente por Telegram.</p>
+        <div class="step-title" data-i18n="hw3Title">Coordina tu Pago</div>
+        <p class="step-desc" data-i18n="hw3Desc">Acordamos el método de pago más conveniente para ti directamente por Telegram.</p>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <div class="step-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.38 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.06 6.06l.9-.9a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         </div>
-        <div class="step-title">Recibe tu Acceso</div>
-        <p class="step-desc">Te enviamos el enlace de acceso al evento online directamente por Telegram.</p>
+        <div class="step-title" data-i18n="hw4Title">Recibe tu Acceso</div>
+        <p class="step-desc" data-i18n="hw4Desc">Te enviamos el enlace de acceso al evento online directamente por Telegram.</p>
       </div>
     </div>
   </div>
@@ -2152,38 +2237,38 @@
 <!-- TRUST / WHY US -->
 <section id="trust">
   <div class="wrapper">
-    <p class="section-tag">Por Qué Elegirnos</p>
-    <h2 class="section-title">Tu Confianza, Nuestra Prioridad</h2>
-    <p class="section-sub">Conectamos fans con sus eventos online favoritos, sin complicaciones</p>
+    <p class="section-tag" data-i18n="trTag">Por Qué Elegirnos</p>
+    <h2 class="section-title" data-i18n="trTitle">Tu Confianza, Nuestra Prioridad</h2>
+    <p class="section-sub" data-i18n="trSub">Conectamos fans con sus eventos online favoritos, sin complicaciones</p>
 
     <div class="trust-grid">
       <div class="trust-card">
         <div class="trust-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <div class="trust-title">Acceso Garantizado</div>
-        <p class="trust-desc">Recibes tu enlace antes del evento. Si no puedes conectarte en vivo, tienes acceso a la grabación completa.</p>
+        <div class="trust-title" data-i18n="tr1Title">Acceso Garantizado</div>
+        <p class="trust-desc" data-i18n="tr1Desc">Recibes tu enlace antes del evento. Si no puedes conectarte en vivo, tienes acceso a la grabación completa.</p>
       </div>
       <div class="trust-card">
         <div class="trust-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <div class="trust-title">Proceso Transparente</div>
-        <p class="trust-desc">Sin costos ocultos. El precio que ves es el precio que pagas, sin sorpresas.</p>
+        <div class="trust-title" data-i18n="tr2Title">Proceso Transparente</div>
+        <p class="trust-desc" data-i18n="tr2Desc">Sin costos ocultos. El precio que ves es el precio que pagas, sin sorpresas.</p>
       </div>
       <div class="trust-card">
         <div class="trust-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <div class="trust-title">Atención Personalizada</div>
-        <p class="trust-desc">Te acompañamos durante todo el proceso, desde la compra hasta el día del evento.</p>
+        <div class="trust-title" data-i18n="tr3Title">Atención Personalizada</div>
+        <p class="trust-desc" data-i18n="tr3Desc">Te acompañamos durante todo el proceso, desde la compra hasta el día del evento.</p>
       </div>
       <div class="trust-card">
         <div class="trust-icon">
           <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <div class="trust-title">Respuesta Rápida</div>
-        <p class="trust-desc">Respondemos tus dudas en minutos. Tu tiempo es valioso para nosotros.</p>
+        <div class="trust-title" data-i18n="tr4Title">Respuesta Rápida</div>
+        <p class="trust-desc" data-i18n="tr4Desc">Respondemos tus dudas en minutos. Tu tiempo es valioso para nosotros.</p>
       </div>
     </div>
   </div>
@@ -2223,10 +2308,10 @@
 
 <!-- CTA BANNER -->
 <section id="cta-section">
-  <h2 class="cta-title">¿Listo para vivir la experiencia?</h2>
-  <p class="cta-sub">No te quedes sin tu boleto — los lugares son limitados.</p>
+  <h2 class="cta-title" data-i18n="ctaTitle">¿Listo para vivir la experiencia?</h2>
+  <p class="cta-sub" data-i18n="ctaSub">No te quedes sin tu boleto — los lugares son limitados.</p>
   <div class="hero-btns">
-    <a href="#events" class="btn btn-primary">Ver Eventos Disponibles</a>
+    <a href="#events" class="btn btn-primary" data-i18n="heroBtnPrimary">Ver Eventos Disponibles</a>
     <a href="https://t.me/panchoenlared" target="_blank" rel="noopener" class="btn btn-outline">Telegram: @panchoenlared</a>
   </div>
 </section>
@@ -2234,7 +2319,7 @@
 <!-- CONTACT / FOOTER -->
 <footer id="contact">
   <div class="footer-logo">Y<span>Pass</span></div>
-  <p class="footer-text">
+  <p class="footer-text" data-i18n="footerText">
     Todos los eventos son <b style="color:#e4e4e4;">100% en línea</b>. Escríbenos por Telegram para disponibilidad, precios y proceso de pago.<br>
     <a href="https://t.me/panchoenlared" target="_blank" rel="noopener"
        style="color:var(--red-l);letter-spacing:.1em;font-family:'Orbitron',monospace;font-size:.8rem;text-decoration:none;">
@@ -2242,7 +2327,7 @@
     </a>
   </p>
   <div class="footer-divider"></div>
-  <p class="footer-disclaimer">
+  <p class="footer-disclaimer" data-i18n="footerDisclaimer">
     YPass es un servicio de reventa de boletos. Los precios pueden variar respecto al precio original del evento.
     No estamos afiliados con las productoras ni organizadores oficiales de los eventos listados.
     Todos los nombres de eventos y artistas son propiedad de sus respectivos dueños.
@@ -2382,17 +2467,17 @@
   ═══════════════════════════════════════════ */
   const EVENTS_DATA = [
     { id:'dmd2',      name:{es:'DMD Land 3', en:'DMD Land 3'},     icon:'⚡', color:'#00b4ff',
-      days:['2026-05-02','2026-05-03'], start:new Date('2026-05-02T10:00:00+07:00'), price:3.50, url:'/dmdland3' },
+      days:['2026-05-02','2026-05-03'], start:new Date('2026-05-02T10:00:00+07:00'), price:3.50, dayPrice:2.00, url:'/dmdland3' },
     { id:'olympop',   name:{es:'Olympop 2', en:'Olympop 2'},        icon:'🏅', color:'#4d94ff',
       days:['2026-05-09'], start:new Date('2026-05-09T13:00:00+07:00'), price:2.00, url:'/olympop' },
     { id:'lol3',      name:{es:'Love Out Loud', en:'Love Out Loud'},icon:'❤', color:'#f5c518',
-      days:['2026-05-22','2026-05-23','2026-05-24'], start:new Date('2026-05-22T17:00:00+07:00'), price:4.00, url:'/loveoutloud' },
+      days:['2026-05-22','2026-05-23','2026-05-24'], start:new Date('2026-05-22T17:00:00+07:00'), price:4.00, dayPrice:2.00, url:'/loveoutloud' },
     { id:'poohpavel', name:{es:'Pooh Pavel', en:'Pooh Pavel'},      icon:'💖', color:'#FF6B9D',
       days:['2026-06-07'], start:new Date('2026-06-07T17:00:00+07:00'), price:2.50, url:'/poohpavel' },
     { id:'blush2',    name:{es:'Blush Blossom', en:'Blush Blossom'},icon:'🌸', color:'#ff9edb',
-      days:['2026-06-13','2026-06-14'], start:new Date('2026-06-13T17:00:00+07:00'), price:3.50, url:'/blushblossom' },
+      days:['2026-06-13','2026-06-14'], start:new Date('2026-06-13T17:00:00+07:00'), price:3.50, dayPrice:2.00, url:'/blushblossom' },
     { id:'perth2',    name:{es:'Perth Santa Concert', en:'Perth Santa Concert'}, icon:'🎵', color:'#e8738a',
-      days:['2026-07-18','2026-07-19'], start:new Date('2026-07-18T17:00:00+07:00'), price:3.00, url:'/perthsanta' },
+      days:['2026-07-18','2026-07-19'], start:new Date('2026-07-18T17:00:00+07:00'), price:3.00, dayPrice:2.00, url:'/perthsanta' },
     { id:'sotus',     name:{es:'SOTUS 10 Years', en:'SOTUS 10 Years'}, icon:'🎓', color:'#FF5252',
       days:['2026-08-29'], start:new Date('2026-08-29T18:00:00+07:00'), price:2.50, url:'/sotus' },
     { id:'starlympic',name:{es:'Starlympic 2026', en:'Starlympic 2026'}, icon:'🏆', color:'#FFD700',
@@ -2414,6 +2499,32 @@
       navReferral:'Referidos', navHow:'Cómo funciona', navContact:'Contacto', navCta:'Ver Boletos',
       gbLabel:'Próximo evento', gbCta:'Ver detalles',
       gbD:'d', gbH:'h', gbM:'m', gbS:'s',
+      heroEyebrow:'Tus eventos a los mejores precios',
+      heroSub:'Tu pase al BL & GL Tailándes',
+      heroDesc:'Consigue tus boletos para los eventos más exclusivos.<br><b>Conciertos · Fancons · Shows en vivo</b> — todo en un solo lugar.',
+      heroBtnPrimary:'Ver Eventos Disponibles', heroBtnOutline:'¿Cómo Funciona?',
+      statActive:'Eventos Activos', statGuarantee:'Boletos Garantizados',
+      statSupport:'Soporte Disponible', statRating:'Calificación de Servicio',
+      evTag:'Disponibles Ahora', evTitle:'Eventos Actuales',
+      evSub:'Selecciona el evento de tu interés para ver disponibilidad y precios',
+      bnTag:'Combina & Ahorra', bnTitle:'Packs & Bundles',
+      bnSub:'Elige el pack que más te convenga y obtén el mejor precio',
+      fnTag:'Historial', fnTitle:'Eventos Finalizados',
+      fnSub:'Estos eventos ya concluyeron. ¡Gracias a todos los que participaron!',
+      hwTag:'Proceso Simple', hwTitle:'¿Cómo Funciona?', hwSub:'Consigue tus boletos en 4 pasos sencillos',
+      hw1Title:'Elige tu Evento', hw1Desc:'Explora los eventos online disponibles y selecciona el que te interesa.',
+      hw2Title:'Escríbenos por Telegram', hw2Desc:'Contáctanos en <b>@panchoenlared</b> y dinos qué evento te interesa.',
+      hw3Title:'Coordina tu Pago', hw3Desc:'Acordamos el método de pago más conveniente para ti directamente por Telegram.',
+      hw4Title:'Recibe tu Acceso', hw4Desc:'Te enviamos el enlace de acceso al evento online directamente por Telegram.',
+      trTag:'Por Qué Elegirnos', trTitle:'Tu Confianza, Nuestra Prioridad',
+      trSub:'Conectamos fans con sus eventos online favoritos, sin complicaciones',
+      tr1Title:'Acceso Garantizado', tr1Desc:'Recibes tu enlace antes del evento. Si no puedes conectarte en vivo, tienes acceso a la grabación completa.',
+      tr2Title:'Proceso Transparente', tr2Desc:'Sin costos ocultos. El precio que ves es el precio que pagas, sin sorpresas.',
+      tr3Title:'Atención Personalizada', tr3Desc:'Te acompañamos durante todo el proceso, desde la compra hasta el día del evento.',
+      tr4Title:'Respuesta Rápida', tr4Desc:'Respondemos tus dudas en minutos. Tu tiempo es valioso para nosotros.',
+      ctaTitle:'¿Listo para vivir la experiencia?', ctaSub:'No te quedes sin tu boleto — los lugares son limitados.',
+      footerText:'Todos los eventos son <b style="color:#e4e4e4;">100% en línea</b>. Escríbenos por Telegram para disponibilidad, precios y proceso de pago.<br><a href="https://t.me/panchoenlared" target="_blank" rel="noopener" style="color:var(--red-l);letter-spacing:.1em;font-family:\'Orbitron\',monospace;font-size:.8rem;text-decoration:none;">✈ @panchoenlared</a>',
+      footerDisclaimer:'YPass es un servicio de reventa de boletos. Los precios pueden variar respecto al precio original del evento. No estamos afiliados con las productoras ni organizadores oficiales de los eventos listados. Todos los nombres de eventos y artistas son propiedad de sus respectivos dueños.',
       svTag:'Ahorra de verdad', svTitle:'Cuánto Ahorras',
       svSub:'Compara nuestro precio vs. el boleto oficial promedio ($35 USD por día)',
       svPick:'Selecciona evento:', svOfficial:'Precio Oficial', svOurs:'Nuestro Precio', svSave:'Ahorras',
@@ -2432,6 +2543,32 @@
       navReferral:'Referrals', navHow:'How it works', navContact:'Contact', navCta:'Get Tickets',
       gbLabel:'Next event', gbCta:'View details',
       gbD:'d', gbH:'h', gbM:'m', gbS:'s',
+      heroEyebrow:'Your events at the best prices',
+      heroSub:'Your pass to Thai BL & GL',
+      heroDesc:'Get your tickets to the most exclusive Thai BL/GL events.<br><b>Concerts · Fancons · Live shows</b> — all in one place.',
+      heroBtnPrimary:'View Available Events', heroBtnOutline:'How does it work?',
+      statActive:'Active Events', statGuarantee:'Guaranteed Tickets',
+      statSupport:'Support Available', statRating:'Service Rating',
+      evTag:'Available Now', evTitle:'Current Events',
+      evSub:'Pick the event you want to see availability and prices',
+      bnTag:'Combine & Save', bnTitle:'Packs & Bundles',
+      bnSub:'Pick the pack that suits you best and get the best price',
+      fnTag:'Past', fnTitle:'Finished Events',
+      fnSub:'These events have already ended. Thanks to everyone who joined!',
+      hwTag:'Simple Process', hwTitle:'How Does It Work?', hwSub:'Get your tickets in 4 simple steps',
+      hw1Title:'Pick Your Event', hw1Desc:'Browse the available online events and pick the one you want.',
+      hw2Title:'Message us on Telegram', hw2Desc:'Reach us at <b>@panchoenlared</b> and tell us which event you want.',
+      hw3Title:'Set Up Payment', hw3Desc:'We agree on the most convenient payment method for you directly via Telegram.',
+      hw4Title:'Receive Access', hw4Desc:'We send you the access link to the online event directly via Telegram.',
+      trTag:'Why Choose Us', trTitle:'Your Trust, Our Priority',
+      trSub:'We connect fans with their favorite online events, hassle-free',
+      tr1Title:'Guaranteed Access', tr1Desc:'You get your link before the event. If you can\'t catch it live, you have access to the full recording.',
+      tr2Title:'Transparent Process', tr2Desc:'No hidden fees. The price you see is the price you pay — no surprises.',
+      tr3Title:'Personalized Support', tr3Desc:'We walk you through the whole process, from purchase to the event day.',
+      tr4Title:'Fast Response', tr4Desc:'We answer your questions in minutes. Your time matters to us.',
+      ctaTitle:'Ready to experience it?', ctaSub:'Don\'t miss out — spots are limited.',
+      footerText:'All events are <b style="color:#e4e4e4;">100% online</b>. Message us on Telegram for availability, pricing and payment process.<br><a href="https://t.me/panchoenlared" target="_blank" rel="noopener" style="color:var(--red-l);letter-spacing:.1em;font-family:\'Orbitron\',monospace;font-size:.8rem;text-decoration:none;">✈ @panchoenlared</a>',
+      footerDisclaimer:'YPass is a ticket reselling service. Prices may differ from the event\'s original price. We are not affiliated with the official producers or organizers of the listed events. All event and artist names are property of their respective owners.',
       svTag:'Real savings', svTitle:'How Much You Save',
       svSub:'Compare our price vs. the average official ticket ($35 USD per day)',
       svPick:'Pick an event:', svOfficial:'Official Price', svOurs:'Our Price', svSave:'You Save',
@@ -2509,7 +2646,50 @@
       const cur = parent.querySelector('[data-currencies]');
       if (cur) cur.innerHTML = chipsHTML(usd);
     });
+    injectCardPrices();
     if (typeof updateBuilder === 'function') updateBuilder();
+  }
+
+  function injectCardPrices() {
+    const lblFull = currentLang === 'en' ? 'Full access' : 'Acceso completo';
+    const lblPerDay = currentLang === 'en' ? '/ day' : '/ día';
+    const lblDays = n => currentLang === 'en' ? `${n} days · all included` : `${n} días · todo incluido`;
+    document.querySelectorAll('[data-event-id]').forEach(card => {
+      const ev = EVENTS_DATA.find(e => e.id === card.dataset.eventId);
+      if (!ev || ev.finished) return;
+      const cardBody = card.querySelector('.card-body');
+      const cta = cardBody && cardBody.querySelector('.card-cta');
+      if (!cta) return;
+      const days = ev.days.length;
+      let html;
+      if (days > 1 && ev.dayPrice) {
+        html = `
+          <div class="card-price-block">
+            <div class="cpr-item">
+              <span class="cpr-val">${priceHTML(ev.dayPrice, currentFx)}</span>
+              <span class="cpr-lbl">${lblPerDay}</span>
+            </div>
+            <div class="cpr-item bundle">
+              <span class="cpr-val">${priceHTML(ev.price, currentFx)}</span>
+              <span class="cpr-lbl">${lblDays(days)}</span>
+            </div>
+          </div>`;
+      } else {
+        html = `
+          <div class="card-price-block">
+            <div class="cpr-item bundle" style="flex:1;">
+              <span class="cpr-val">${priceHTML(ev.price, currentFx)}</span>
+              <span class="cpr-lbl">${lblFull}</span>
+            </div>
+          </div>`;
+      }
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html.trim();
+      const newBlock = tmp.firstElementChild;
+      const old = cardBody.querySelector('.card-price-block');
+      if (old) old.replaceWith(newBlock);
+      else cardBody.insertBefore(newBlock, cta);
+    });
   }
 
   async function loadRates() {
@@ -2568,11 +2748,31 @@
   }
 
   /* ═══════════════════════════════════════════
-     CALENDAR
+     CALENDAR (paginated, single month)
   ═══════════════════════════════════════════ */
+  let calMonths = [];
+  let calIdx = 0;
+
+  function buildCalMonths() {
+    const months = new Set();
+    EVENTS_DATA.forEach(ev => ev.days.forEach(d => {
+      const dt = new Date(d + 'T12:00:00');
+      months.add(`${dt.getFullYear()}-${pad2(dt.getMonth())}`);
+    }));
+    calMonths = [...months].sort();
+    // Default to current/upcoming month
+    const now = new Date();
+    const nowKey = `${now.getFullYear()}-${pad2(now.getMonth())}`;
+    const idx = calMonths.findIndex(m => m >= nowKey);
+    calIdx = idx >= 0 ? idx : 0;
+  }
+
   function renderCalendar() {
     const container = document.getElementById('cal-container');
     if (!container) return;
+    if (!calMonths.length) buildCalMonths();
+    if (!calMonths.length) { container.innerHTML = ''; return; }
+
     const dowEs = ['L','M','X','J','V','S','D'];
     const dowEn = ['M','T','W','T','F','S','S'];
     const dow = currentLang === 'en' ? dowEn : dowEs;
@@ -2580,51 +2780,58 @@
     const monthNamesEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const monthNames = currentLang === 'en' ? monthNamesEn : monthNamesEs;
 
-    const months = new Set();
-    EVENTS_DATA.forEach(ev => ev.days.forEach(d => {
-      const dt = new Date(d + 'T12:00:00');
-      months.add(`${dt.getFullYear()}-${pad2(dt.getMonth())}`);
-    }));
-    const sortedMonths = [...months].sort();
-
     const today = new Date();
     const todayKey = `${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}`;
 
-    let html = '';
-    sortedMonths.forEach(mk => {
-      const [y, mStr] = mk.split('-');
-      const m = parseInt(mStr, 10);
-      const yNum = parseInt(y, 10);
-      const firstDay = new Date(yNum, m, 1);
-      const lastDay = new Date(yNum, m+1, 0);
-      const offset = (firstDay.getDay() + 6) % 7;
-      const totalDays = lastDay.getDate();
+    const mk = calMonths[calIdx];
+    const [y, mStr] = mk.split('-');
+    const m = parseInt(mStr, 10);
+    const yNum = parseInt(y, 10);
+    const firstDay = new Date(yNum, m, 1);
+    const lastDay = new Date(yNum, m+1, 0);
+    const offset = (firstDay.getDay() + 6) % 7;
+    const totalDays = lastDay.getDate();
 
-      html += `<div class="cal-month">`;
-      html += `<div class="cal-month-title">${monthNames[m]} ${y}</div>`;
-      html += `<div class="cal-grid">`;
-      dow.forEach(d => html += `<div class="cal-dow">${d}</div>`);
-      for (let i = 0; i < offset; i++) html += `<div class="cal-day"></div>`;
-      for (let day = 1; day <= totalDays; day++) {
-        const key = `${y}-${pad2(m+1)}-${pad2(day)}`;
-        const evs = EVENTS_DATA.filter(ev => ev.days.includes(key));
-        const isFinished = evs.length && evs.every(ev => ev.finished);
-        let cls = 'cal-day in-month';
-        if (key === todayKey) cls += ' today';
-        if (evs.length) cls += ' has-event';
-        if (isFinished) cls += ' finished';
-        let icon = '', tip = '';
-        if (evs.length) {
-          icon = `<span class="cal-icon">${evs.map(e=>e.icon).join('')}</span>`;
-          tip = `<span class="cal-tooltip">${evs.map(e=>e.name[currentLang]).join(' · ')}</span>`;
-        }
-        const click = evs.length && !isFinished ? `onclick="window.location='${evs[0].url}'"` : '';
-        html += `<div class="${cls}" ${click}><span>${day}</span>${icon}${tip}</div>`;
+    let cells = '';
+    dow.forEach(d => cells += `<div class="cal-dow">${d}</div>`);
+    for (let i = 0; i < offset; i++) cells += `<div class="cal-day"></div>`;
+    for (let day = 1; day <= totalDays; day++) {
+      const key = `${y}-${pad2(m+1)}-${pad2(day)}`;
+      const evs = EVENTS_DATA.filter(ev => ev.days.includes(key));
+      const isFinished = evs.length && evs.every(ev => ev.finished);
+      let cls = 'cal-day in-month';
+      if (key === todayKey) cls += ' today';
+      if (evs.length) cls += ' has-event';
+      if (isFinished) cls += ' finished';
+      let icon = '', tip = '';
+      if (evs.length) {
+        icon = `<span class="cal-icon">${evs.map(e=>e.icon).join('')}</span>`;
+        tip = `<span class="cal-tooltip">${evs.map(e=>e.name[currentLang]).join(' · ')}</span>`;
       }
-      html += `</div></div>`;
-    });
-    container.innerHTML = html;
+      const click = evs.length && !isFinished ? `onclick="window.location='${evs[0].url}'"` : '';
+      cells += `<div class="${cls}" ${click}><span>${day}</span>${icon}${tip}</div>`;
+    }
+
+    const dots = calMonths.map((mm, i) => {
+      return `<button class="cal-dot ${i===calIdx?'active':''}" onclick="calGoTo(${i})" aria-label="Mes ${i+1}"></button>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="cal-month">
+        <div class="cal-nav">
+          <button class="cal-arrow" id="cal-prev" onclick="calPrev()" ${calIdx===0?'disabled':''} aria-label="Anterior">←</button>
+          <div class="cal-month-title">${monthNames[m]} ${y}</div>
+          <button class="cal-arrow" id="cal-next" onclick="calNext()" ${calIdx===calMonths.length-1?'disabled':''} aria-label="Siguiente">→</button>
+        </div>
+        <div class="cal-grid">${cells}</div>
+        <div class="cal-pager">${dots}</div>
+      </div>
+    `;
   }
+
+  function calPrev() { if (calIdx > 0) { calIdx--; renderCalendar(); } }
+  function calNext() { if (calIdx < calMonths.length-1) { calIdx++; renderCalendar(); } }
+  function calGoTo(i) { calIdx = i; renderCalendar(); }
 
   /* ═══════════════════════════════════════════
      SAVINGS CALCULATOR
