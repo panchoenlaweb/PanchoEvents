@@ -549,7 +549,9 @@ async function sha256(str) {
 }
 
 /* Vimeo Live event IDs per day */
-const VIMEO_IDS = { 1: '5903425', 2: '5903427' };
+/* TEST: usando un único stream para prueba de plataforma. Reales:
+   { 1: '5903425', 2: '5903427' } */
+const VIMEO_IDS = { 1: '5904834', 2: '5904834' };
 /* Activate player 15 minutes before event start */
 const PRE_LIVE_MS = 15 * 60 * 1000;
 
