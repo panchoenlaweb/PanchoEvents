@@ -699,12 +699,17 @@
     <div class="wrapper">
         <h2 class="section-title">Precios Online (Reventa)</h2>
 
-        <div class="price-opts" style="grid-template-columns:1fr;max-width:340px;">
+        <div class="price-opts">
+            <div class="p-card">
+                <p class="p-card-name">Día 2 · Solo</p>
+                <p class="p-usd"><sup>$</sup>2 <sup style="font-size:.7rem">USD</sup></p>
+                <p class="p-desc">Solo Día 2 en vivo</p>
+            </div>
             <div class="p-card featured">
-                <div class="feat-badge">ÚNICA OPCIÓN</div>
-                <p class="p-card-name">Día 2 · En Vivo</p>
+                <div class="feat-badge">MEJOR OPCIÓN</div>
+                <p class="p-card-name">Día 2 + Grabación</p>
                 <p class="p-usd"><sup>$</sup>3 <sup style="font-size:.7rem">USD</sup></p>
-                <p class="p-desc">Incluye la grabación del Día 1</p>
+                <p class="p-desc">Día 2 en vivo + grabación Día 1</p>
             </div>
         </div>
 
@@ -977,13 +982,15 @@ function renderTable(rates, note, live) {
     let rows = '';
 
     regions.forEach(reg => {
-        rows += `<tr class="reg-sep"><td colspan="3">— ${reg} —</td></tr>`;
+        rows += `<tr class="reg-sep"><td colspan="4">— ${reg} —</td></tr>`;
         CURRENCIES.filter(c => c.region === reg).forEach(c => {
             const r  = rates[c.code] ?? FB[c.code] ?? 1;
+            const p1 = c.fmt(2 * r);
             const p2 = c.fmt(3 * r);
             rows += `<tr>
                 <td><span class="c-flag">${c.flag}</span><span class="c-name">${c.name}</span></td>
                 <td><span class="c-code">${c.code}</span></td>
+                <td><span class="p1d">${p1}</span></td>
                 <td><span class="p2d">${p2}</span></td>
             </tr>`;
         });
@@ -994,7 +1001,8 @@ function renderTable(rates, note, live) {
             <table class="ctbl">
                 <thead><tr>
                     <th>Moneda</th><th>Código</th>
-                    <th>Día 2 + Grabación Día 1 (USD 3)</th>
+                    <th>Solo Día 2 &nbsp;(USD 2)</th>
+                    <th>Día 2 + Grab. Día 1 (USD 3)</th>
                 </tr></thead>
                 <tbody>${rows}</tbody>
             </table>
@@ -1002,7 +1010,7 @@ function renderTable(rates, note, live) {
 
     document.getElementById('rate-note').innerHTML =
         `${live ? '🟢 Tasas en tiempo real' : '🟡 Tasas de referencia aproximadas'} &nbsp;·&nbsp; ${note}
-        <br><small>* Peso Argentino: tasa oficial. &nbsp;Precio base: Día 2 en vivo + grabación del Día 1 = USD 3</small>`;
+        <br><small>* Peso Argentino: tasa oficial. &nbsp;Precios base: Solo Día 2 = USD 2 &nbsp;|&nbsp; Día 2 + grabación Día 1 = USD 3</small>`;
 }
 
 async function loadRates() {
