@@ -844,7 +844,7 @@ function switchDay(d) {
 ═══════════════════════════════════════ */
 function updateLiveIndicator(ev) {
     const now = Date.now();
-    const end = ev.getTime() + (4*3600000); // ~4 hours duration
+    const end = ev.getTime() + (6.5*3600000); // hasta 10:30 PM Bangkok (inicio 4 PM + 6h30)
     const ind = document.getElementById('live-indicator');
     const lbl = document.getElementById('live-label');
 
