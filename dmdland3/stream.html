@@ -474,7 +474,6 @@
         }
         .wm-tag {
             position: absolute;
-            top: 12px; right: 12px;
             font-family: 'Orbitron', monospace;
             font-size: .72rem;
             letter-spacing: .14em;
@@ -485,9 +484,20 @@
             background: rgba(0,0,0,.28);
             border: 1px solid rgba(255,255,255,.18);
             border-radius: 2px;
+            transition: top .6s ease, left .6s ease, right .6s ease, bottom .6s ease, opacity .4s ease;
+            top: auto; right: 12px; bottom: auto; left: auto;
+            top: 12px;
         }
+        .wm-tag.c-tr { top: 12px;   right: 12px; left: auto;  bottom: auto; }
+        .wm-tag.c-br { bottom: 12px; right: 12px; left: auto;  top: auto;    }
+        .wm-tag.c-bl { bottom: 12px; left: 12px;  right: auto; top: auto;    }
+        .wm-tag.c-tl { top: 12px;    left: 12px;  right: auto; bottom: auto; }
         @media (max-width: 640px) {
-            .wm-tag { top: 8px; right: 8px; font-size: .55rem; letter-spacing: .08em; padding: 3px 7px; }
+            .wm-tag { font-size: .55rem; letter-spacing: .08em; padding: 3px 7px; }
+            .wm-tag.c-tr { top: 8px;    right: 8px; }
+            .wm-tag.c-br { bottom: 8px; right: 8px; }
+            .wm-tag.c-bl { bottom: 8px; left: 8px; }
+            .wm-tag.c-tl { top: 8px;    left: 8px; }
         }
 
         /* Fullscreen handling: when .player-wrap goes fullscreen, iframe + watermark
@@ -1103,19 +1113,26 @@ if (sessionStorage.getItem('dmd_test') === '1') {
     const sidEl = document.getElementById('blackout-sid');
     if (sidEl) sidEl.textContent = `SESIÓN · ${SESSION_ID}`;
 
-    // --- Watermark fijo en la esquina superior derecha ---
+    // --- Watermark ciclándose entre las 4 esquinas cada 6 s ---
     const wmLayer = document.getElementById('wm-layer');
     if (wmLayer) {
         const tag = document.createElement('div');
-        tag.className = 'wm-tag';
+        tag.className = 'wm-tag c-tr';
         wmLayer.appendChild(tag);
+        const corners = ['c-tr', 'c-br', 'c-bl', 'c-tl'];
+        let idx = 0;
         function updateWm() {
-            const day = sessionStorage.getItem('dmd_access') || '?';
+            const day  = sessionStorage.getItem('dmd_access') || '?';
             const user = sessionStorage.getItem('dmd_user') || SESSION_ID;
             tag.textContent = `${user} · D${day}`;
         }
+        function moveCorner() {
+            idx = (idx + 1) % corners.length;
+            tag.className = 'wm-tag ' + corners[idx];
+        }
         updateWm();
         setInterval(updateWm, 10000);
+        setInterval(moveCorner, 6000);
     }
 
     // --- Blackout control ---
@@ -1213,10 +1230,25 @@ if (sessionStorage.getItem('dmd_test') === '1') {
         if (!wrap) return;
         let redirecting = false;
 
+        function tryLockLandscape() {
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(()=>{});
+                }
+            } catch(_) {}
+        }
+        function tryUnlock() {
+            try {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch(_) {}
+        }
+
         function onFsChange() {
             const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
-            if (!fsEl) { redirecting = false; return; }
-            if (fsEl === wrap) return; // ya es el contenedor correcto
+            if (!fsEl) { redirecting = false; tryUnlock(); return; }
+            if (fsEl === wrap) { tryLockLandscape(); return; }
             // Si entró al iframe u otro descendiente, redirigir al wrap
             const playerArea = document.getElementById('player-area');
             if (fsEl.tagName === 'IFRAME' || (playerArea && playerArea.contains(fsEl))) {
@@ -1227,7 +1259,7 @@ if (sessionStorage.getItem('dmd_test') === '1') {
                              Promise.resolve();
                 Promise.resolve(exit).then(() => {
                     const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
-                    if (req) req.call(wrap).catch(()=>{});
+                    if (req) req.call(wrap).then(tryLockLandscape).catch(()=>{});
                     setTimeout(() => redirecting = false, 200);
                 }).catch(() => { redirecting = false; });
             }
