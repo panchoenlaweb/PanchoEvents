@@ -541,17 +541,28 @@
         <h1 class="gate-title">Transmisión Privada</h1>
         <p class="gate-sub">DMD LAND 3 · Land of Fusion</p>
         <input
+            type="text"
+            id="user-input"
+            class="gate-input"
+            placeholder="@tuUsuarioTelegram o email"
+            maxlength="60"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            onkeydown="if(event.key==='Enter') document.getElementById('pwd-input').focus()"
+        />
+        <input
             type="password"
             id="pwd-input"
             class="gate-input"
-            placeholder="· · · · · ·"
+            placeholder="Clave de acceso"
             maxlength="30"
             autocomplete="off"
             onkeydown="if(event.key==='Enter') checkPwd()"
         />
         <button class="gate-btn" onclick="checkPwd()">ENTRAR →</button>
         <p class="gate-err-msg" id="gate-err"></p>
-        <p class="gate-hint">Ingresa la clave que recibiste con tu entrada</p>
+        <p class="gate-hint">Ingresa tu @usuario y la clave que recibiste con tu entrada</p>
     </div>
 </div>
 
@@ -844,19 +855,40 @@ function applyDayRestriction(day) {
 }
 
 async function checkPwd() {
-    const val   = document.getElementById('pwd-input').value.trim();
-    const errEl = document.getElementById('gate-err');
-    const inp   = document.getElementById('pwd-input');
+    const val     = document.getElementById('pwd-input').value.trim();
+    const userRaw = document.getElementById('user-input').value.trim();
+    const errEl   = document.getElementById('gate-err');
+    const inp     = document.getElementById('pwd-input');
+    const uInp    = document.getElementById('user-input');
 
-    if (!val) return;
+    // Validar identificador: @usuario (3+ chars) o email básico
+    const isTelegram = /^@?[a-zA-Z0-9_]{3,32}$/.test(userRaw);
+    const isEmail    = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(userRaw);
+    if (!userRaw || (!isTelegram && !isEmail)) {
+        errEl.textContent = 'Ingresa tu @usuario de Telegram o un email válido.';
+        uInp.classList.add('err');
+        setTimeout(() => uInp.classList.remove('err'), 500);
+        return;
+    }
+    if (!val) {
+        errEl.textContent = 'Ingresa tu clave de acceso.';
+        inp.classList.add('err');
+        setTimeout(() => inp.classList.remove('err'), 500);
+        return;
+    }
 
     const hash = await sha256(val);
     const day  = HASHES[hash];
 
     if (day === 'TEST') {
+        // Normalizar @usuario
+        const normalized = isTelegram ? ('@' + userRaw.replace(/^@/, '')) : userRaw.toLowerCase();
+        sessionStorage.setItem('dmd_user', normalized);
         activateTestMode();
         errEl.textContent = '';
     } else if (day) {
+        const normalized = isTelegram ? ('@' + userRaw.replace(/^@/, '')) : userRaw.toLowerCase();
+        sessionStorage.setItem('dmd_user', normalized);
         unlockDay(day);
         errEl.textContent = '';
     } else {
@@ -899,9 +931,13 @@ function activateTestMode() {
 function logoutStream() {
     sessionStorage.removeItem('dmd_access');
     sessionStorage.removeItem('dmd_test');
+    sessionStorage.removeItem('dmd_user');
+    sessionStorage.removeItem('dmd_sid');
     document.getElementById('main-content').style.display = 'none';
     document.getElementById('gate').style.display = 'flex';
     document.getElementById('pwd-input').value = '';
+    const uIn = document.getElementById('user-input');
+    if (uIn) uIn.value = '';
     document.getElementById('gate-err').textContent = '';
 }
 
@@ -1062,10 +1098,11 @@ if (sessionStorage.getItem('dmd_test') === '1') {
             const now = new Date();
             const hh  = String(now.getHours()).padStart(2,'0');
             const mm  = String(now.getMinutes()).padStart(2,'0');
+            const user = sessionStorage.getItem('dmd_user') || SESSION_ID;
             const labels = [
-                `DMD L3 · D${day} · ${SESSION_ID}`,
-                `${hh}:${mm} · ${SESSION_ID}`,
-                `NO RETRANSMITIR · ${SESSION_ID}`,
+                `${user} · D${day}`,
+                `${user} · ${hh}:${mm}`,
+                `NO RETRANSMITIR · ${user}`,
             ];
             tags.forEach((t, i) => {
                 t.textContent = labels[i];
