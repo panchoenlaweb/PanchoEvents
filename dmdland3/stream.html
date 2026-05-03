@@ -183,7 +183,7 @@
         /* PLAYER AREA */
         .player-section { padding: 0; background: #000; }
         .player-wrap {
-            width: 100%; max-width: none; margin: 0 auto;
+            max-width: 960px; margin: 0 auto;
             position: relative;
         }
         .vimeo-embed {
@@ -445,165 +445,6 @@
             .warn-text  { font-size: .85rem; }
             .warn-btn   { font-size: .72rem; padding: 12px 24px; letter-spacing: .18em; width: 100%; }
         }
-
-        /* ════════════════════
-           ANTI-RECORDING PROTECTION
-        ════════════════════ */
-        /* Disable user selection & drag across stream page */
-        #main-content, #main-content * {
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            -moz-user-select: none !important;
-            -ms-user-select: none !important;
-            -webkit-user-drag: none !important;
-            -webkit-touch-callout: none !important;
-        }
-        /* Inputs and textareas should still accept text (none on this page, but safe) */
-        #main-content input, #main-content textarea {
-            user-select: text !important;
-            -webkit-user-select: text !important;
-        }
-
-        /* Dynamic watermark overlay on top of the player */
-        .wm-layer {
-            position: absolute; inset: 0;
-            pointer-events: none;
-            z-index: 5;
-            overflow: hidden;
-            mix-blend-mode: difference;
-        }
-        .wm-tag {
-            position: absolute;
-            font-family: 'Orbitron', monospace;
-            font-size: .72rem;
-            letter-spacing: .14em;
-            color: rgba(255,255,255,.6);
-            text-shadow: 0 0 4px rgba(0,0,0,.9);
-            white-space: nowrap;
-            padding: 4px 10px;
-            background: rgba(0,0,0,.28);
-            border: 1px solid rgba(255,255,255,.18);
-            border-radius: 2px;
-            transition: top .6s ease, left .6s ease, right .6s ease, bottom .6s ease, opacity .4s ease;
-            top: auto; right: 12px; bottom: auto; left: auto;
-            top: 12px;
-        }
-        .wm-tag.c-tr { top: 12px;   right: 12px; left: auto;  bottom: auto; }
-        .wm-tag.c-br { bottom: 12px; right: 12px; left: auto;  top: auto;    }
-        .wm-tag.c-bl { bottom: 12px; left: 12px;  right: auto; top: auto;    }
-        .wm-tag.c-tl { top: 12px;    left: 12px;  right: auto; bottom: auto; }
-        @media (max-width: 640px) {
-            .wm-tag { font-size: .55rem; letter-spacing: .08em; padding: 3px 7px; }
-            .wm-tag.c-tr { top: 8px;    right: 8px; }
-            .wm-tag.c-br { bottom: 8px; right: 8px; }
-            .wm-tag.c-bl { bottom: 8px; left: 8px; }
-            .wm-tag.c-tl { top: 8px;    left: 8px; }
-        }
-
-        /* Custom fullscreen button (more reliable on mobile) */
-        .fs-btn {
-            position: absolute; top: 8px; left: 8px;
-            z-index: 20;
-            background: rgba(0,0,0,.55);
-            border: 1px solid rgba(255,255,255,.2);
-            color: #fff;
-            font-family: 'Orbitron', monospace;
-            font-size: .58rem; letter-spacing: .08em;
-            text-transform: uppercase;
-            padding: 5px 8px;
-            cursor: pointer;
-            display: flex; align-items: center; gap: 5px;
-            backdrop-filter: blur(4px);
-            transition: background .2s, border-color .2s;
-            opacity: .7;
-        }
-        .fs-btn:hover { opacity: 1; background: rgba(0,140,255,.3); border-color: var(--blue-light); }
-        .fs-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-        @media (max-width: 640px) {
-            .fs-btn { padding: 5px 7px; gap: 4px; font-size: 0; }
-            .fs-btn svg { width: 14px; height: 14px; }
-            .fs-btn span { display: none !important; }
-        }
-        /* In fullscreen: keep button visible as "Exit" */
-        .fs-btn .fs-lbl-exit { display: none; }
-        .fs-btn .fs-icon-exit { display: none; }
-        .player-wrap:fullscreen .fs-btn .fs-lbl-open,
-        .player-wrap:-webkit-full-screen .fs-btn .fs-lbl-open,
-        .player-wrap:fullscreen .fs-btn .fs-icon-open,
-        .player-wrap:-webkit-full-screen .fs-btn .fs-icon-open { display: none; }
-        .player-wrap:fullscreen .fs-btn .fs-lbl-exit,
-        .player-wrap:-webkit-full-screen .fs-btn .fs-lbl-exit { display: inline; }
-        .player-wrap:fullscreen .fs-btn .fs-icon-exit,
-        .player-wrap:-webkit-full-screen .fs-btn .fs-icon-exit { display: inline-block; }
-        .player-wrap:fullscreen .fs-btn,
-        .player-wrap:-webkit-full-screen .fs-btn {
-            top: 16px; left: 16px;
-            background: rgba(200,0,0,.55);
-            border-color: rgba(255,100,100,.55);
-        }
-        .player-wrap:fullscreen .fs-btn:hover,
-        .player-wrap:-webkit-full-screen .fs-btn:hover {
-            background: rgba(255,50,50,.75);
-            border-color: #ff8080;
-        }
-
-        /* Fullscreen handling: when .player-wrap goes fullscreen, iframe + watermark
-           fill the screen together so the watermark stays visible. */
-        .player-wrap:fullscreen,
-        .player-wrap:-webkit-full-screen {
-            max-width: none; width: 100vw; height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            background: #000;
-        }
-        .player-wrap:fullscreen .vimeo-embed,
-        .player-wrap:-webkit-full-screen .vimeo-embed {
-            padding-bottom: 0;
-            width: 100vw; height: 100vh;
-        }
-        .player-wrap:fullscreen .wm-layer,
-        .player-wrap:-webkit-full-screen .wm-layer {
-            position: fixed; inset: 0;
-        }
-
-        /* Blackout overlay (focus lost / screen capture suspected / devtools) */
-        .blackout {
-            position: fixed; inset: 0; z-index: 1000;
-            background: #000;
-            display: none;
-            align-items: center; justify-content: center;
-            flex-direction: column;
-            padding: 24px;
-            text-align: center;
-        }
-        .blackout.active { display: flex; }
-        .blackout-icon {
-            font-size: 3.5rem; margin-bottom: 20px;
-            filter: drop-shadow(0 0 18px rgba(255,80,80,.8));
-            animation: boPulse 1.4s ease-in-out infinite;
-        }
-        @keyframes boPulse {
-            0%,100% { transform: scale(1);    opacity: .85; }
-            50%     { transform: scale(1.08); opacity: 1; }
-        }
-        .blackout-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.15rem; letter-spacing: .22em;
-            color: #ff5050; text-transform: uppercase;
-            margin-bottom: 14px;
-            text-shadow: 0 0 14px rgba(255,80,80,.5);
-        }
-        .blackout-text {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: .95rem; line-height: 1.6;
-            color: #d8e2f0; max-width: 460px;
-            margin-bottom: 8px;
-        }
-        .blackout-text b { color: #ffaaaa; }
-        .blackout-hint {
-            font-family: 'Orbitron', monospace;
-            font-size: .65rem; letter-spacing: .2em;
-            color: #667; margin-top: 22px;
-        }
     </style>
 </head>
 <body>
@@ -617,44 +458,18 @@
         <h1 class="gate-title">Transmisión Privada</h1>
         <p class="gate-sub">DMD LAND 3 · Land of Fusion</p>
         <input
-            type="text"
-            id="user-input"
-            class="gate-input"
-            placeholder="@tuUsuarioTelegram o email"
-            maxlength="60"
-            autocomplete="off"
-            autocapitalize="off"
-            spellcheck="false"
-            onkeydown="if(event.key==='Enter') document.getElementById('pwd-input').focus()"
-        />
-        <input
             type="password"
             id="pwd-input"
             class="gate-input"
-            placeholder="Clave de acceso"
+            placeholder="· · · · · ·"
             maxlength="30"
             autocomplete="off"
             onkeydown="if(event.key==='Enter') checkPwd()"
         />
         <button class="gate-btn" onclick="checkPwd()">ENTRAR →</button>
         <p class="gate-err-msg" id="gate-err"></p>
-        <p class="gate-hint">Ingresa tu @usuario y la clave que recibiste con tu entrada</p>
+        <p class="gate-hint">Ingresa la clave que recibiste con tu entrada</p>
     </div>
-</div>
-
-<!-- ════════════════════ BLACKOUT OVERLAY (anti-capture) ════════════════════ -->
-<div class="blackout" id="blackout" aria-hidden="true">
-    <div class="blackout-icon">🚫</div>
-    <div class="blackout-title">Reproducción Pausada</div>
-    <p class="blackout-text">
-        Se detectó <b>pérdida de foco</b> o posible <b>captura de pantalla</b>.
-        Esta transmisión es <b>privada</b> y está protegida contra retransmisión
-        en Discord, Google Meet, TikTok, Twitch, OBS y similares.
-    </p>
-    <p class="blackout-text" style="font-size:.82rem;color:#aab;">
-        Regresa a esta ventana para continuar viendo el evento.
-    </p>
-    <p class="blackout-hint" id="blackout-sid">SESIÓN · ————</p>
 </div>
 
 <!-- ════════════════════ WARNING MODAL ════════════════════ -->
@@ -723,15 +538,6 @@
     <!-- PLAYER -->
     <div class="player-section">
         <div class="player-wrap">
-            <!-- Botón propio de pantalla completa (más fiable en móvil) -->
-            <button type="button" class="fs-btn" id="fs-btn" onclick="toggleCustomFullscreen()" aria-label="Pantalla completa">
-                <svg class="fs-icon-open" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-                <svg class="fs-icon-exit" viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
-                <span class="fs-lbl-open">Pantalla completa</span>
-                <span class="fs-lbl-exit">Salir</span>
-            </button>
-            <!-- Dynamic anti-piracy watermark overlay -->
-            <div class="wm-layer" id="wm-layer" aria-hidden="true"></div>
             <div class="vimeo-embed" id="player-area">
                 <div class="stream-placeholder" id="stream-placeholder">
                     <div class="placeholder-icon">📡</div>
@@ -866,9 +672,8 @@ async function sha256(str) {
 
 /* Vimeo Live event IDs per day */
 const VIMEO_IDS = { 1: '5903425', 2: '5903427' };
-/* Activate player 15 minutes before event start (15*60*1000).
-   TEMPORAL: abierto desde ya. Restaurar a `15 * 60 * 1000` cuando corresponda. */
-const PRE_LIVE_MS = 365 * 24 * 60 * 60 * 1000; // ~1 año
+/* Activate player 15 minutes before event start */
+const PRE_LIVE_MS = 15 * 60 * 1000;
 
 function getEvDate(day) {
     return day === 1 ? EV1 : EV2;
@@ -939,40 +744,19 @@ function applyDayRestriction(day) {
 }
 
 async function checkPwd() {
-    const val     = document.getElementById('pwd-input').value.trim();
-    const userRaw = document.getElementById('user-input').value.trim();
-    const errEl   = document.getElementById('gate-err');
-    const inp     = document.getElementById('pwd-input');
-    const uInp    = document.getElementById('user-input');
+    const val   = document.getElementById('pwd-input').value.trim();
+    const errEl = document.getElementById('gate-err');
+    const inp   = document.getElementById('pwd-input');
 
-    // Validar identificador: @usuario (3+ chars) o email básico
-    const isTelegram = /^@?[a-zA-Z0-9_]{3,32}$/.test(userRaw);
-    const isEmail    = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(userRaw);
-    if (!userRaw || (!isTelegram && !isEmail)) {
-        errEl.textContent = 'Ingresa tu @usuario de Telegram o un email válido.';
-        uInp.classList.add('err');
-        setTimeout(() => uInp.classList.remove('err'), 500);
-        return;
-    }
-    if (!val) {
-        errEl.textContent = 'Ingresa tu clave de acceso.';
-        inp.classList.add('err');
-        setTimeout(() => inp.classList.remove('err'), 500);
-        return;
-    }
+    if (!val) return;
 
     const hash = await sha256(val);
     const day  = HASHES[hash];
 
     if (day === 'TEST') {
-        // Normalizar @usuario
-        const normalized = isTelegram ? ('@' + userRaw.replace(/^@/, '')) : userRaw.toLowerCase();
-        sessionStorage.setItem('dmd_user', normalized);
         activateTestMode();
         errEl.textContent = '';
     } else if (day) {
-        const normalized = isTelegram ? ('@' + userRaw.replace(/^@/, '')) : userRaw.toLowerCase();
-        sessionStorage.setItem('dmd_user', normalized);
         unlockDay(day);
         errEl.textContent = '';
     } else {
@@ -1015,13 +799,9 @@ function activateTestMode() {
 function logoutStream() {
     sessionStorage.removeItem('dmd_access');
     sessionStorage.removeItem('dmd_test');
-    sessionStorage.removeItem('dmd_user');
-    sessionStorage.removeItem('dmd_sid');
     document.getElementById('main-content').style.display = 'none';
     document.getElementById('gate').style.display = 'flex';
     document.getElementById('pwd-input').value = '';
-    const uIn = document.getElementById('user-input');
-    if (uIn) uIn.value = '';
     document.getElementById('gate-err').textContent = '';
 }
 
@@ -1144,215 +924,6 @@ if (sessionStorage.getItem('dmd_test') === '1') {
     }
     setInterval(() => updateLiveIndicator(activeDay===1 ? EV1 : EV2), 30000);
 }
-
-/* ═══════════════════════════════════════════════════════════════════
-   ANTI-RECORDING / ANTI-RETRANSMISSION PROTECTION
-   — Dynamic watermark, focus/visibility blackout, keyboard lockdown,
-     devtools detection, context-menu disable.
-   Nota: ninguna protección web es 100% infalible (siempre hay cámara
-   externa, HDMI capture, herramientas root/OS), pero esto disuade y
-   marca cualquier grabación con watermark visible.
-═══════════════════════════════════════════════════════════════════ */
-(function setupProtection(){
-    // --- Unique per-session ID (visible in watermark, for leak tracking) ---
-    function sid() {
-        let id = sessionStorage.getItem('dmd_sid');
-        if (!id) {
-            id = (Math.random().toString(36).slice(2, 7) + Date.now().toString(36).slice(-4)).toUpperCase();
-            sessionStorage.setItem('dmd_sid', id);
-        }
-        return id;
-    }
-    const SESSION_ID = sid();
-    const sidEl = document.getElementById('blackout-sid');
-    if (sidEl) sidEl.textContent = `SESIÓN · ${SESSION_ID}`;
-
-    // --- Watermark ciclándose entre las 4 esquinas cada 6 s ---
-    const wmLayer = document.getElementById('wm-layer');
-    if (wmLayer) {
-        const tag = document.createElement('div');
-        tag.className = 'wm-tag c-tr';
-        wmLayer.appendChild(tag);
-        const corners = ['c-tr', 'c-br', 'c-bl', 'c-tl'];
-        let idx = 0;
-        function updateWm() {
-            const day  = sessionStorage.getItem('dmd_access') || '?';
-            const user = sessionStorage.getItem('dmd_user') || SESSION_ID;
-            tag.textContent = `${user} · D${day}`;
-        }
-        function moveCorner() {
-            idx = (idx + 1) % corners.length;
-            tag.className = 'wm-tag ' + corners[idx];
-        }
-        updateWm();
-        setInterval(updateWm, 10000);
-        setInterval(moveCorner, 6000);
-    }
-
-    // --- Blackout control ---
-    const blackout = document.getElementById('blackout');
-    function showBlackout() { if (blackout) blackout.classList.add('active'); }
-    function hideBlackout() { if (blackout) blackout.classList.remove('active'); }
-
-    // --- Visibility detection ---
-    // Blackout only cuando la pestaña se oculta (alt-tab, cambio de pestaña).
-    // NO usamos 'blur' porque clicar dentro del iframe de Vimeo (para escribir
-    // la clave de Vimeo, ajustar volumen, etc.) dispara blur del window y
-    // provocaría falsos positivos. La pestaña sigue visible, así que
-    // visibilitychange es el indicador correcto.
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) showBlackout(); else hideBlackout();
-    });
-
-    // --- Disable right-click ---
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    // --- Disable drag & select ---
-    document.addEventListener('dragstart',   e => e.preventDefault());
-    document.addEventListener('selectstart', e => {
-        const tag = e.target && e.target.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-        e.preventDefault();
-    });
-
-    // --- Block common recording / inspection shortcuts ---
-    document.addEventListener('keydown', e => {
-        const k = (e.key || '').toLowerCase();
-        // F12 · DevTools
-        if (e.key === 'F12') { e.preventDefault(); showBlackout(); return; }
-        // PrintScreen
-        if (e.key === 'PrintScreen') {
-            try { navigator.clipboard && navigator.clipboard.writeText(''); } catch(_) {}
-            showBlackout();
-            setTimeout(hideBlackout, 2500);
-            e.preventDefault();
-            return;
-        }
-        // Win + Shift + S (Snip & Sketch)
-        if (e.shiftKey && (e.metaKey || e.key === 'Meta') && k === 's') {
-            showBlackout(); setTimeout(hideBlackout, 2500); e.preventDefault(); return;
-        }
-        // Ctrl/Cmd + Shift + I/J/C  (DevTools)
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) {
-            e.preventDefault(); showBlackout(); return;
-        }
-        // Ctrl/Cmd + U  (view source)
-        if ((e.ctrlKey || e.metaKey) && k === 'u') { e.preventDefault(); return; }
-        // Ctrl/Cmd + S  (save page)
-        if ((e.ctrlKey || e.metaKey) && k === 's') { e.preventDefault(); return; }
-        // Ctrl/Cmd + P  (print)
-        if ((e.ctrlKey || e.metaKey) && k === 'p') { e.preventDefault(); showBlackout(); setTimeout(hideBlackout, 1500); return; }
-    });
-
-    // --- Naive DevTools detection (size heuristic) ---
-    // Triggers blackout when devtools is docked (window inner vs outer delta).
-    // Skips when screen recording might legitimately resize viewport.
-    let devOpen = false;
-    function checkDevTools() {
-        const threshold = 170;
-        const wDelta = window.outerWidth  - window.innerWidth;
-        const hDelta = window.outerHeight - window.innerHeight;
-        const open = wDelta > threshold || hDelta > threshold;
-        if (open !== devOpen) {
-            devOpen = open;
-            if (open) showBlackout(); else hideBlackout();
-        }
-    }
-    setInterval(checkDevTools, 1200);
-
-    // --- Screen Capture API detection (best-effort) ---
-    // Some browsers fire a "captureState" event on media elements or via the
-    // HTMLIFrameElement; not standardized. As a proxy we hijack getDisplayMedia
-    // and log/block when the same tab attempts to capture itself.
-    try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-            const orig = navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices);
-            navigator.mediaDevices.getDisplayMedia = function(...args) {
-                showBlackout();
-                return Promise.reject(new DOMException('Captura no permitida', 'NotAllowedError'));
-            };
-        }
-    } catch(_) {}
-
-    // --- Custom fullscreen button handler (exposed globally) ---
-    window.toggleCustomFullscreen = function() {
-        const wrap = document.querySelector('.player-wrap');
-        if (!wrap) return;
-        const inFs = document.fullscreenElement || document.webkitFullscreenElement;
-        if (inFs) {
-            if (document.exitFullscreen) document.exitFullscreen();
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            return;
-        }
-        const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
-        if (req) {
-            const p = req.call(wrap);
-            if (p && p.then) {
-                p.then(() => {
-                    try {
-                        if (screen.orientation && screen.orientation.lock) {
-                            screen.orientation.lock('landscape').catch(()=>{});
-                        }
-                    } catch(_) {}
-                }).catch(()=>{});
-            }
-        }
-    };
-
-    // --- Fullscreen hijack: redirect iframe fullscreen → player-wrap ---
-    // Cuando Vimeo pide fullscreen sobre el iframe, la watermark queda fuera.
-    // Capturamos el evento, salimos, y re-pedimos fullscreen sobre el contenedor
-    // (player-wrap) que incluye iframe + watermark. Funciona porque el fullscreenchange
-    // se dispara dentro del gesto de usuario original.
-    (function hijackFullscreen(){
-        const wrap = document.querySelector('.player-wrap');
-        if (!wrap) return;
-        let redirecting = false;
-
-        function tryLockLandscape() {
-            try {
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(()=>{});
-                }
-            } catch(_) {}
-        }
-        function tryUnlock() {
-            try {
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-            } catch(_) {}
-        }
-
-        function onFsChange() {
-            const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
-            if (!fsEl) { redirecting = false; tryUnlock(); return; }
-            if (fsEl === wrap) { tryLockLandscape(); return; }
-            // Si entró al iframe u otro descendiente, redirigir al wrap
-            const playerArea = document.getElementById('player-area');
-            if (fsEl.tagName === 'IFRAME' || (playerArea && playerArea.contains(fsEl))) {
-                if (redirecting) return;
-                redirecting = true;
-                const exit = document.exitFullscreen ? document.exitFullscreen() :
-                             document.webkitExitFullscreen ? Promise.resolve(document.webkitExitFullscreen()) :
-                             Promise.resolve();
-                Promise.resolve(exit).then(() => {
-                    const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
-                    if (req) req.call(wrap).then(tryLockLandscape).catch(()=>{});
-                    setTimeout(() => redirecting = false, 200);
-                }).catch(() => { redirecting = false; });
-            }
-        }
-
-        document.addEventListener('fullscreenchange',       onFsChange);
-        document.addEventListener('webkitfullscreenchange', onFsChange);
-    })();
-
-    // --- Block long-press context menu on iOS/Android ---
-    document.addEventListener('touchstart', e => {
-        if (e.touches && e.touches.length > 1) e.preventDefault();
-    }, { passive: false });
-})();
 </script>
 </body>
 </html>
