@@ -604,15 +604,15 @@
 <!-- NAV DOTS -->
 <nav class="nav-dots" aria-label="Navegación por secciones">
     <div class="nav-dot active"  title="Inicio"         onclick="scrollTo('hero')"></div>
-    <div class="nav-dot"         title="Cuenta regresiva" onclick="scrollTo('countdown')"></div>
-    <div class="nav-dot"         title="Horarios"        onclick="scrollTo('timezones')"></div>
-    <div class="nav-dot"         title="Entradas"        onclick="scrollTo('tickets')"></div>
+    <div class="nav-dot"         title="Grabación"       onclick="scrollTo('tickets')"></div>
 </nav>
 
 <!-- ════════════════════ HERO ════════════════════ -->
 <section id="hero">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-inner">
+
+        <div class="event-badge" style="background:rgba(120,120,120,.18);border:1px solid #777;color:#bbb;text-shadow:none;">✓ EVENTO FINALIZADO</div>
 
         <h1 class="hero-title">DMD LAND 3</h1>
         <h2 class="hero-subtitle">THE FINAL LAND</h2>
@@ -625,7 +625,7 @@
 
         <div class="hero-meta">
             <span>📍 <b>IMPACT Arena, Muang Thong Thani</b> &nbsp;·&nbsp; Bangkok, Thailand</span>
-            <span>⏰ <b>4:00 PM</b> &nbsp;·&nbsp; ambos días &nbsp;(GMT+7)</span>
+            <span>🎬 <b>Grabación disponible</b> &nbsp;·&nbsp; ambos días completos</span>
         </div>
 
         <!-- local time auto-detect -->
@@ -636,85 +636,31 @@
         </div>
 
         <div class="hero-btns">
-            <button class="btn-reserve" onclick="document.getElementById('tickets').scrollIntoView({behavior:'smooth'})">🎟 Reservar Entrada</button>
-            <div class="btn-stream-wrap">
-                <button class="btn-stream" onclick="window.location.href='https://www.panchoenlared.com/dmdland3/stream'">
-                    <span class="lock-icon">📺</span>Ver Transmisión
-                </button>
-            </div>
+            <a class="btn-reserve" href="https://t.me/Panchoenlared" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🎬 Comprar Grabación</a>
         </div>
     </div>
     <div class="scroll-hint" aria-hidden="true"><span></span></div>
 </section>
 
-<!-- ════════════════════ COUNTDOWN ════════════════════ -->
-<section id="countdown">
-    <div class="wrapper">
-        <h2 class="section-title">Cuenta Regresiva</h2>
-
-        <div class="countdown-grid">
-            <!-- Day 1 -->
-            <div class="cd-card active" id="cd1">
-                <p class="cd-day-label">Día 1 — Sáb 02 Mayo</p>
-                <div class="timer">
-                    <div class="t-block"><span class="t-num" id="d1d">--</span><span class="t-lbl">días</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d1h">--</span><span class="t-lbl">horas</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d1m">--</span><span class="t-lbl">min</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d1s">--</span><span class="t-lbl">seg</span></div>
-                </div>
-                <p class="cd-status" id="st1">4:00 PM · Bangkok (GMT+7)</p>
-            </div>
-            <!-- Day 2 -->
-            <div class="cd-card" id="cd2">
-                <p class="cd-day-label">Día 2 — Dom 03 Mayo</p>
-                <div class="timer">
-                    <div class="t-block"><span class="t-num" id="d2d">--</span><span class="t-lbl">días</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d2h">--</span><span class="t-lbl">horas</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d2m">--</span><span class="t-lbl">min</span></div>
-                    <span class="t-sep">:</span>
-                    <div class="t-block"><span class="t-num" id="d2s">--</span><span class="t-lbl">seg</span></div>
-                </div>
-                <p class="cd-status" id="st2">4:00 PM · Bangkok (GMT+7)</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ════════════════════ TIMEZONES ════════════════════ -->
-<section id="timezones">
-    <div class="wrapper">
-        <h2 class="section-title">Horarios Mundiales</h2>
-        <p class="tz-subtitle">4:00 PM Bangkok (GMT+7) · ambos días</p>
-        <div class="region-grid" id="tz-grid"></div>
-    </div>
-</section>
-
-<!-- ════════════════════ TICKETS ════════════════════ -->
+<!-- ════════════════════ RECORDING (replaces tickets) ════════════════════ -->
 <section id="tickets">
     <div class="wrapper">
-        <h2 class="section-title">Precios Online (Reventa)</h2>
+        <h2 class="section-title">Grabación Disponible</h2>
+        <p class="tz-subtitle" style="text-align:center;margin-bottom:36px;">El evento ya finalizó. Podés comprar la grabación completa de los 2 días vía Telegram.</p>
 
-        <div class="price-opts">
-            <div class="p-card">
-                <p class="p-card-name">Día 2 · Solo</p>
-                <p class="p-usd"><sup>$</sup>2 <sup style="font-size:.7rem">USD</sup></p>
-                <p class="p-desc">Solo Día 2 en vivo</p>
-            </div>
+        <div class="price-opts" style="grid-template-columns:1fr;max-width:380px;">
             <div class="p-card featured">
-                <div class="feat-badge">MEJOR OPCIÓN</div>
-                <p class="p-card-name">Día 2 + Grabación</p>
+                <div class="feat-badge">GRABACIÓN COMPLETA</div>
+                <p class="p-card-name">Día 1 + Día 2</p>
                 <p class="p-usd"><sup>$</sup>3 <sup style="font-size:.7rem">USD</sup></p>
-                <p class="p-desc">Día 2 en vivo + grabación Día 1</p>
+                <p class="p-desc">Grabación completa de ambos días · acceso por streaming privado</p>
+                <a href="https://t.me/Panchoenlared" target="_blank" rel="noopener" class="btn-reserve" style="display:inline-flex;align-items:center;justify-content:center;margin-top:22px;text-decoration:none;width:100%;">💬 Comprar por Telegram</a>
             </div>
         </div>
 
-        <div id="prices-box"><div class="spinner">Cargando precios actualizados</div></div>
-        <p class="price-note" id="rate-note"></p>
+        <p class="price-note" style="margin-top:36px;text-align:center;">
+            Escríbeme directamente a <a href="https://t.me/Panchoenlared" target="_blank" style="color:var(--blue-light);text-decoration:none">@panchoenlared</a> para coordinar el pago en tu moneda local y recibir el acceso a la grabación.
+        </p>
     </div>
 </section>
 
@@ -894,6 +840,7 @@ function fmtTZ(date, tz) {
 
 (function buildTZ() {
     const grid = document.getElementById('tz-grid');
+    if (!grid) return;
     Object.entries(TZ_DATA).forEach(([region, zones]) => {
         const card = document.createElement('div');
         card.className = 'region-card';
@@ -996,7 +943,9 @@ function renderTable(rates, note, live) {
         });
     });
 
-    document.getElementById('prices-box').innerHTML = `
+    const box = document.getElementById('prices-box');
+    if (!box) return;
+    box.innerHTML = `
         <div class="tbl-wrap">
             <table class="ctbl">
                 <thead><tr>
@@ -1008,7 +957,8 @@ function renderTable(rates, note, live) {
             </table>
         </div>`;
 
-    document.getElementById('rate-note').innerHTML =
+    const noteEl = document.getElementById('rate-note');
+    if (noteEl) noteEl.innerHTML =
         `${live ? '🟢 Tasas en tiempo real' : '🟡 Tasas de referencia aproximadas'} &nbsp;·&nbsp; ${note}
         <br><small>* Peso Argentino: tasa oficial. &nbsp;Precios base: Solo Día 2 = USD 2 &nbsp;|&nbsp; Día 2 + grabación Día 1 = USD 3</small>`;
 }
@@ -1032,7 +982,7 @@ async function loadRates() {
     }
 }
 
-loadRates();
+if (document.getElementById('prices-box')) loadRates();
 
 /* ── LOCAL TIME AUTO-DETECT ── */
 (function(){
@@ -1042,9 +992,11 @@ loadRates();
         const t = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
         const s = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value||tz;
         const r = tz.replace(/_/g,' ');
-        document.getElementById('local-time-value').textContent = t+' hs';
-        document.getElementById('local-time-tz').innerHTML = '<span>'+s+'</span> &nbsp;·&nbsp; '+r;
-    } catch(e){ document.getElementById('local-time-tz').textContent='No se pudo detectar tu zona horaria'; }
+        const v = document.getElementById('local-time-value');
+        const z = document.getElementById('local-time-tz');
+        if (v) v.textContent = t+' hs';
+        if (z) z.innerHTML = '<span>'+s+'</span> &nbsp;·&nbsp; '+r;
+    } catch(e){ const z = document.getElementById('local-time-tz'); if (z) z.textContent='No se pudo detectar tu zona horaria'; }
 })();
 </script>
 </body>
