@@ -1194,15 +1194,15 @@ if (sessionStorage.getItem('dmd_test') === '1') {
     function showBlackout() { if (blackout) blackout.classList.add('active'); }
     function hideBlackout() { if (blackout) blackout.classList.remove('active'); }
 
-    // --- Focus / visibility detection ---
-    // Blackout when tab is hidden or window loses focus (catches alt-tab into
-    // Discord/Meet window). Note: "Share this tab" while tab is active cannot
-    // be detected — that's why we rely on the watermark for traceability.
+    // --- Visibility detection ---
+    // Blackout only cuando la pestaña se oculta (alt-tab, cambio de pestaña).
+    // NO usamos 'blur' porque clicar dentro del iframe de Vimeo (para escribir
+    // la clave de Vimeo, ajustar volumen, etc.) dispara blur del window y
+    // provocaría falsos positivos. La pestaña sigue visible, así que
+    // visibilitychange es el indicador correcto.
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) showBlackout(); else hideBlackout();
     });
-    window.addEventListener('blur',  showBlackout);
-    window.addEventListener('focus', hideBlackout);
 
     // --- Disable right-click ---
     document.addEventListener('contextmenu', e => e.preventDefault());
