@@ -183,9 +183,11 @@
         /* PLAYER AREA */
         .player-section { padding: 0; background: #000; }
         .player-wrap {
-            max-width: 960px; margin: 0 auto;
+            max-width: 1400px; margin: 0 auto;
             position: relative;
         }
+        @media (min-width: 1600px) { .player-wrap { max-width: 1600px; } }
+        @media (min-width: 1920px) { .player-wrap { max-width: 1720px; } }
         .vimeo-embed {
             position: relative; width: 100%; padding-bottom: 56.25%; background: #000;
         }
