@@ -474,19 +474,20 @@
         }
         .wm-tag {
             position: absolute;
+            top: 12px; right: 12px;
             font-family: 'Orbitron', monospace;
-            font-size: .78rem;
-            letter-spacing: .18em;
-            color: rgba(255,255,255,.55);
+            font-size: .72rem;
+            letter-spacing: .14em;
+            color: rgba(255,255,255,.6);
             text-shadow: 0 0 4px rgba(0,0,0,.9);
             white-space: nowrap;
-            padding: 4px 8px;
-            background: rgba(0,0,0,.18);
-            border: 1px solid rgba(255,255,255,.15);
-            transition: top .8s ease, left .8s ease, opacity .4s ease;
+            padding: 4px 10px;
+            background: rgba(0,0,0,.28);
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 2px;
         }
         @media (max-width: 640px) {
-            .wm-tag { font-size: .58rem; letter-spacing: .1em; padding: 3px 6px; }
+            .wm-tag { top: 8px; right: 8px; font-size: .55rem; letter-spacing: .08em; padding: 3px 7px; }
         }
 
         /* Fullscreen handling: when .player-wrap goes fullscreen, iframe + watermark
@@ -1102,36 +1103,19 @@ if (sessionStorage.getItem('dmd_test') === '1') {
     const sidEl = document.getElementById('blackout-sid');
     if (sidEl) sidEl.textContent = `SESIÓN · ${SESSION_ID}`;
 
-    // --- Dynamic watermark: 3 moving tags with session + time ---
+    // --- Watermark fijo en la esquina superior derecha ---
     const wmLayer = document.getElementById('wm-layer');
     if (wmLayer) {
-        const tags = [];
-        for (let i = 0; i < 3; i++) {
-            const t = document.createElement('div');
-            t.className = 'wm-tag';
-            wmLayer.appendChild(t);
-            tags.push(t);
-        }
-        function moveWm() {
+        const tag = document.createElement('div');
+        tag.className = 'wm-tag';
+        wmLayer.appendChild(tag);
+        function updateWm() {
             const day = sessionStorage.getItem('dmd_access') || '?';
-            const now = new Date();
-            const hh  = String(now.getHours()).padStart(2,'0');
-            const mm  = String(now.getMinutes()).padStart(2,'0');
             const user = sessionStorage.getItem('dmd_user') || SESSION_ID;
-            const labels = [
-                `${user} · D${day}`,
-                `${user} · ${hh}:${mm}`,
-                `NO RETRANSMITIR · ${user}`,
-            ];
-            tags.forEach((t, i) => {
-                t.textContent = labels[i];
-                t.style.top  = (8 + Math.random() * 80) + '%';
-                t.style.left = (4 + Math.random() * 70) + '%';
-                t.style.opacity = (0.45 + Math.random() * 0.35).toFixed(2);
-            });
+            tag.textContent = `${user} · D${day}`;
         }
-        moveWm();
-        setInterval(moveWm, 5000);
+        updateWm();
+        setInterval(updateWm, 10000);
     }
 
     // --- Blackout control ---
