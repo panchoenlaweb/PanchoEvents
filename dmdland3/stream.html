@@ -522,9 +522,28 @@
             .fs-btn { top: 8px; left: 8px; font-size: .62rem; padding: 8px 12px; letter-spacing: .08em; }
             .fs-btn svg { width: 13px; height: 13px; }
         }
-        /* Hide button while already in fullscreen */
+        /* In fullscreen: keep button visible as "Exit" */
+        .fs-btn .fs-lbl-exit { display: none; }
+        .fs-btn .fs-icon-exit { display: none; }
+        .player-wrap:fullscreen .fs-btn .fs-lbl-open,
+        .player-wrap:-webkit-full-screen .fs-btn .fs-lbl-open,
+        .player-wrap:fullscreen .fs-btn .fs-icon-open,
+        .player-wrap:-webkit-full-screen .fs-btn .fs-icon-open { display: none; }
+        .player-wrap:fullscreen .fs-btn .fs-lbl-exit,
+        .player-wrap:-webkit-full-screen .fs-btn .fs-lbl-exit { display: inline; }
+        .player-wrap:fullscreen .fs-btn .fs-icon-exit,
+        .player-wrap:-webkit-full-screen .fs-btn .fs-icon-exit { display: inline-block; }
         .player-wrap:fullscreen .fs-btn,
-        .player-wrap:-webkit-full-screen .fs-btn { display: none; }
+        .player-wrap:-webkit-full-screen .fs-btn {
+            top: 16px; left: 16px;
+            background: rgba(200,0,0,.55);
+            border-color: rgba(255,100,100,.55);
+        }
+        .player-wrap:fullscreen .fs-btn:hover,
+        .player-wrap:-webkit-full-screen .fs-btn:hover {
+            background: rgba(255,50,50,.75);
+            border-color: #ff8080;
+        }
 
         /* Fullscreen handling: when .player-wrap goes fullscreen, iframe + watermark
            fill the screen together so the watermark stays visible. */
@@ -704,8 +723,10 @@
         <div class="player-wrap">
             <!-- Botón propio de pantalla completa (más fiable en móvil) -->
             <button type="button" class="fs-btn" id="fs-btn" onclick="toggleCustomFullscreen()" aria-label="Pantalla completa">
-                <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-                <span>Pantalla completa</span>
+                <svg class="fs-icon-open" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+                <svg class="fs-icon-exit" viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+                <span class="fs-lbl-open">Pantalla completa</span>
+                <span class="fs-lbl-exit">Salir</span>
             </button>
             <!-- Dynamic anti-piracy watermark overlay -->
             <div class="wm-layer" id="wm-layer" aria-hidden="true"></div>
