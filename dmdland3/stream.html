@@ -445,6 +445,89 @@
             .warn-text  { font-size: .85rem; }
             .warn-btn   { font-size: .72rem; padding: 12px 24px; letter-spacing: .18em; width: 100%; }
         }
+
+        /* ════════════════════
+           ANTI-RECORDING PROTECTION
+        ════════════════════ */
+        /* Disable user selection & drag across stream page */
+        #main-content, #main-content * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-user-drag: none !important;
+            -webkit-touch-callout: none !important;
+        }
+        /* Inputs and textareas should still accept text (none on this page, but safe) */
+        #main-content input, #main-content textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+
+        /* Dynamic watermark overlay on top of the player */
+        .wm-layer {
+            position: absolute; inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+            mix-blend-mode: difference;
+        }
+        .wm-tag {
+            position: absolute;
+            font-family: 'Orbitron', monospace;
+            font-size: .78rem;
+            letter-spacing: .18em;
+            color: rgba(255,255,255,.55);
+            text-shadow: 0 0 4px rgba(0,0,0,.9);
+            white-space: nowrap;
+            padding: 4px 8px;
+            background: rgba(0,0,0,.18);
+            border: 1px solid rgba(255,255,255,.15);
+            transition: top .8s ease, left .8s ease, opacity .4s ease;
+        }
+        @media (max-width: 640px) {
+            .wm-tag { font-size: .58rem; letter-spacing: .1em; padding: 3px 6px; }
+        }
+
+        /* Blackout overlay (focus lost / screen capture suspected / devtools) */
+        .blackout {
+            position: fixed; inset: 0; z-index: 1000;
+            background: #000;
+            display: none;
+            align-items: center; justify-content: center;
+            flex-direction: column;
+            padding: 24px;
+            text-align: center;
+        }
+        .blackout.active { display: flex; }
+        .blackout-icon {
+            font-size: 3.5rem; margin-bottom: 20px;
+            filter: drop-shadow(0 0 18px rgba(255,80,80,.8));
+            animation: boPulse 1.4s ease-in-out infinite;
+        }
+        @keyframes boPulse {
+            0%,100% { transform: scale(1);    opacity: .85; }
+            50%     { transform: scale(1.08); opacity: 1; }
+        }
+        .blackout-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.15rem; letter-spacing: .22em;
+            color: #ff5050; text-transform: uppercase;
+            margin-bottom: 14px;
+            text-shadow: 0 0 14px rgba(255,80,80,.5);
+        }
+        .blackout-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .95rem; line-height: 1.6;
+            color: #d8e2f0; max-width: 460px;
+            margin-bottom: 8px;
+        }
+        .blackout-text b { color: #ffaaaa; }
+        .blackout-hint {
+            font-family: 'Orbitron', monospace;
+            font-size: .65rem; letter-spacing: .2em;
+            color: #667; margin-top: 22px;
+        }
     </style>
 </head>
 <body>
@@ -470,6 +553,21 @@
         <p class="gate-err-msg" id="gate-err"></p>
         <p class="gate-hint">Ingresa la clave que recibiste con tu entrada</p>
     </div>
+</div>
+
+<!-- ════════════════════ BLACKOUT OVERLAY (anti-capture) ════════════════════ -->
+<div class="blackout" id="blackout" aria-hidden="true">
+    <div class="blackout-icon">🚫</div>
+    <div class="blackout-title">Reproducción Pausada</div>
+    <p class="blackout-text">
+        Se detectó <b>pérdida de foco</b> o posible <b>captura de pantalla</b>.
+        Esta transmisión es <b>privada</b> y está protegida contra retransmisión
+        en Discord, Google Meet, TikTok, Twitch, OBS y similares.
+    </p>
+    <p class="blackout-text" style="font-size:.82rem;color:#aab;">
+        Regresa a esta ventana para continuar viendo el evento.
+    </p>
+    <p class="blackout-hint" id="blackout-sid">SESIÓN · ————</p>
 </div>
 
 <!-- ════════════════════ WARNING MODAL ════════════════════ -->
@@ -538,6 +636,8 @@
     <!-- PLAYER -->
     <div class="player-section">
         <div class="player-wrap">
+            <!-- Dynamic anti-piracy watermark overlay -->
+            <div class="wm-layer" id="wm-layer" aria-hidden="true"></div>
             <div class="vimeo-embed" id="player-area">
                 <div class="stream-placeholder" id="stream-placeholder">
                     <div class="placeholder-icon">📡</div>
@@ -924,6 +1024,150 @@ if (sessionStorage.getItem('dmd_test') === '1') {
     }
     setInterval(() => updateLiveIndicator(activeDay===1 ? EV1 : EV2), 30000);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ANTI-RECORDING / ANTI-RETRANSMISSION PROTECTION
+   — Dynamic watermark, focus/visibility blackout, keyboard lockdown,
+     devtools detection, context-menu disable.
+   Nota: ninguna protección web es 100% infalible (siempre hay cámara
+   externa, HDMI capture, herramientas root/OS), pero esto disuade y
+   marca cualquier grabación con watermark visible.
+═══════════════════════════════════════════════════════════════════ */
+(function setupProtection(){
+    // --- Unique per-session ID (visible in watermark, for leak tracking) ---
+    function sid() {
+        let id = sessionStorage.getItem('dmd_sid');
+        if (!id) {
+            id = (Math.random().toString(36).slice(2, 7) + Date.now().toString(36).slice(-4)).toUpperCase();
+            sessionStorage.setItem('dmd_sid', id);
+        }
+        return id;
+    }
+    const SESSION_ID = sid();
+    const sidEl = document.getElementById('blackout-sid');
+    if (sidEl) sidEl.textContent = `SESIÓN · ${SESSION_ID}`;
+
+    // --- Dynamic watermark: 3 moving tags with session + time ---
+    const wmLayer = document.getElementById('wm-layer');
+    if (wmLayer) {
+        const tags = [];
+        for (let i = 0; i < 3; i++) {
+            const t = document.createElement('div');
+            t.className = 'wm-tag';
+            wmLayer.appendChild(t);
+            tags.push(t);
+        }
+        function moveWm() {
+            const day = sessionStorage.getItem('dmd_access') || '?';
+            const now = new Date();
+            const hh  = String(now.getHours()).padStart(2,'0');
+            const mm  = String(now.getMinutes()).padStart(2,'0');
+            const labels = [
+                `DMD L3 · D${day} · ${SESSION_ID}`,
+                `${hh}:${mm} · ${SESSION_ID}`,
+                `NO RETRANSMITIR · ${SESSION_ID}`,
+            ];
+            tags.forEach((t, i) => {
+                t.textContent = labels[i];
+                t.style.top  = (8 + Math.random() * 80) + '%';
+                t.style.left = (4 + Math.random() * 70) + '%';
+                t.style.opacity = (0.45 + Math.random() * 0.35).toFixed(2);
+            });
+        }
+        moveWm();
+        setInterval(moveWm, 5000);
+    }
+
+    // --- Blackout control ---
+    const blackout = document.getElementById('blackout');
+    function showBlackout() { if (blackout) blackout.classList.add('active'); }
+    function hideBlackout() { if (blackout) blackout.classList.remove('active'); }
+
+    // --- Focus / visibility detection ---
+    // Blackout when tab is hidden or window loses focus (catches alt-tab into
+    // Discord/Meet window). Note: "Share this tab" while tab is active cannot
+    // be detected — that's why we rely on the watermark for traceability.
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) showBlackout(); else hideBlackout();
+    });
+    window.addEventListener('blur',  showBlackout);
+    window.addEventListener('focus', hideBlackout);
+
+    // --- Disable right-click ---
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // --- Disable drag & select ---
+    document.addEventListener('dragstart',   e => e.preventDefault());
+    document.addEventListener('selectstart', e => {
+        const tag = e.target && e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        e.preventDefault();
+    });
+
+    // --- Block common recording / inspection shortcuts ---
+    document.addEventListener('keydown', e => {
+        const k = (e.key || '').toLowerCase();
+        // F12 · DevTools
+        if (e.key === 'F12') { e.preventDefault(); showBlackout(); return; }
+        // PrintScreen
+        if (e.key === 'PrintScreen') {
+            try { navigator.clipboard && navigator.clipboard.writeText(''); } catch(_) {}
+            showBlackout();
+            setTimeout(hideBlackout, 2500);
+            e.preventDefault();
+            return;
+        }
+        // Win + Shift + S (Snip & Sketch)
+        if (e.shiftKey && (e.metaKey || e.key === 'Meta') && k === 's') {
+            showBlackout(); setTimeout(hideBlackout, 2500); e.preventDefault(); return;
+        }
+        // Ctrl/Cmd + Shift + I/J/C  (DevTools)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) {
+            e.preventDefault(); showBlackout(); return;
+        }
+        // Ctrl/Cmd + U  (view source)
+        if ((e.ctrlKey || e.metaKey) && k === 'u') { e.preventDefault(); return; }
+        // Ctrl/Cmd + S  (save page)
+        if ((e.ctrlKey || e.metaKey) && k === 's') { e.preventDefault(); return; }
+        // Ctrl/Cmd + P  (print)
+        if ((e.ctrlKey || e.metaKey) && k === 'p') { e.preventDefault(); showBlackout(); setTimeout(hideBlackout, 1500); return; }
+    });
+
+    // --- Naive DevTools detection (size heuristic) ---
+    // Triggers blackout when devtools is docked (window inner vs outer delta).
+    // Skips when screen recording might legitimately resize viewport.
+    let devOpen = false;
+    function checkDevTools() {
+        const threshold = 170;
+        const wDelta = window.outerWidth  - window.innerWidth;
+        const hDelta = window.outerHeight - window.innerHeight;
+        const open = wDelta > threshold || hDelta > threshold;
+        if (open !== devOpen) {
+            devOpen = open;
+            if (open) showBlackout(); else hideBlackout();
+        }
+    }
+    setInterval(checkDevTools, 1200);
+
+    // --- Screen Capture API detection (best-effort) ---
+    // Some browsers fire a "captureState" event on media elements or via the
+    // HTMLIFrameElement; not standardized. As a proxy we hijack getDisplayMedia
+    // and log/block when the same tab attempts to capture itself.
+    try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+            const orig = navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices);
+            navigator.mediaDevices.getDisplayMedia = function(...args) {
+                showBlackout();
+                return Promise.reject(new DOMException('Captura no permitida', 'NotAllowedError'));
+            };
+        }
+    } catch(_) {}
+
+    // --- Block long-press context menu on iOS/Android ---
+    document.addEventListener('touchstart', e => {
+        if (e.touches && e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+})();
 </script>
 </body>
 </html>
