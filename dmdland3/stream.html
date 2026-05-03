@@ -489,6 +489,24 @@
             .wm-tag { font-size: .58rem; letter-spacing: .1em; padding: 3px 6px; }
         }
 
+        /* Fullscreen handling: when .player-wrap goes fullscreen, iframe + watermark
+           fill the screen together so the watermark stays visible. */
+        .player-wrap:fullscreen,
+        .player-wrap:-webkit-full-screen {
+            max-width: none; width: 100vw; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: #000;
+        }
+        .player-wrap:fullscreen .vimeo-embed,
+        .player-wrap:-webkit-full-screen .vimeo-embed {
+            padding-bottom: 0;
+            width: 100vw; height: 100vh;
+        }
+        .player-wrap:fullscreen .wm-layer,
+        .player-wrap:-webkit-full-screen .wm-layer {
+            position: fixed; inset: 0;
+        }
+
         /* Blackout overlay (focus lost / screen capture suspected / devtools) */
         .blackout {
             position: fixed; inset: 0; z-index: 1000;
@@ -1199,6 +1217,40 @@ if (sessionStorage.getItem('dmd_test') === '1') {
             };
         }
     } catch(_) {}
+
+    // --- Fullscreen hijack: redirect iframe fullscreen → player-wrap ---
+    // Cuando Vimeo pide fullscreen sobre el iframe, la watermark queda fuera.
+    // Capturamos el evento, salimos, y re-pedimos fullscreen sobre el contenedor
+    // (player-wrap) que incluye iframe + watermark. Funciona porque el fullscreenchange
+    // se dispara dentro del gesto de usuario original.
+    (function hijackFullscreen(){
+        const wrap = document.querySelector('.player-wrap');
+        if (!wrap) return;
+        let redirecting = false;
+
+        function onFsChange() {
+            const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+            if (!fsEl) { redirecting = false; return; }
+            if (fsEl === wrap) return; // ya es el contenedor correcto
+            // Si entró al iframe u otro descendiente, redirigir al wrap
+            const playerArea = document.getElementById('player-area');
+            if (fsEl.tagName === 'IFRAME' || (playerArea && playerArea.contains(fsEl))) {
+                if (redirecting) return;
+                redirecting = true;
+                const exit = document.exitFullscreen ? document.exitFullscreen() :
+                             document.webkitExitFullscreen ? Promise.resolve(document.webkitExitFullscreen()) :
+                             Promise.resolve();
+                Promise.resolve(exit).then(() => {
+                    const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+                    if (req) req.call(wrap).catch(()=>{});
+                    setTimeout(() => redirecting = false, 200);
+                }).catch(() => { redirecting = false; });
+            }
+        }
+
+        document.addEventListener('fullscreenchange',       onFsChange);
+        document.addEventListener('webkitfullscreenchange', onFsChange);
+    })();
 
     // --- Block long-press context menu on iOS/Android ---
     document.addEventListener('touchstart', e => {
