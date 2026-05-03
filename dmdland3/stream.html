@@ -500,6 +500,32 @@
             .wm-tag.c-tl { top: 8px;    left: 8px; }
         }
 
+        /* Custom fullscreen button (more reliable on mobile) */
+        .fs-btn {
+            position: absolute; top: 10px; left: 10px;
+            z-index: 20;
+            background: rgba(0,0,0,.55);
+            border: 1px solid rgba(255,255,255,.25);
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            font-size: .7rem; letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: 7px 12px;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            backdrop-filter: blur(4px);
+            transition: background .2s, border-color .2s;
+        }
+        .fs-btn:hover { background: rgba(0,140,255,.3); border-color: var(--blue-light); }
+        .fs-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+        @media (max-width: 640px) {
+            .fs-btn { top: 8px; left: 8px; font-size: .62rem; padding: 8px 12px; letter-spacing: .08em; }
+            .fs-btn svg { width: 13px; height: 13px; }
+        }
+        /* Hide button while already in fullscreen */
+        .player-wrap:fullscreen .fs-btn,
+        .player-wrap:-webkit-full-screen .fs-btn { display: none; }
+
         /* Fullscreen handling: when .player-wrap goes fullscreen, iframe + watermark
            fill the screen together so the watermark stays visible. */
         .player-wrap:fullscreen,
@@ -676,6 +702,11 @@
     <!-- PLAYER -->
     <div class="player-section">
         <div class="player-wrap">
+            <!-- Botón propio de pantalla completa (más fiable en móvil) -->
+            <button type="button" class="fs-btn" id="fs-btn" onclick="toggleCustomFullscreen()" aria-label="Pantalla completa">
+                <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+                <span>Pantalla completa</span>
+            </button>
             <!-- Dynamic anti-piracy watermark overlay -->
             <div class="wm-layer" id="wm-layer" aria-hidden="true"></div>
             <div class="vimeo-embed" id="player-area">
@@ -1219,6 +1250,31 @@ if (sessionStorage.getItem('dmd_test') === '1') {
             };
         }
     } catch(_) {}
+
+    // --- Custom fullscreen button handler (exposed globally) ---
+    window.toggleCustomFullscreen = function() {
+        const wrap = document.querySelector('.player-wrap');
+        if (!wrap) return;
+        const inFs = document.fullscreenElement || document.webkitFullscreenElement;
+        if (inFs) {
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            return;
+        }
+        const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+        if (req) {
+            const p = req.call(wrap);
+            if (p && p.then) {
+                p.then(() => {
+                    try {
+                        if (screen.orientation && screen.orientation.lock) {
+                            screen.orientation.lock('landscape').catch(()=>{});
+                        }
+                    } catch(_) {}
+                }).catch(()=>{});
+            }
+        }
+    };
 
     // --- Fullscreen hijack: redirect iframe fullscreen → player-wrap ---
     // Cuando Vimeo pide fullscreen sobre el iframe, la watermark queda fuera.
