@@ -799,6 +799,8 @@
 </head>
 <body>
 
+<style>.back-ypass{position:fixed;top:14px;left:14px;z-index:300;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);color:#fff;text-decoration:none;font-family:"Orbitron",sans-serif;font-size:.6rem;letter-spacing:.15em;padding:7px 14px;border-radius:6px;backdrop-filter:blur(8px);transition:.2s}.back-ypass:hover{background:rgba(255,255,255,.13)}</style>
+<a href="/" class="back-ypass">← YPass</a>
 <canvas id="bg-canvas"></canvas>
 
 <!-- ── NAV DOTS ── -->
@@ -952,7 +954,7 @@
         <span class="t-sep">:</span>
         <div class="t-block"><span class="t-num" id="d1s">--</span><span class="t-lbl">seg</span></div>
       </div>
-      <p class="cd-status" id="st1">Horario por confirmar · Bangkok (UTC+7)</p>
+      <p class="cd-status" id="st1">3:00 PM · Bangkok (UTC+7)</p>
     </div>
   </div>
 </section>
@@ -961,7 +963,7 @@
 <section id="timezones">
   <div class="wrapper">
     <h2 class="section-title">Horarios Mundiales</h2>
-    <p class="tz-subtitle">Hora local de inicio — Horario por confirmar · Bangkok (UTC+7) · Domingo 7 Junio 2026</p>
+    <p class="tz-subtitle">3:00 PM Bangkok (UTC+7) · Domingo 7 Junio 2026</p>
     <div class="region-grid" id="tz-grid"></div>
   </div>
 </section>
@@ -1143,9 +1145,9 @@ function scrollToSect(id) { document.getElementById(id).scrollIntoView({ behavio
 
 /* ═══════════════════════════════════
    COUNTDOWN
-   Event: 2026-06-07 at 18:00 Bangkok (UTC+7) = 11:00 UTC (TBC)
+   Event: 2026-06-07 at 15:00 Bangkok (UTC+7) = 08:00 UTC
 ═══════════════════════════════════ */
-const EV = new Date('2026-06-07T11:00:00Z');
+const EV = new Date('2026-06-07T08:00:00Z');
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
