@@ -1029,13 +1029,13 @@
 <div class="tz-section">
   <div class="tz-inner">
     <div class="tz-header">
-      <div class="section-tag" data-i18n="tz-tag">✦ HORARIOS</div>
+      <div class="section-tag" data-i18n="tz-tag">❖ HORARIOS</div>
       <h2 class="section-title" data-i18n="tz-title">¿A qué hora es en tu país?</h2>
-      <p style="color:var(--muted);font-size:.95rem;" data-i18n="tz-subtitle">Horario por confirmar. Se actualizará cuando esté disponible.</p>
-      <div class="tz-origin">🇹🇭&nbsp; Bangkok (UTC+7) &nbsp;·&nbsp; Horario TBC</div>
+      <p style="color:var(--muted);font-size:.95rem;" data-i18n="tz-subtitle">5:00 PM Bangkok (UTC+7) · ambos días</p>
+      <div class="tz-origin">🇹🇭&nbsp; Bangkok (UTC+7) &nbsp;·&nbsp; 5:00 PM &nbsp;·&nbsp; 18 &amp; 19 Jul 2026</div>
     </div>
-
-    <p class="tz-note" data-i18n="tz-note">Los horarios se publicarán una vez confirmados oficialmente para el <span>18 y 19 de julio de 2026</span>.</p>
+    <div class="tz-grid" id="tz-grid"></div>
+    <p class="tz-note">Ambos días comienzan a las <span>5:00 PM hora de Bangkok</span>. Todos los horarios son aproximados según la zona horaria local.</p>
   </div>
 </div>
 
@@ -1291,8 +1291,8 @@
       'countdown-live':  '🎉 EN VIVO',
       'tz-tag':          '✦ HORARIOS',
       'tz-title':        '¿A qué hora es en tu país?',
-      'tz-subtitle':     'Horario por confirmar. Se actualizará cuando esté disponible.',
-      'tz-note':         'Los horarios se publicarán una vez confirmados oficialmente para el <span>18 y 19 de julio de 2026</span>.',
+      'tz-subtitle':     '5:00 PM Bangkok (UTC+7) · ambos días',
+      'tz-note':         'Ambos días comienzan a las <span>5:00 PM hora de Bangkok</span>.',
       'includes-tag':    '✦ INCLUYE',
       'includes-title':  'Todo lo que obtienes',
       'includes-desc':   'Cada entrada da acceso a lo siguiente, sin costos ocultos.',
@@ -1371,8 +1371,8 @@
       'countdown-live':  '🎉 LIVE NOW',
       'tz-tag':          '✦ SHOWTIMES',
       'tz-title':        'What time is it in your country?',
-      'tz-subtitle':     'Schedule to be confirmed. Will be updated when available.',
-      'tz-note':         'Showtimes will be published once officially confirmed for <span>July 18 and 19, 2026</span>.',
+      'tz-subtitle':     '5:00 PM Bangkok (UTC+7) · both days',
+      'tz-note':         'Both days start at <span>5:00 PM Bangkok time</span>.',
       'includes-tag':    '✦ INCLUDES',
       'includes-title':  'Everything you get',
       'includes-desc':   'Each ticket gives access to the following, with no hidden costs.',
@@ -1563,6 +1563,48 @@
   renderCurrencies();
   fetchRates();
   setInterval(fetchRates, 30 * 60 * 1000);
+
+  /* ─── TIMEZONE GRID ─── */
+  (function buildTZ() {
+    const grid = document.getElementById('tz-grid');
+    if (!grid) return;
+    const EV = new Date('2026-07-18T17:00:00+07:00');
+    const zones = [
+      { flag:'��', name:'México',        tz:'America/Mexico_City' },
+      { flag:'🇨🇴', name:'Colombia',      tz:'America/Bogota' },
+      { flag:'🇵🇪', name:'Perú',         tz:'America/Lima' },
+      { flag:'🇨🇱', name:'Chile',         tz:'America/Santiago' },
+      { flag:'🇦🇷', name:'Argentina',     tz:'America/Argentina/Buenos_Aires' },
+      { flag:'🇧🇷', name:'Brasil',        tz:'America/Sao_Paulo' },
+      { flag:'🇻🇪', name:'Venezuela',     tz:'America/Caracas' },
+      { flag:'🇺🇸', name:'EE.UU. (NY)',   tz:'America/New_York' },
+      { flag:'🇪🇸', name:'España',        tz:'Europe/Madrid' },
+      { flag:'🇬🇧', name:'Reino Unido',  tz:'Europe/London' },
+      { flag:'🇫🇷', name:'Francia',       tz:'Europe/Paris' },
+      { flag:'🇵🇱', name:'Polonia',       tz:'Europe/Warsaw' },
+      { flag:'🇺🇾', name:'Uruguay',       tz:'America/Montevideo' },
+      { flag:'🇹🇭', name:'Tailandia ★',  tz:'Asia/Bangkok', highlight:true },
+      { flag:'🇵🇭', name:'Filipinas',     tz:'Asia/Manila' },
+      { flag:'🇰🇷', name:'Corea del Sur', tz:'Asia/Seoul' },
+      { flag:'🇯🇵', name:'Japón',         tz:'Asia/Tokyo' },
+      { flag:'🇸🇬', name:'Singapur',      tz:'Asia/Singapore' },
+    ];
+    zones.forEach(z => {
+      const t = new Intl.DateTimeFormat('es', {
+        timeZone: z.tz, hour: '2-digit', minute: '2-digit', hour12: true
+      }).format(EV);
+      const [time, ampm] = t.split(' ');
+      const card = document.createElement('div');
+      card.className = 'tz-card' + (z.highlight ? ' tz-card--event' : '');
+      if (z.highlight) card.style.cssText = 'border-color:var(--pink);box-shadow:0 0 18px rgba(232,115,138,.2);';
+      card.innerHTML = `
+        <div class="tz-flag">${z.flag}</div>
+        <div class="tz-country">${z.name}</div>
+        <div class="tz-time">${time}<span class="tz-ampm">${ampm || ''}</span></div>
+        <div class="tz-label">18 &amp; 19 Jul</div>`;
+      grid.appendChild(card);
+    });
+  })();
 
   /* ─── LOCAL TIME AUTO-DETECT ─── */
   (function(){
