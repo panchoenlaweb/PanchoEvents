@@ -1870,10 +1870,10 @@
             <li>6+ días de conciertos en vivo</li>
           </ul>
         </div>
-        <div class="b-foot" data-usd="8.5">
+        <div class="b-foot" data-usd="9">
           <div>
-            <div class="bp-old">$9.50 USD</div>
-            <div class="bp-new"><sup>$</sup>8<sup>.50 USD</sup></div>
+            <div class="bp-old">$10.00 USD</div>
+            <div class="bp-new"><sup>$</sup>9<sup> USD</sup></div>
             <div class="bp-save">✓ Ahorras $1.00</div>
             <div class="b-currencies" data-currencies></div>
           </div>
@@ -2423,7 +2423,7 @@
   const BB_EVENTS = [
     { id:'starlympic', name:'Starlympic 2026',       detail:'Sport Day · 28 Nov',           price:2.50, color:'rgba(255,215,0,.7)',   icon:'🏆' },
     { id:'lol3',       name:'Love Out Loud',          detail:'Concierto · 22-24 May · 3 días', price:4.00, color:'rgba(245,197,24,.8)', icon:'❤' },
-    { id:'perth2',     name:'Perth Santa Concert',    detail:'Concierto · 18-19 Jul · 2 días', price:3.00, color:'rgba(232,115,138,.8)',icon:'🎵' },
+    { id:'perth2',     name:'Perth Santa Concert',    detail:'Concierto · 18-19 Jul · 2 días', price:3.50, color:'rgba(232,115,138,.8)',icon:'🎵' },
     { id:'olympop',    name:'Olympop 2 Sport Day',    detail:'Sport Day · 9 May',             price:2.00, color:'rgba(77,148,255,.7)',  icon:'🏅' },
     { id:'sotus',      name:'Sotus',                  detail:'Concierto · TBC',               price:2.50, color:'rgba(160,120,255,.8)', icon:'🎓' },
     { id:'blush2',     name:'Blush Blossom Fan Fest', detail:'Fan Fest · 13-14 Jun · 2 días', price:3.50, color:'rgba(255,158,219,.8)', icon:'🌸' },
@@ -2434,7 +2434,7 @@
   const FIXED_PACKS = {
     [makePackKey(BB_EVENTS.map(ev => ev.id))]: { name: 'Pack Total',      price: 18 },
     [makePackKey(['starlympic', 'lol3', 'perth2', 'blush2'])]: { name: 'Pack Mega',       price: 12 },
-    [makePackKey(['lol3', 'perth2', 'sotus'])]:      { name: 'Pack Conciertos', price: 8.5 },
+    [makePackKey(['lol3', 'perth2', 'sotus'])]:      { name: 'Pack Conciertos', price: 9 },
     [makePackKey(['lol3', 'olympop'])]:              { name: 'Pack Mayo',       price: 5.5 },
     [makePackKey(['starlympic', 'olympop'])]:                { name: 'Pack Sport Day',  price: 4 },
     [makePackKey(['olympop', 'poohpavel', 'blush2'])]:        { name: 'Pack Junio',      price: 7.25 },
@@ -2510,7 +2510,7 @@
         {es:'5:00 PM Bangkok (UTC+7)', en:'5:00 PM Bangkok (UTC+7)'},
       ] },
     { id:'perth2', name:{es:'Perth Santa Concert', en:'Perth Santa Concert'}, icon:'🎵', color:'#e8738a',
-      days:['2026-07-18','2026-07-19'], start:new Date('2026-07-18T17:00:00+07:00'), price:3.00, dayPrice:2.00, url:'/perthsanta',
+      days:['2026-07-18','2026-07-19'], start:new Date('2026-07-18T17:00:00+07:00'), price:3.50, dayPrice:2.00, url:'/perthsanta',
       status:{es:'Nuevo', en:'New'},
       badge:{es:'Concierto Online · 2 Días', en:'Online Concert · 2 Days'},
       subtitle:{es:'🎵 Paragon Hall · 2026', en:'🎵 Paragon Hall · 2026'},
