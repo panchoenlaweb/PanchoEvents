@@ -846,7 +846,7 @@
     </div>
 
     <div class="hero-meta">
-      <span>⏰ <b>Horario por confirmar</b> · Hora Bangkok (ICT · UTC+7)</span>
+      <span>⏰ <b>3:00 PM Bangkok</b> · (ICT · UTC+7)</span>
       <span>📺 Worldwide Live Stream</span>
     </div>
 
@@ -864,7 +864,7 @@
         <button class="btn-stream" disabled>
           🔒 Ver Transmisión
         </button>
-        <div class="btn-stream-tip">Disponible el 7 de Junio · Horario por confirmar</div>
+        <div class="btn-stream-tip">Disponible el 7 de Junio · 3:00 PM Bangkok</div>
       </div>
     </div>
   </div>
@@ -877,13 +877,13 @@
     <span class="ticker-item">Pooh · Pavel</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">💖 Second Date Fancon</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">07 Jun 2026</span><span class="ticker-sep">✦</span>
-    <span class="ticker-item">Horario x confirmar</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">3:00 PM Bangkok</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">Live Stream</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">Worldwide</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">Pooh · Pavel</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">💖 Second Date Fancon</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">07 Jun 2026</span><span class="ticker-sep">✦</span>
-    <span class="ticker-item">Horario x confirmar</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">3:00 PM Bangkok</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">Live Stream</span><span class="ticker-sep">✦</span>
     <span class="ticker-item">Worldwide</span><span class="ticker-sep">✦</span>
   </div>
@@ -1358,9 +1358,15 @@ loadRates();
 /* ── LOCAL TIME AUTO-DETECT ── */
 (function(){
   try {
-    document.getElementById('local-time-value').textContent = 'Por confirmar';
-    document.getElementById('local-time-tz').textContent = 'El horario se anunciará próximamente';
-  } catch(e){ document.getElementById('local-time-tz').textContent='No se pudo detectar tu zona horaria'; }
+    const ev = new Date('2026-06-07T08:00:00Z');
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const t = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
+    const s = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value||tz;
+    const v = document.getElementById('local-time-value');
+    const z = document.getElementById('local-time-tz');
+    if(v) v.textContent = t+' hs';
+    if(z) z.innerHTML = '<span>'+s+'</span> · '+tz.replace(/_/g,' ');
+  } catch(e){ const z=document.getElementById('local-time-tz'); if(z) z.textContent='No se pudo detectar tu zona horaria'; }
 })();
 </script>
 </body>
