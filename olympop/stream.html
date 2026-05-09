@@ -325,7 +325,7 @@ const EV = new Date('2026-05-09T05:00:00Z');
 function initLiveBadge() {
   const badge = document.getElementById('live-indicator');
   const label = document.getElementById('live-label');
-  const GRACE = 12 * 60 * 60 * 1000;
+  const GRACE = 14 * 60 * 60 * 1000;
   function update() {
     const now = Date.now(); const diff = EV - now;
     if (diff <= 0 && now - EV < GRACE) {
