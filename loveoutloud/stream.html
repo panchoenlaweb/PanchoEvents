@@ -509,7 +509,7 @@ if (sessionStorage.getItem('lol_access') === '1') {
 /* ═══════════════════════════════════
    INIT
 ═══════════════════════════════════ */
-const EV_MAIN  = new Date('2026-05-22T10:00:00Z'); // 17:00 Bangkok
+const EV_MAIN  = new Date('2026-05-11T02:00:00Z'); // prueba plataforma 09:00 Bangkok
 
 function initContent(meta) {
   // Actualizar info strip con la fecha de la clave
@@ -536,7 +536,7 @@ function initContent(meta) {
 function initLiveBadge(EV, isTest) {
   const badge = document.getElementById('live-indicator');
   const label = document.getElementById('live-label');
-  const GRACE = isTest ? 4 * 3600000 : 5 * 3600000;
+  const GRACE = isTest ? 4 * 3600000 : 72 * 3600000;
 
   function update() {
     const now  = Date.now();
@@ -589,7 +589,7 @@ function injectPlayer() {
   if (box.querySelector('iframe')) return;
 
   const iframe = document.createElement('iframe');
-  iframe.src   = 'https://vimeo.com/event/5810147/embed/interaction';
+  iframe.src   = 'https://vimeo.com/event/5922852/embed/interaction';
   iframe.setAttribute('frameborder','0');
   iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
   iframe.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
