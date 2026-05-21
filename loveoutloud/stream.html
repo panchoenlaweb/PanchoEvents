@@ -510,7 +510,20 @@ if (sessionStorage.getItem('lol_access') === '1') {
 /* ═══════════════════════════════════
    INIT
 ═══════════════════════════════════ */
-const EV_MAIN  = new Date('2026-05-11T02:00:00Z'); // prueba plataforma 09:00 Bangkok
+const EV_MAIN  = new Date('2026-05-22T10:00:00Z'); // Día 1 · 17:00 Bangkok UTC+7
+const EARLY    = 10 * 60 * 1000;                   // activar 10 min antes
+
+const DAY_EVENT_IDS = {
+  '22 MAY 2026': '5944769',
+  '23 MAY 2026': '5944772',
+  '24 MAY 2026': '5944775',
+};
+
+const DAY_EV_TIMES = {
+  '22 MAY 2026': new Date('2026-05-22T10:00:00Z'),
+  '23 MAY 2026': new Date('2026-05-23T10:00:00Z'),
+  '24 MAY 2026': new Date('2026-05-24T10:00:00Z'),
+};
 
 function initContent(meta) {
   // Actualizar info strip con la fecha de la clave
@@ -523,11 +536,18 @@ function initContent(meta) {
   const banner = document.getElementById('test-banner');
   if (banner) banner.style.display = meta && meta.test ? 'flex' : 'none';
 
-  // Para clave de prueba usamos EV = ahora+5s para que "ya esté en vivo"
-  const EV = meta && meta.test ? new Date(Date.now() - 1000) : EV_MAIN;
+  // Determinar el Vimeo event ID según el día de la clave (test usa ID propio)
+  const eventId = (meta && meta.test)
+    ? '5947351'
+    : ((meta && DAY_EVENT_IDS[meta.date]) || '5944769');
+
+  // Para clave de prueba usamos EV = ahora-1s para que "ya esté en vivo"
+  const EV = meta && meta.test
+    ? new Date(Date.now() - 1000)
+    : (DAY_EV_TIMES[meta && meta.date] || EV_MAIN);
 
   initLiveBadge(EV, meta && meta.test);
-  startPlayerCountdown(EV, meta && meta.test);
+  startPlayerCountdown(EV, meta && meta.test, eventId);
   buildTzList(EV_MAIN); // siempre con fecha real del evento en la tabla horaria
 }
 
@@ -542,10 +562,10 @@ function initLiveBadge(EV, isTest) {
   function update() {
     const now  = Date.now();
     const diff = EV - now;
-    if (diff <= 0 && now - EV < GRACE) {
+    if (diff <= EARLY && now - EV < GRACE) {
       badge.classList.remove('offline');
       label.textContent = '● EN VIVO';
-    } else if (diff > 0) {
+    } else if (diff > EARLY) {
       badge.classList.add('offline');
       label.textContent = 'EN ESPERA';
     } else {
@@ -560,16 +580,16 @@ function initLiveBadge(EV, isTest) {
 /* ═══════════════════════════════════
    PLAYER — COUNTDOWN / EMBED VIMEO
 ═══════════════════════════════════ */
-function startPlayerCountdown(EV, isTest) {
+function startPlayerCountdown(EV, isTest, eventId) {
   function tick() {
     const diff = EV - Date.now();
-    if (diff <= 0) {
+    if (diff <= EARLY) {
       ['pcd','pch','pcm','pcs'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent='00'; });
       const timer   = document.getElementById('pc-timer');
       const liveMsg = document.getElementById('pc-live-msg');
       if (timer)   timer.style.display   = 'none';
       if (liveMsg) liveMsg.style.display = 'block';
-      injectPlayer();
+      injectPlayer(eventId);
       return;
     }
     const p = n => String(n).padStart(2,'0');
@@ -583,14 +603,14 @@ function startPlayerCountdown(EV, isTest) {
   setInterval(tick, 1000);
 }
 
-function injectPlayer() {
+function injectPlayer(eventId) {
   const box = document.getElementById('player-box');
   const ph  = document.getElementById('placeholder');
   // Ya existe iframe (llamada repetida)
   if (box.querySelector('iframe')) return;
 
   const iframe = document.createElement('iframe');
-  iframe.src   = 'https://vimeo.com/event/5922852/embed/interaction';
+  iframe.src   = `https://vimeo.com/event/${eventId || '5944769'}/embed/interaction`;
   iframe.setAttribute('frameborder','0');
   iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
   iframe.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
