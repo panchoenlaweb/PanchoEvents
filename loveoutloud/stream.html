@@ -287,9 +287,9 @@
   <!-- TOP BAR -->
   <header class="top-bar">
     <div class="top-bar-logo">LOVE OUT <span>LOUD</span></div>
-    <div class="live-badge offline" id="live-indicator">
+    <div class="live-badge" id="live-indicator">
       <div class="live-dot"></div>
-      <span id="live-label">EN ESPERA</span>
+      <span id="live-label">● EN VIVO</span>
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
       <button class="btn-logout" onclick="logoutStream()">🔒 Cerrar sesión</button>
@@ -310,23 +310,7 @@
   <div class="player-section">
     <div class="player-wrap">
       <div class="vimeo-embed" id="player-box">
-        <!-- Placeholder shown until stream is live -->
-        <div class="stream-placeholder" id="placeholder">
-          <div class="placeholder-icon">🏎</div>
-          <div class="placeholder-title">LOVE OUT LOUD 2026</div>
-          <p class="placeholder-sub">El stream comenzará pronto.<br/>Asegúrate de tener tu clave lista.<br/>¡Nos vemos en el Heart Race!</p>
-          <div class="countdown-inline" id="pc-timer">
-            <div class="cd-block"><div class="cd-num" id="pcd">--</div><div class="cd-lbl">días</div></div>
-            <div class="cd-sep">:</div>
-            <div class="cd-block"><div class="cd-num" id="pch">--</div><div class="cd-lbl">horas</div></div>
-            <div class="cd-sep">:</div>
-            <div class="cd-block"><div class="cd-num" id="pcm">--</div><div class="cd-lbl">min</div></div>
-            <div class="cd-sep">:</div>
-            <div class="cd-block"><div class="cd-num" id="pcs">--</div><div class="cd-lbl">seg</div></div>
-          </div>
-          <div class="cd-live-msg" id="pc-live-msg" style="display:none">🏁 ¡LOVE OUT LOUD ESTÁ EN VIVO!</div>
-        </div>
-        <!-- iframe inyectado dinámicamente al iniciar el evento -->
+        <!-- iframe inyectado dinámicamente según la clave del día -->
       </div>
     </div>
   </div>
@@ -571,12 +555,6 @@ function initLiveBadge(EV, isTest) {
    PLAYER — COUNTDOWN / EMBED VIMEO
 ═══════════════════════════════════ */
 function startPlayerCountdown(EV, isTest, eventId) {
-  // Todos los links activos — inyectar player inmediatamente
-  ['pcd','pch','pcm','pcs'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent='00'; });
-  const timer   = document.getElementById('pc-timer');
-  const liveMsg = document.getElementById('pc-live-msg');
-  if (timer)   timer.style.display   = 'none';
-  if (liveMsg) liveMsg.style.display = 'block';
   injectPlayer(eventId);
 }
 
