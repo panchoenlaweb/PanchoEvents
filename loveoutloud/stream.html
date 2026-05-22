@@ -560,23 +560,8 @@ function initLiveBadge(EV, isTest) {
   const GRACE = isTest ? 4 * 3600000 : 72 * 3600000;
 
   function update() {
-    if (isTest) {
-      badge.classList.remove('offline');
-      label.textContent = '● EN VIVO';
-      return;
-    }
-    const now  = Date.now();
-    const diff = EV - now;
-    if (diff <= EARLY && now - EV < GRACE) {
-      badge.classList.remove('offline');
-      label.textContent = '● EN VIVO';
-    } else if (diff > EARLY) {
-      badge.classList.add('offline');
-      label.textContent = 'EN ESPERA';
-    } else {
-      badge.classList.add('offline');
-      label.textContent = 'FINALIZADO';
-    }
+    badge.classList.remove('offline');
+    label.textContent = '● EN VIVO';
   }
   update();
   setInterval(update, 10000);
@@ -586,35 +571,13 @@ function initLiveBadge(EV, isTest) {
    PLAYER — COUNTDOWN / EMBED VIMEO
 ═══════════════════════════════════ */
 function startPlayerCountdown(EV, isTest, eventId) {
-  function tick() {
-    if (isTest) {
-      ['pcd','pch','pcm','pcs'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent='00'; });
-      const timer   = document.getElementById('pc-timer');
-      const liveMsg = document.getElementById('pc-live-msg');
-      if (timer)   timer.style.display   = 'none';
-      if (liveMsg) liveMsg.style.display = 'block';
-      injectPlayer(eventId);
-      return;
-    }
-    const diff = EV - Date.now();
-    if (diff <= EARLY) {
-      ['pcd','pch','pcm','pcs'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent='00'; });
-      const timer   = document.getElementById('pc-timer');
-      const liveMsg = document.getElementById('pc-live-msg');
-      if (timer)   timer.style.display   = 'none';
-      if (liveMsg) liveMsg.style.display = 'block';
-      injectPlayer(eventId);
-      return;
-    }
-    const p = n => String(n).padStart(2,'0');
-    const el = id => document.getElementById(id);
-    if(el('pcd')) el('pcd').textContent = p(Math.floor(diff/86400000));
-    if(el('pch')) el('pch').textContent = p(Math.floor((diff%86400000)/3600000));
-    if(el('pcm')) el('pcm').textContent = p(Math.floor((diff%3600000)/60000));
-    if(el('pcs')) el('pcs').textContent = p(Math.floor((diff%60000)/1000));
-  }
-  tick();
-  setInterval(tick, 1000);
+  // Todos los links activos — inyectar player inmediatamente
+  ['pcd','pch','pcm','pcs'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent='00'; });
+  const timer   = document.getElementById('pc-timer');
+  const liveMsg = document.getElementById('pc-live-msg');
+  if (timer)   timer.style.display   = 'none';
+  if (liveMsg) liveMsg.style.display = 'block';
+  injectPlayer(eventId);
 }
 
 function injectPlayer(eventId) {
