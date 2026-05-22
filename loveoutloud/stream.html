@@ -310,7 +310,15 @@
   <div class="player-section">
     <div class="player-wrap">
       <div class="vimeo-embed" id="player-box">
-        <!-- iframe inyectado dinámicamente según la clave del día -->
+        <iframe
+          id="vimeo-iframe"
+          src="https://vimeo.com/event/5944769/embed/interaction"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+        ></iframe>
       </div>
     </div>
   </div>
@@ -559,20 +567,10 @@ function startPlayerCountdown(EV, isTest, eventId) {
 }
 
 function injectPlayer(eventId) {
-  const box = document.getElementById('player-box');
-  const ph  = document.getElementById('placeholder');
-  // Ya existe iframe (llamada repetida)
-  if (box.querySelector('iframe')) return;
-
-  const iframe = document.createElement('iframe');
-  iframe.src   = `https://vimeo.com/event/${eventId || '5944769'}/embed/interaction`;
-  iframe.setAttribute('frameborder','0');
-  iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; web-share';
-  iframe.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
-  iframe.allowFullscreen = true;
-  iframe.style.cssText   = 'position:absolute;inset:0;width:100%;height:100%;border:none;';
-  if (ph) ph.remove();
-  box.appendChild(iframe);
+  const iframe = document.getElementById('vimeo-iframe');
+  if (iframe && eventId) {
+    iframe.src = `https://vimeo.com/event/${eventId}/embed/interaction`;
+  }
 }
 
 /* ═══════════════════════════════════
