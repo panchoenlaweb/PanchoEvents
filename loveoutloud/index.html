@@ -1310,8 +1310,8 @@
       <div class="tz-card">
         <div class="tz-flag">MX</div>
         <div class="tz-country">MÉXICO</div>
-        <div class="tz-time">05:00<span class="tz-ampm">AM</span></div>
-        <div class="tz-label">CDT · UTC−5</div>
+        <div class="tz-time">04:00<span class="tz-ampm">AM</span></div>
+        <div class="tz-label">CST · UTC−6</div>
       </div>
 
       <div class="tz-card">
@@ -1877,7 +1877,7 @@
   /* ─── LOCAL TIME AUTO-DETECT ───────────────────── */
   function detectLocalTime() {
     try {
-      const eventBangkok = new Date('2026-05-22T17:00:00+07:00');
+      const eventBangkok = new Date('2026-05-23T17:00:00+07:00');
       const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const timeStr = new Intl.DateTimeFormat('es', {
         hour: '2-digit', minute: '2-digit', hour12: false, timeZone: userTZ
@@ -1895,7 +1895,7 @@
   detectLocalTime();
 
   /* ─── COUNTDOWN ───────────────────────────── */
-  const eventDate = new Date('2026-05-22T17:00:00+07:00');
+  const eventDate = new Date('2026-05-23T17:00:00+07:00');
   function updateCountdown() {
     const now  = new Date();
     const diff = eventDate - now;
