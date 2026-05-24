@@ -1195,8 +1195,7 @@
 
     <!-- hero CTAs -->
     <div class="hero-btns">
-      <span class="hero-btn hero-btn-enter" data-i18n="hero-btn-enter" onclick="document.getElementById('access-modal').classList.add('show')">INGRESAR AL EVENTO</span>
-      <a class="hero-btn hero-btn-reserve" href="https://t.me/Panchoenlared" target="_blank" rel="noopener" data-i18n="hero-btn-reserve">🎫 RESERVAR AHORA</a>
+      <span class="hero-btn" style="background:transparent;border:2px solid #444;color:#666;cursor:default;pointer-events:none;">✅ EVENTO FINALIZADO</span>
     </div>
 
   </div>
@@ -1249,14 +1248,13 @@
   </div>
 </div>
 
-<!-- countdown -->
+<!-- finished banner -->
 <div class="countdown-section">
-  <p class="countdown-label" data-i18n="countdown-label">🏁 FALTAN PARA EL EVENTO</p>
   <div class="countdown" id="countdown">
-    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-unit" data-i18n="cd-unit-days">DÍAS</div></div>
-    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-unit" data-i18n="cd-unit-hours">HORAS</div></div>
-    <div class="cd-box"><div class="cd-num" id="cd-min">--</div><div class="cd-unit">MIN</div></div>
-    <div class="cd-box"><div class="cd-num" id="cd-sec">--</div><div class="cd-unit" data-i18n="cd-unit-sec">SEG</div></div>
+    <div class="cd-box" style="min-width:260px">
+      <div class="cd-num" style="font-size:1.1rem;color:var(--gold);letter-spacing:.1em">🏁 EVENTO FINALIZADO</div>
+      <div class="cd-unit" style="margin-top:.5rem">Gracias a todos los que participaron ❤</div>
+    </div>
   </div>
 </div>
 
