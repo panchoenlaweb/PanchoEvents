@@ -10,6 +10,22 @@ interface Props {
   event: Record<string, unknown>;
 }
 
+function toEmbedUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    // Already an embed URL — return as-is
+    if (url.hostname === 'player.vimeo.com') return raw;
+    // Vimeo live event embed: vimeo.com/event/ID/embed/...
+    if (url.pathname.includes('/event/') && url.pathname.includes('/embed')) return raw;
+    // Regular Vimeo video: vimeo.com/123456789
+    const videoId = url.pathname.replace(/^\//, '').split('/')[0];
+    if (videoId && /^\d+$/.test(videoId)) {
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+    }
+  } catch { /* not a valid URL, return as-is */ }
+  return raw;
+}
+
 export function StreamClient({ user, event: ev }: Props) {
   const router = useRouter();
 
@@ -68,7 +84,7 @@ export function StreamClient({ user, event: ev }: Props) {
           {ev.stream_url ? (
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
               <iframe
-                src={String(ev.stream_url)}
+                src={toEmbedUrl(String(ev.stream_url))}
                 className="absolute inset-0 w-full h-full border-0"
                 allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
                 allowFullScreen

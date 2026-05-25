@@ -621,10 +621,10 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
             </div>
           </div>
           <Input
-            label="URL del Stream (Vimeo embed, etc.)"
+            label="URL del Stream (Vimeo)"
             value={eventForm.stream_url}
             onChange={(e) => setEventForm((f) => ({ ...f, stream_url: e.target.value }))}
-            placeholder="https://vimeo.com/event/XXXXX/embed/interaction"
+            placeholder="https://vimeo.com/123456789  ó  vimeo.com/event/ID/embed/interaction"
           />
           <Input
             label="URL de Miniatura"
