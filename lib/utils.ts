@@ -19,7 +19,19 @@ export function formatDate(dateStr: string | null): string {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    timeZoneName: 'short',
   }).format(new Date(dateStr));
+}
+
+export function formatDateBangkok(dateStr: string | null): string {
+  if (!dateStr) return '—';
+  return new Intl.DateTimeFormat('es', {
+    timeZone: 'Asia/Bangkok',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(dateStr)) + ' BKK';
 }
 
 export function slugify(text: string): string {

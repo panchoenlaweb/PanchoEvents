@@ -163,11 +163,17 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
     setEventModal({ open: true, editing: null });
   }
 
+  function toBangkokLocal(iso: string): string {
+    const d = new Date(iso);
+    const bkk = new Date(d.getTime() + 7 * 60 * 60 * 1000);
+    return bkk.toISOString().slice(0, 16);
+  }
+
   function openEditEvent(e: Event) {
     setEventForm({
       title: e.title,
       description: e.description ?? '',
-      event_date: e.event_date ? new Date(e.event_date).toISOString().slice(0, 16) : '',
+      event_date: e.event_date ? toBangkokLocal(e.event_date) : '',
       thumbnail_url: e.thumbnail_url ?? '',
       stream_url: e.stream_url ?? '',
       status: e.status,
@@ -185,7 +191,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
       const body = {
         ...eventForm,
         slug: eventForm.slug || slugify(eventForm.title),
-        event_date: eventForm.event_date || null,
+        event_date: eventForm.event_date ? eventForm.event_date + ':00+07:00' : null,
       };
       const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       const data = await res.json();
@@ -651,12 +657,23 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Fecha del evento"
-              type="datetime-local"
-              value={eventForm.event_date}
-              onChange={(e) => setEventForm((f) => ({ ...f, event_date: e.target.value }))}
-            />
+            <div className="flex flex-col gap-1.5">
+              <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">
+                Fecha del evento
+                <span className="ml-2 text-amber normal-case tracking-normal font-sans text-[0.6rem]">(hora Bangkok UTC+7)</span>
+              </label>
+              <input
+                type="datetime-local"
+                value={eventForm.event_date}
+                onChange={(e) => setEventForm((f) => ({ ...f, event_date: e.target.value }))}
+                className="w-full bg-dark border border-zinc-800 hover:border-zinc-600 focus:border-amber/70 focus:ring-1 focus:ring-amber/30 text-zinc-100 font-sans text-sm px-4 py-2.5 transition-all focus:outline-none"
+              />
+              {eventForm.event_date && (
+                <p className="text-[0.6rem] text-zinc-500 font-sans">
+                  Guardará como: {new Date(eventForm.event_date + ':00+07:00').toUTCString().replace(' GMT', ' UTC')}
+                </p>
+              )}
+            </div>
             <div className="flex flex-col gap-1.5">
               <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">Estado</label>
               <select

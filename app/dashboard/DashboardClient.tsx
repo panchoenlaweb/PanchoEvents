@@ -3,7 +3,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut, Calendar, Film, Play, Radio } from 'lucide-react';
 import type { JWTPayload } from '@/types';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDateBangkok } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 
 interface Props {
@@ -207,11 +207,18 @@ function EventCard({ event: ev }: { event: Record<string, unknown> }) {
           </p>
         )}
         {ev.event_date as string && (
-          <div className="flex items-center gap-1.5 text-zinc-600 mb-2">
-            <Calendar size={11} />
-            <span className="font-display text-[0.6rem] tracking-wide">
-              {formatDate(String(ev.event_date))}
-            </span>
+          <div className="mb-2">
+            <div className="flex items-center gap-1.5 text-zinc-400">
+              <Calendar size={11} />
+              <span className="font-display text-[0.6rem] tracking-wide">
+                {formatDate(String(ev.event_date))}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 text-zinc-600 mt-0.5 ml-4">
+              <span className="font-sans text-[0.55rem] tracking-wide">
+                🇹🇭 {formatDateBangkok(String(ev.event_date))}
+              </span>
+            </div>
           </div>
         )}
         {countdown && isActive && (
