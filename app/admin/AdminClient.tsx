@@ -356,7 +356,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-dark-border">
-                      {['Título', 'Slug', 'Fecha', 'Estado', 'Acciones'].map((h) => (
+                      {['Título', 'Slug', 'Fecha', 'Stream', 'Estado', 'Acciones'].map((h) => (
                         <th key={h} className="font-display text-[0.6rem] tracking-widest text-zinc-500 uppercase text-left px-3 py-3">
                           {h}
                         </th>
@@ -370,6 +370,17 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
                         <td className="px-3 py-3 font-display text-[0.6rem] text-zinc-500 tracking-wider">{e.slug}</td>
                         <td className="px-3 py-3 font-sans text-zinc-500 text-xs whitespace-nowrap">
                           {formatDate(e.event_date)}
+                        </td>
+                        <td className="px-3 py-3">
+                          {e.stream_url ? (
+                            <span className="inline-flex items-center gap-1 font-display text-[0.58rem] tracking-wider text-emerald-400 uppercase">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />Listo
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 font-display text-[0.58rem] tracking-wider text-zinc-600 uppercase">
+                              <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />Sin URL
+                            </span>
+                          )}
                         </td>
                         <td className="px-3 py-3">
                           <Badge variant={e.status === 'active' ? 'active' : 'inactive'}>
