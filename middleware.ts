@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const COOKIE_NAME = 'pe_session';
+const COOKIE_NAME         = 'pe_session';
+const REFRESH_COOKIE_NAME = 'pe_refresh';
 
 interface TokenPayload {
   userId: string;
@@ -68,8 +69,14 @@ export async function middleware(request: NextRequest) {
 
   const payload = await verifyToken(token);
 
-  // Invalid/expired JWT → login
+  // Invalid/expired JWT → try silent refresh first
   if (!payload) {
+    const refreshToken = request.cookies.get(REFRESH_COOKIE_NAME)?.value;
+    if (refreshToken) {
+      const refreshUrl = new URL('/api/auth/refresh-redirect', request.url);
+      refreshUrl.searchParams.set('to', pathname);
+      return NextResponse.redirect(refreshUrl);
+    }
     const res = NextResponse.redirect(new URL('/login?reason=expired', request.url));
     res.cookies.delete(COOKIE_NAME);
     return res;
