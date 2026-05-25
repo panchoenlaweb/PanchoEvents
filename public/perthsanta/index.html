@@ -1592,7 +1592,7 @@
       { flag:'🇸🇬', name:'Singapur',      tz:'Asia/Singapore' },
     ];
     zones.forEach(z => {
-      const t = new Intl.DateTimeFormat('es', {
+      const t = new Intl.DateTimeFormat('en-US', {
         timeZone: z.tz, hour: '2-digit', minute: '2-digit', hour12: true
       }).format(EV);
       const [time, ampm] = t.split(' ');
@@ -1613,7 +1613,7 @@
     try {
       const ev = new Date('2026-07-18T17:00:00+07:00');
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const tStr = new Intl.DateTimeFormat('es',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
+      const tStr = new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz}).format(ev);
       const tzName = new Intl.DateTimeFormat('en',{timeZoneName:'short',timeZone:tz}).formatToParts(ev).find(p=>p.type==='timeZoneName')?.value || tz;
       const v = document.getElementById('local-time-value');
       const z = document.getElementById('local-time-tz');

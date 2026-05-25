@@ -1884,7 +1884,7 @@
     try {
       const eventBangkok = new Date('2026-05-24T17:00:00+07:00');
       const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const timeStr = new Intl.DateTimeFormat('es', {
+      const timeStr = new Intl.DateTimeFormat('en-US', {
         hour: '2-digit', minute: '2-digit', hour12: false, timeZone: userTZ
       }).format(eventBangkok);
       const tzShort = new Intl.DateTimeFormat('en', {
