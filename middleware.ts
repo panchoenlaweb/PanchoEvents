@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 const COOKIE_NAME = 'pe_session';
 
 interface TokenPayload {
@@ -13,7 +12,10 @@ interface TokenPayload {
 
 async function verifyToken(token: string): Promise<TokenPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const secret = process.env.JWT_SECRET;
+    if (!secret) return null;
+    const key = new TextEncoder().encode(secret);
+    const { payload } = await jwtVerify(token, key);
     return payload as unknown as TokenPayload;
   } catch {
     return null;
@@ -23,19 +25,6 @@ async function verifyToken(token: string): Promise<TokenPayload | null> {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(COOKIE_NAME)?.value;
-
-  // Root redirect
-  if (pathname === '/') {
-    if (token) {
-      const payload = await verifyToken(token);
-      if (payload) {
-        return NextResponse.redirect(
-          new URL(payload.role === 'admin' ? '/admin' : '/dashboard', request.url),
-        );
-      }
-    }
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
 
   const isProtectedDashboard = pathname.startsWith('/dashboard');
   const isProtectedAdmin = pathname.startsWith('/admin');
@@ -72,5 +61,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/dashboard/:path*', '/admin/:path*'],
+  matcher: ['/dashboard/:path*', '/admin/:path*'],
 };
