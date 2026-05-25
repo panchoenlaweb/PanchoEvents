@@ -11,8 +11,7 @@ const nextConfig = {
       { source: '/', destination: '/landing.html' },
     ];
     for (const slug of EVENTS) {
-      rules.push({ source: `/${slug}`,        destination: `/${slug}/index.html` });
-      rules.push({ source: `/${slug}/stream`, destination: `/${slug}/stream.html` });
+      rules.push({ source: `/${slug}`, destination: `/${slug}/index.html` });
     }
     return rules;
   },
