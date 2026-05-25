@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, Calendar, Film, Play } from 'lucide-react';
+import { LogOut, Calendar, Film, Play, Radio } from 'lucide-react';
 import type { JWTPayload } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
@@ -79,13 +79,22 @@ export function DashboardClient({ user, events }: Props) {
 
         {events.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="text-5xl mb-5 opacity-30">📭</div>
-            <p className="font-display text-sm tracking-widest text-zinc-500 uppercase">
+            <div className="text-5xl mb-5">🎟️</div>
+            <p className="font-display text-sm tracking-widest text-zinc-400 uppercase mb-3">
               Sin eventos asignados
             </p>
-            <p className="text-zinc-600 text-sm font-sans mt-2 max-w-xs">
-              Tu administrador aún no ha asignado ningún evento a tu cuenta.
+            <p className="text-zinc-500 text-sm font-sans mt-2 max-w-sm leading-relaxed">
+              Aún no tienes acceso a ningún viewing party. Si ya coordinaste tu pago,
+              contáctanos por Telegram para activar tu acceso.
             </p>
+            <a
+              href="https://t.me/panchoenlared"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 font-display text-[0.65rem] tracking-widest uppercase text-amber border border-amber/40 px-5 py-2.5 hover:bg-amber/10 transition-colors"
+            >
+              ✈ Contactar por Telegram
+            </a>
           </div>
         ) : (
           <>
@@ -110,9 +119,36 @@ export function DashboardClient({ user, events }: Props) {
   );
 }
 
+function useCountdown(eventDate: string | null) {
+  const [cd, setCd] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
+  useEffect(() => {
+    if (!eventDate) return;
+    const target = new Date(eventDate).getTime();
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) { setCd(null); return; }
+      setCd({
+        d: Math.floor(diff / 86_400_000),
+        h: Math.floor((diff % 86_400_000) / 3_600_000),
+        m: Math.floor((diff % 3_600_000) / 60_000),
+        s: Math.floor((diff % 60_000) / 1_000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1_000);
+    return () => clearInterval(id);
+  }, [eventDate]);
+  return cd;
+}
+
 function EventCard({ event: ev }: { event: Record<string, unknown> }) {
   const router = useRouter();
-  const isActive = ev.status === 'active';
+  const isActive  = ev.status === 'active';
+  const dateStr   = ev.event_date ? String(ev.event_date) : null;
+  const countdown = useCountdown(dateStr);
+  const isLive    = isActive && !!ev.stream_url && dateStr
+    ? Date.now() - new Date(dateStr).getTime() < 10 * 60 * 60 * 1_000   // within last 10h
+    : false;
 
   return (
     <div
@@ -140,6 +176,12 @@ function EventCard({ event: ev }: { event: Record<string, unknown> }) {
             <Film size={32} className="text-zinc-700" />
           </div>
         )}
+        {isLive && (
+          <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-red-600/90 px-2 py-1 text-white">
+            <Radio size={10} className="animate-pulse" />
+            <span className="font-display text-[0.55rem] tracking-widest uppercase">En vivo</span>
+          </div>
+        )}
         {isActive && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
             <div className="w-12 h-12 rounded-full border-2 border-amber flex items-center justify-center">
@@ -165,11 +207,22 @@ function EventCard({ event: ev }: { event: Record<string, unknown> }) {
           </p>
         )}
         {ev.event_date as string && (
-          <div className="flex items-center gap-1.5 text-zinc-600">
+          <div className="flex items-center gap-1.5 text-zinc-600 mb-2">
             <Calendar size={11} />
             <span className="font-display text-[0.6rem] tracking-wide">
               {formatDate(String(ev.event_date))}
             </span>
+          </div>
+        )}
+        {countdown && isActive && (
+          <div className="flex items-center gap-2 bg-amber/5 border border-amber/20 px-3 py-2">
+            <span className="font-display text-[0.55rem] tracking-widest text-amber/60 uppercase">Faltan</span>
+            {countdown.d > 0 && (
+              <span className="font-display text-xs text-amber">{countdown.d}<span className="text-[0.5rem] text-amber/50 ml-0.5">d</span></span>
+            )}
+            <span className="font-display text-xs text-amber">{String(countdown.h).padStart(2,'0')}<span className="text-[0.5rem] text-amber/50 ml-0.5">h</span></span>
+            <span className="font-display text-xs text-amber">{String(countdown.m).padStart(2,'0')}<span className="text-[0.5rem] text-amber/50 ml-0.5">m</span></span>
+            <span className="font-display text-xs text-amber">{String(countdown.s).padStart(2,'0')}<span className="text-[0.5rem] text-amber/50 ml-0.5">s</span></span>
           </div>
         )}
       </div>
