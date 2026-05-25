@@ -1,9 +1,20 @@
 /** @type {import('next').NextConfig} */
+const EVENTS = [
+  'joongdunk', 'surfjava', 'seakeen', 'dmdland3', 'loveoutloud',
+  'olympop', 'perthsanta', 'poohpavel', 'blushblossom', 'sotus',
+  'starlympic', 'redworld',
+];
+
 const nextConfig = {
-  outputFileTracingIncludes: {
-    '/': ['./static/**/*'],
-    '/[event]': ['./static/**/*'],
-    '/[event]/stream': ['./static/**/*'],
+  async rewrites() {
+    const rules = [
+      { source: '/', destination: '/landing.html' },
+    ];
+    for (const slug of EVENTS) {
+      rules.push({ source: `/${slug}`,        destination: `/${slug}/index.html` });
+      rules.push({ source: `/${slug}/stream`, destination: `/${slug}/stream.html` });
+    }
+    return rules;
   },
   images: {
     remotePatterns: [

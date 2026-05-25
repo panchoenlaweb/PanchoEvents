@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YPass – Tu acceso al BL/GL Tailándes en vivo</title>
+  <meta name="description" content="YPass: streaming privado en español para conciertos, fancons y fanmeets de Y-series Thai BL/GL. Boletos accesibles, pago en tu moneda local.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:       #ff2d8a;
+      --red-l:     #ff5fa3;
+      --red-glow:  rgba(255,45,138,.5);
+      --gold:      #f5c518;
+      --violet:    #8b3dff;
+      --dark:      #0a0612;
+      --card:      #14101c;
+      --card2:     #19131f;
+      --border:    rgba(255,45,138,.22);
+      --text:      #efe4ec;
+      --muted:     #6e5d6c;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── CANVAS ── */
+    #bg-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 300;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(8,8,8,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .nav-logo span { color: var(--red-l); }
+
+    .nav-links {
+      display: flex; gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Orbitron', monospace;
+      font-size: .65rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--red-l); }
+
+    .nav-cta {
+      font-family: 'Orbitron', monospace;
+      font-size: .62rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--red);
+      padding: 8px 20px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, box-shadow .2s;
+    }
+    .nav-cta:hover {
+      background: var(--red-l);
+      box-shadow: 0 0 20px var(--red-glow);
+    }
+
+    .nav-login {
+      font-family: 'Orbitron', monospace;
+      font-size: .62rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--gold);
+      padding: 8px 18px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, box-shadow .2s;
+      white-space: nowrap;
+    }
+    .nav-login:hover {
+      background: #ffd740;
+      box-shadow: 0 0 20px rgba(245,197,24,.5);
+    }
+
+    /* ── HAMBURGER ── */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 4px;
+      z-index: 302;
+    }
+    .nav-burger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile-cta { display: none; }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 18px; }
+      .nav-burger { display: flex; }
+      .nav-cta { display: none; }
+
+      .nav-links {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(6,6,6,.97);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .38s ease, padding .38s ease;
+        padding: 0;
+        z-index: 299;
+      }
+      .nav-links.open {
+        max-height: 380px;
+        padding: 8px 0 20px;
+      }
+      .nav-links li {
+        border-bottom: 1px solid rgba(255,45,138,.1);
+      }
+      .nav-links li:last-child { border-bottom: none; }
+      .nav-links a {
+        display: block;
+        padding: 15px 24px;
+        font-size: .72rem;
+        letter-spacing: .2em;
+        color: var(--muted);
+      }
+      .nav-links a:hover { color: var(--red-l); background: rgba(255,45,138,.05); }
+
+      .nav-mobile-cta {
+        display: block;
+        padding: 0 20px;
+        margin-top: 10px;
+      }
+      .nav-mobile-cta a {
+        display: block !important;
+        padding: 13px 24px !important;
+        text-align: center;
+        background: var(--red) !important;
+        color: #fff !important;
+        border-radius: 0;
+        letter-spacing: .18em !important;
+        transition: background .2s;
+      }
+      .nav-mobile-cta a:hover { background: var(--red-l) !important; }
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 80px 20px 60px;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255,45,138,.22) 0%, transparent 70%),
+        linear-gradient(180deg, #0a0612 0%, #170820 50%, #0a0612 100%);
+      z-index: 1;
+    }
+
+    /* scanlines */
+    #hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,.05) 0px, rgba(0,0,0,.05) 1px,
+        transparent 1px, transparent 3px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 3;
+      max-width: 860px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: .6rem;
+      letter-spacing: .6em;
+      color: var(--red-l);
+      border: 1px solid var(--red);
+      padding: 5px 22px;
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3rem, 12vw, 8.5rem);
+      font-weight: 900;
+      letter-spacing: .12em;
+      line-height: .9;
+      text-transform: uppercase;
+      background: linear-gradient(140deg, #fff 0%, #bbb 35%, #fff 60%, #999 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 50px rgba(255,45,138,.5));
+      margin-bottom: 12px;
+    }
+
+    .hero-title span {
+      display: block;
+      color: var(--red-l);
+      background: linear-gradient(to right, var(--red), var(--red-l), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 30px var(--red-glow));
+    }
+
+    .hero-sub {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(.7rem, 2.2vw, 1.1rem);
+      letter-spacing: .45em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+
+    .hero-divider {
+      width: 100px; height: 2px;
+      background: linear-gradient(to right, transparent, var(--red), transparent);
+      margin: 0 auto 40px;
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: #aaa;
+      letter-spacing: .05em;
+      max-width: 560px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+    }
+    .hero-desc b { color: var(--red-l); }
+
+    .hero-btns {
+      display: flex; gap: 14px;
+      justify-content: center; flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Orbitron', monospace;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 14px 36px;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform .15s, box-shadow .15s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      border: 2px solid var(--red);
+      box-shadow: 0 0 20px rgba(255,45,138,.3);
+    }
+    .btn-primary:hover {
+      background: var(--red-l);
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px var(--red-glow);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid rgba(255,255,255,.2);
+    }
+    .btn-outline:hover {
+      border-color: var(--red);
+      color: var(--red-l);
+      transform: translateY(-2px);
+    }
+
+    /* ── SCROLL HINT ── */
+    .scroll-hint {
+      position: absolute; bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .scroll-hint span {
+      font-family: 'Orbitron', monospace;
+      font-size: .5rem;
+      letter-spacing: .4em;
+      color: var(--muted);
+    }
+    .scroll-arrow {
+      width: 20px; height: 20px;
+      border-right: 2px solid var(--red);
+      border-bottom: 2px solid var(--red);
+      transform: rotate(45deg);
+      animation: arrowBounce 1.4s ease-in-out infinite;
+    }
+    @keyframes arrowBounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(6px); }
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      position: relative; z-index: 1;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 20px;
+    }
+    .stats-inner {
+      max-width: 900px; margin: 0 auto;
+      display: flex; gap: 0; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat {
+      flex: 1; min-width: 150px;
+      text-align: center;
+      padding: 12px 24px;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      color: var(--red-l);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .8rem;
+      letter-spacing: .15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── SECTION ── */
+    section { padding: 100px 0; position: relative; z-index: 1; }
+    .wrapper { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+    .section-tag {
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .55em;
+      color: var(--red-l);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px; height: 2px;
+      background: linear-gradient(to right, transparent, var(--red), transparent);
+      margin: 12px auto 0;
+    }
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.05rem;
+      letter-spacing: .06em;
+      margin-bottom: 64px;
+    }
+
+    /* ── EVENT CARDS ── */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 28px;
+    }
+
+    .event-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .event-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(145deg, rgba(255,45,138,.06) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .event-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--red);
+      box-shadow: 0 12px 45px rgba(255,45,138,.25);
+    }
+
+    .card-image {
+      width: 100%; aspect-ratio: 16/9;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      opacity: .85;
+      transition: opacity .25s;
+    }
+    .event-card:hover .card-image { opacity: 1; }
+
+    .card-image-placeholder {
+      width: 100%; aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: .08em;
+      background: var(--card2);
+      position: relative; overflow: hidden;
+    }
+    .card-image-placeholder::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255,255,255,.02) 0px, rgba(255,255,255,.02) 1px,
+        transparent 1px, transparent 12px
+      );
+    }
+
+    .card-body {
+      padding: 26px 28px 30px;
+      position: relative; z-index: 1;
+      flex: 1; display: flex; flex-direction: column;
+    }
+
+    .card-badge {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: 1px solid var(--red);
+      color: var(--red-l);
+      margin-bottom: 14px;
+      width: fit-content;
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: .06em;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .card-subtitle {
+      font-family: 'Orbitron', monospace;
+      font-size: .7rem;
+      letter-spacing: .2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .card-desc {
+      font-size: 1rem;
+      color: #888;
+      letter-spacing: .04em;
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 22px;
+    }
+
+    .card-meta {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 24px;
+    }
+    .card-meta-row {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .88rem; color: #999; letter-spacing: .05em;
+    }
+    .card-meta-row svg {
+      width: 14px; height: 14px;
+      stroke: var(--red); fill: none;
+      flex-shrink: 0;
+    }
+
+    .card-cta {
+      font-family: 'Orbitron', monospace;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: 12px 0;
+      text-align: center;
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red-l);
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: background .2s, color .2s, box-shadow .2s;
+    }
+    .card-cta:hover {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 0 22px var(--red-glow);
+    }
+
+    .card-price-block {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,45,138,.04);
+    }
+    .cpr-item {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 14px 8px;
+      text-align: center;
+    }
+    .cpr-item + .cpr-item {
+      border-left: 1px solid var(--border);
+    }
+    .cpr-val {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .cpr-val sup { font-size: .65rem; color: var(--muted); vertical-align: super; }
+    .cpr-item.bundle .cpr-val { color: var(--gold); }
+    .cpr-lbl {
+      font-family: 'Orbitron', monospace;
+      font-size: .5rem;
+      letter-spacing: .15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .card-status-badge {
+      position: absolute; top: 14px; right: 14px;
+      font-family: 'Orbitron', monospace;
+      font-size: .5rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      z-index: 5;
+    }
+    .status-available {
+      background: rgba(0,200,80,.12);
+      border: 1px solid rgba(0,200,80,.5);
+      color: #00c850;
+    }
+    .status-limited {
+      background: rgba(245,197,24,.1);
+      border: 1px solid rgba(245,197,24,.5);
+      color: var(--gold);
+    }
+    .status-urgent {
+      background: linear-gradient(135deg, #ff2030, #c2002a);
+      border: 1px solid #ff6680;
+      color: #fff;
+      font-weight: 900;
+      text-shadow: 0 1px 2px rgba(0,0,0,.4);
+      animation: urgentPulse 1.4s ease-in-out infinite;
+    }
+    @keyframes urgentPulse {
+      0%,100% { box-shadow: 0 0 10px rgba(255,40,80,.55), 0 2px 6px rgba(0,0,0,.4); transform: scale(1); }
+      50%     { box-shadow: 0 0 24px rgba(255,40,80,.9),  0 2px 6px rgba(0,0,0,.4); transform: scale(1.04); }
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2px;
+    }
+    .step {
+      padding: 40px 32px;
+      border-right: 1px solid var(--border);
+      position: relative; text-align: center;
+      transition: background .2s;
+    }
+    .step:last-child { border-right: none; }
+    .step:hover { background: var(--card2); }
+    .step-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem;
+      font-weight: 900;
+      color: rgba(255,45,138,.18);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .step-icon {
+      margin-bottom: 14px;
+    }
+    .step-icon svg {
+      width: 30px; height: 30px;
+      stroke: var(--red-l); fill: none;
+    }
+    .step-title {
+      font-family: 'Cinzel', serif;
+      font-size: .95rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: .92rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+      line-height: 1.7;
+    }
+
+    /* ── TRUST SECTION ── */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .trust-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      text-align: center;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .trust-card:hover {
+      border-color: var(--red);
+      box-shadow: 0 4px 25px rgba(255,45,138,.15);
+    }
+    .trust-icon svg {
+      width: 34px; height: 34px;
+      stroke: var(--red-l); fill: none;
+      margin-bottom: 16px;
+    }
+    .trust-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .trust-desc {
+      font-size: .92rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+      line-height: 1.7;
+    }
+
+    /* ── CTA BANNER ── */
+    #cta-section {
+      background: linear-gradient(135deg, #0d0000 0%, #1a0000 50%, #0d0000 100%);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 90px 24px;
+    }
+    .cta-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 30px var(--red-glow));
+    }
+    .cta-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      margin-bottom: 42px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #050505;
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .footer-logo span { color: var(--red-l); }
+    .footer-text {
+      font-size: .82rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      line-height: 1.8;
+    }
+    .footer-divider {
+      width: 60px; height: 1px;
+      background: var(--border);
+      margin: 20px auto;
+    }
+    .footer-disclaimer {
+      font-size: .72rem;
+      color: #333;
+      letter-spacing: .06em;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── GLOBAL COUNTDOWN BANNER ── */
+    #global-banner {
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      z-index: 250;
+      background: linear-gradient(90deg, rgba(20,0,0,.96), rgba(40,0,5,.95) 50%, rgba(20,0,0,.96));
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 20px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; flex-wrap: wrap;
+      font-family: 'Orbitron', monospace;
+      transform: translateY(-100%);
+      transition: transform .35s ease;
+    }
+    #global-banner.show { transform: translateY(0); }
+    .gb-pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red-l);
+      box-shadow: 0 0 10px var(--red-l);
+      animation: gbPulse 1.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes gbPulse { 0%,100% { opacity:.4; transform:scale(.85); } 50% { opacity:1; transform:scale(1.15); } }
+    .gb-label {
+      font-size: .55rem;
+      letter-spacing: .25em;
+      color: var(--red-l);
+      text-transform: uppercase;
+    }
+    .gb-event {
+      font-size: .72rem;
+      letter-spacing: .12em;
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .gb-timer {
+      display: flex; gap: 6px; align-items: center;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      color: var(--gold);
+    }
+    .gb-timer b {
+      color: #fff;
+      font-weight: 900;
+      font-size: .82rem;
+      min-width: 26px;
+      text-align: center;
+      display: inline-block;
+    }
+    .gb-cta {
+      background: var(--red);
+      color: #fff;
+      font-size: .55rem;
+      letter-spacing: .15em;
+      padding: 6px 14px;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: background .2s, box-shadow .2s;
+    }
+    .gb-cta:hover { background: var(--red-l); box-shadow: 0 0 18px var(--red-glow); }
+    .gb-close {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 1rem; padding: 0 4px;
+      line-height: 1;
+    }
+    .gb-close:hover { color: #fff; }
+    body.has-banner { padding-top: 44px; }
+    @media (max-width: 700px) {
+      #global-banner { padding: 6px 12px; gap: 8px; }
+      .gb-label { display: none; }
+      .gb-event { font-size: .58rem; letter-spacing: .08em; }
+      .gb-timer { font-size: .58rem; }
+      .gb-timer b { font-size: .68rem; min-width: 20px; }
+      .gb-cta { font-size: .48rem; padding: 5px 10px; }
+    }
+
+    /* ── NAV SWITCHERS (FX + LANG) ── */
+    .nav-tools {
+      display: flex; gap: 6px; align-items: center;
+      margin-right: 12px;
+    }
+    .nav-select {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #ddd;
+      font-family: 'Orbitron', monospace;
+      font-size: .58rem;
+      letter-spacing: .14em;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+      text-transform: uppercase;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--red-l) 50%), linear-gradient(135deg, var(--red-l) 50%, transparent 50%);
+      background-position: calc(100% - 11px) 50%, calc(100% - 6px) 50%;
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 22px;
+    }
+    .nav-select:hover { border-color: var(--red); color: #fff; }
+    .nav-select:focus { outline: none; border-color: var(--red); }
+    .nav-select option { background: #111; color: #ddd; }
+    @media (max-width: 700px) {
+      .nav-tools { gap: 4px; margin-right: 6px; }
+      .nav-select { font-size: .5rem; padding: 5px 16px 5px 6px; letter-spacing: .08em; }
+    }
+    @media (max-width: 380px) {
+      #lang-select { display: none; }
+    }
+
+    /* ── SAVINGS CALCULATOR ── */
+    #savings {
+      background: linear-gradient(180deg, var(--card) 0%, var(--dark) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 70px 24px;
+    }
+    .sv-wrap { max-width: 900px; margin: 0 auto; text-align: center; }
+    .sv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      margin-top: 36px;
+    }
+    @media (max-width: 700px) { .sv-grid { grid-template-columns: 1fr; } }
+    .sv-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      padding: 28px 20px;
+      position: relative;
+    }
+    .sv-box.sv-highlight {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(245,197,24,.05), var(--card2));
+      box-shadow: 0 0 30px rgba(245,197,24,.08);
+    }
+    .sv-lbl {
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .25em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .sv-val {
+      font-family: 'Cinzel', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .sv-val .small { font-size: 1rem; color: var(--muted); }
+    .sv-box.sv-highlight .sv-val { color: var(--gold); }
+    .sv-pct {
+      font-family: 'Orbitron', monospace;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      color: #00c850;
+      margin-top: 8px;
+      font-weight: 700;
+    }
+    .sv-controls {
+      display: flex; gap: 10px; align-items: center; justify-content: center;
+      flex-wrap: wrap;
+      margin: 24px 0 8px;
+    }
+    .sv-controls label {
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+    }
+    .sv-controls select {
+      background: var(--card);
+      border: 1px solid var(--red);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      padding: 8px 14px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 30px;
+      background-image: linear-gradient(45deg, transparent 50%, var(--red-l) 50%), linear-gradient(135deg, var(--red-l) 50%, transparent 50%);
+      background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+    }
+    .sv-controls select option { background: #111; }
+
+    /* ── CALENDAR ── */
+    #calendar { background: var(--dark); }
+    .cal-month {
+      max-width: 720px; margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 22px;
+      position: relative;
+    }
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .cal-arrow {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--red-l);
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      transition: background .2s, border-color .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .cal-arrow:hover:not(:disabled) {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+      box-shadow: 0 0 18px var(--red-glow);
+    }
+    .cal-arrow:disabled {
+      opacity: .25;
+      cursor: not-allowed;
+    }
+    .cal-month-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--red-l);
+      flex: 1;
+    }
+    .cal-pager {
+      display: flex; gap: 6px;
+      justify-content: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .cal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .2s;
+      padding: 0;
+    }
+    .cal-dot.active {
+      background: var(--red);
+      border-color: var(--red);
+      transform: scale(1.3);
+    }
+    .cal-dot:hover { border-color: var(--red-l); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-dow {
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      text-align: center;
+      padding: 6px 0;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,.04);
+      background: rgba(0,0,0,.2);
+      font-size: .82rem;
+      color: #555;
+      position: relative;
+      transition: border-color .2s, background .2s;
+    }
+    .cal-day.in-month { color: var(--text); }
+    .cal-day.today { border-color: var(--red); color: var(--red-l); font-weight: 700; }
+    .cal-day.has-event {
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(255,45,138,.15), rgba(255,45,138,.06));
+      border-color: var(--red);
+    }
+    .cal-day.has-event:hover {
+      background: rgba(255,45,138,.25);
+      transform: scale(1.05);
+      z-index: 3;
+    }
+    .cal-day .cal-icon {
+      font-size: .85rem;
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .cal-day .cal-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: #0a0a0a;
+      border: 1px solid var(--red);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: .1em;
+      padding: 6px 10px;
+      white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+      z-index: 10;
+    }
+    .cal-day.has-event:hover .cal-tooltip { opacity: 1; }
+    .cal-day.finished {
+      opacity: .35;
+      background: rgba(255,255,255,.02);
+      border-color: rgba(255,255,255,.04);
+    }
+    .cal-day.finished.has-event {
+      background: rgba(80,80,80,.1);
+      border-color: rgba(120,120,120,.2);
+    }
+
+    /* ── REFERRAL ── */
+    #referral {
+      background: linear-gradient(135deg, #0c0010 0%, #15001a 50%, #0c0010 100%);
+      border-top: 1px solid rgba(245,197,24,.18);
+      border-bottom: 1px solid rgba(245,197,24,.18);
+      padding: 80px 24px;
+      position: relative; overflow: hidden;
+    }
+    #referral::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(-45deg, rgba(245,197,24,.02) 0, rgba(245,197,24,.02) 1px, transparent 1px, transparent 14px);
+    }
+    .ref-wrap { max-width: 760px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .ref-card {
+      background: rgba(0,0,0,.45);
+      border: 1px dashed rgba(245,197,24,.4);
+      padding: 36px 28px;
+      margin-top: 28px;
+    }
+    .ref-code {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: .25em;
+      color: var(--gold);
+      background: rgba(245,197,24,.06);
+      border: 1px solid var(--gold);
+      padding: 14px 28px;
+      display: inline-block;
+      margin: 14px 0;
+      cursor: pointer;
+      user-select: all;
+      transition: background .2s;
+    }
+    .ref-code:hover { background: rgba(245,197,24,.14); }
+    .ref-copied {
+      font-family: 'Orbitron', monospace;
+      font-size: .6rem;
+      letter-spacing: .15em;
+      color: #00c850;
+      margin-top: 6px;
+      opacity: 0;
+      transition: opacity .25s;
+      text-transform: uppercase;
+    }
+    .ref-copied.show { opacity: 1; }
+    .ref-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 26px;
+    }
+    @media (max-width: 700px) { .ref-steps { grid-template-columns: 1fr; } }
+    .ref-step {
+      background: rgba(0,0,0,.3);
+      border: 1px solid rgba(245,197,24,.12);
+      padding: 16px;
+      font-size: .85rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+    }
+    .ref-step b { color: var(--gold); display: block; font-family: 'Orbitron', monospace; font-size: .7rem; letter-spacing: .15em; margin-bottom: 6px; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">Y<span>Pass</span></div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#events" data-i18n="navEvents">Eventos</a></li>
+    <li><a href="#calendar" data-i18n="navCalendar">Calendario</a></li>
+    <li><a href="#referral" data-i18n="navReferral">Referidos</a></li>
+    <li><a href="#how" data-i18n="navHow">Cómo funciona</a></li>
+    <li><a href="#contact" data-i18n="navContact">Contacto</a></li>
+    <li class="nav-mobile-cta"><a href="#events" data-i18n="navCta">Ver Boletos</a></li>
+  </ul>
+  <div class="nav-tools">
+    <select class="nav-select" id="fx-select" aria-label="Moneda">
+      <option value="USD">$ USD</option>
+      <option value="MXN">$ MXN</option>
+      <option value="EUR">€ EUR</option>
+      <option value="CLP">$ CLP</option>
+      <option value="COP">$ COP</option>
+    </select>
+    <select class="nav-select" id="lang-select" aria-label="Language">
+      <option value="es">🇪🇸 ES</option>
+      <option value="en">🇬🇧 EN</option>
+    </select>
+  </div>
+  <a href="/login" class="nav-login">🔐 Mi Stream</a>
+  <a href="#events" class="nav-cta" data-i18n="navCta">Ver Boletos</a>
+  <button class="nav-burger" id="nav-burger" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- GLOBAL COUNTDOWN BANNER -->
+<div id="global-banner" role="status" aria-live="polite">
+  <div class="gb-pulse"></div>
+  <span class="gb-label" data-i18n="gbLabel">Próximo evento</span>
+  <span class="gb-event" id="gb-event">—</span>
+  <span class="gb-timer" id="gb-timer">
+    <b id="gb-d">00</b><span data-i18n="gbD">d</span>
+    <b id="gb-h">00</b><span data-i18n="gbH">h</span>
+    <b id="gb-m">00</b><span data-i18n="gbM">m</span>
+    <b id="gb-s">00</b><span data-i18n="gbS">s</span>
+  </span>
+  <a id="gb-cta" class="gb-cta" href="#events" data-i18n="gbCta">Ver detalles</a>
+  <button class="gb-close" onclick="closeBanner()" aria-label="Cerrar">✕</button>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow" data-i18n="heroEyebrow">Tus eventos a los mejores precios</div>
+    <h1 class="hero-title">
+      Y
+      <span>Pass</span>
+    </h1>
+    <p class="hero-sub" data-i18n="heroSub">Tu pase al BL &amp; GL Tailándes</p>
+    <div class="hero-divider"></div>
+    <p class="hero-desc" data-i18n="heroDesc">
+      Consigue tus boletos para los eventos más exclusivos.<br>
+      <b>Conciertos · Fancons · Shows en vivo</b> — todo en un solo lugar.
+    </p>
+    <div class="hero-btns">
+      <a href="#events" class="btn btn-primary" data-i18n="heroBtnPrimary">Ver Eventos Disponibles</a>
+      <a href="#how" class="btn btn-outline" data-i18n="heroBtnOutline">¿Cómo Funciona?</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-num">5+</div>
+      <div class="stat-label" data-i18n="statActive">Eventos Activos</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label" data-i18n="statGuarantee">Boletos Garantizados</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24h</div>
+      <div class="stat-label" data-i18n="statSupport">Soporte Disponible</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">★ 5</div>
+      <div class="stat-label" data-i18n="statRating">Calificación de Servicio</div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENTS SECTION -->
+<section id="events">
+  <div class="wrapper">
+    <p class="section-tag" data-i18n="evTag">Disponibles Ahora</p>
+    <h2 class="section-title" data-i18n="evTitle">Eventos Actuales</h2>
+    <p class="section-sub" data-i18n="evSub">Selecciona el evento de tu interés para ver disponibilidad y precios</p>
+
+    <div class="events-grid">
+
+      <!-- PERTH SANTA CONCERT CARD -->
+      <a href="/perthsanta" class="event-card" data-event-id="perth2">
+        <div class="card-status-badge status-available">Nuevo</div>
+        <div class="card-image-placeholder" style="background:linear-gradient(135deg,rgba(26,10,16,.6),rgba(12,8,20,.5)),url('/perthsanta/fondo.jpg') center/cover no-repeat;"></div>
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#e8738a;color:#e8738a;">Concierto Online · 2 Días</div>
+          <h3 class="card-title">Perth Santa<br>Devil's Kiss Concert</h3>
+          <p class="card-subtitle" style="color:#5ec6d4;">🎵 Paragon Hall · 2026</p>
+          <p class="card-desc">
+            El concierto más esperado de Perth y Santa en Paragon Hall, Bangkok. 2 noches inolvidables — disponible en streaming privado.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Sáb 18 · Dom 19 · Jul · 2026</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Horario por confirmar</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>Evento 100% Online</span>
+            </div>
+          </div>
+          <span class="card-cta">Ver Boletos →</span>
+        </div>
+      </a>
+
+      <!-- SOTUS CARD -->
+      <a href="/sotus" class="event-card" data-event-id="sotus">
+        <div class="card-status-badge status-available">Nuevo</div>
+        <div class="card-image-placeholder" style="background:linear-gradient(135deg,#0a0a0f,#1a1012);color:#FF5252;">SOTUS</div>
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#E53935;color:#FF5252;">Concierto Online · 10 Años</div>
+          <h3 class="card-title">SOTUS The Series<br>10 Years Concert</h3>
+          <p class="card-subtitle" style="color:#FF5252;">🎤 10 Years Concert · 2026</p>
+          <p class="card-desc">
+            Celebra 10 años de SOTUS The Series con un concierto especial. Krist, Singto y el elenco reunidos — streaming privado.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Sáb 29 · Ago · 2026</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Horario por confirmar · Bangkok (UTC+7)</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>Evento 100% Online</span>
+            </div>
+          </div>
+          <span class="card-cta">Ver Boletos →</span>
+        </div>
+      </a>
+
+      <!-- STARLYMPIC CARD -->
+      <a href="/starlympic" class="event-card" data-event-id="starlympic">
+        <div class="card-status-badge status-available">Nuevo</div>
+        <div class="card-image-placeholder" style="background:linear-gradient(135deg,#0a0c0f,#111820);color:#FFD700;">STARLYMPIC</div>
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#FFD700;color:#FFD700;">Sport Day Online · GMMTV</div>
+          <h3 class="card-title">Starlympic<br>2026</h3>
+          <p class="card-subtitle" style="color:#FFD700;">🏆 GMMTV Sport Day · 2026</p>
+          <p class="card-desc">
+            El evento deportivo más esperado de GMMTV. Tus artistas favoritos compitiendo en fútbol, básquetbol, bádminton y relevos — streaming privado.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Sáb 28 · Nov · 2026</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>2:00 PM Bangkok (UTC+7) · Horario x confirmar</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>Evento 100% Online</span>
+            </div>
+          </div>
+          <span class="card-cta">Ver Boletos →</span>
+        </div>
+      </a>
+
+      <!-- POOH PAVEL CARD -->
+      <a href="/poohpavel" class="event-card" data-event-id="poohpavel">
+        <div class="card-status-badge status-available">Nuevo</div>
+        <div class="card-image-placeholder" style="background:linear-gradient(135deg,rgba(26,10,20,.6),rgba(15,7,16,.5)),url('/poohpavel/fondo.png') center/cover no-repeat;"></div>
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#FF6B9D;color:#FF8FB7;">Fancon Online · 1 Día</div>
+          <h3 class="card-title">Pooh Pavel<br>Second Date Fancon</h3>
+          <p class="card-subtitle" style="color:#FF8FB7;">💖 Second Date · 2026</p>
+          <p class="card-desc">
+            Pooh y Pavel regresan con su segundo fancon. Una experiencia romántica e íntima — streaming privado con grabación incluida.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Dom 07 · Jun · 2026</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Horario por confirmar · Bangkok (UTC+7)</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>Evento 100% Online</span>
+            </div>
+          </div>
+          <span class="card-cta">Ver Boletos →</span>
+        </div>
+      </a>
+
+      <!-- BLUSH BLOSSOM CARD -->
+      <a href="/blushblossom" class="event-card" data-event-id="blush2">
+        <div class="card-status-badge status-available">Nuevo</div>
+        <div class="card-image-placeholder" style="background:linear-gradient(135deg,rgba(26,10,24,.6),rgba(12,8,32,.5)),url('/blushblossom/fondo.avif') center/cover no-repeat;"></div>
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#ff9edb;color:#ff9edb;">Fan Fest Online · 2 Días</div>
+          <h3 class="card-title">Blush Blossom<br>Fan Fest 2026</h3>
+          <p class="card-subtitle" style="color:#ff4fbd;">🌸 Midnight Bloom · 2026</p>
+          <p class="card-desc">
+            7 parejas GMMTV juntas en un fan fest único. 2 noches de actuaciones, juegos y momentos íntimos — streaming privado.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Sáb 13 · Dom 14 · Jun · 2026</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>5:00 PM Bangkok (UTC+7)</span>
+            </div>
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>Evento 100% Online</span>
+            </div>
+          </div>
+          <span class="card-cta">Ver Boletos →</span>
+        </div>
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FINISHED EVENTS -->
+<section id="finished" style="padding-top:40px;">
+  <div class="wrapper">
+    <p class="section-tag" data-i18n="fnTag">Historial</p>
+    <h2 class="section-title" data-i18n="fnTitle">Eventos Finalizados</h2>
+    <p class="section-sub" data-i18n="fnSub">Estos eventos ya concluyeron. ¡Gracias a todos los que participaron!</p>
+
+    <div class="events-grid">
+
+      <!-- OLYMPOP 2 CARD (FINALIZADO) -->
+      <a class="event-card" data-event-id="olympop" style="opacity:.65;pointer-events:none;cursor:default;">
+        <div class="card-status-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">Finalizado</div>
+        <img class="card-image" src="olympop/olympop.jpg" alt="OLYMPOP 2 Sport Day 2026" style="object-position:center top">
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#555;color:#999;">Fan Con Online · GMMTV · Sport Day</div>
+          <h3 class="card-title">OLYMPOP 2<br>Sport Day</h3>
+          <p class="card-subtitle">🏅 2026 · Sport Day</p>
+          <p class="card-desc">El gran Sport Day de OLYMPOP 2. Competencias, shows en vivo y mucha energía.</p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Sáb 09 · May · 2026 · Finalizado</span>
+            </div>
+          </div>
+          <span class="card-cta" style="border-color:#555;color:#888;cursor:default;">Evento Finalizado</span>
+        </div>
+      </a>
+
+      <!-- LOVE OUT LOUD CARD (FINALIZADO) -->
+      <a class="event-card" data-event-id="lol3" style="opacity:.65;pointer-events:none;cursor:default;">
+        <div class="card-status-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">Finalizado</div>
+        <img class="card-image" src="loveoutloud/LOL.png" alt="Love Out Loud 2026 – Heart Race">
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#555;color:#999;">Concierto Online · 3 Días</div>
+          <h3 class="card-title">Love Out Loud<br>Heart Race</h3>
+          <p class="card-subtitle">❤ 2026 · Heart Race ❤</p>
+          <p class="card-desc">3 noches de pura adrenalina y emoción. Streaming privado exclusivo.</p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>22 · 23 · 24 Mayo 2026 · Finalizado</span>
+            </div>
+          </div>
+          <span class="card-cta" style="border-color:#555;color:#888;cursor:default;">Evento Finalizado</span>
+        </div>
+      </a>
+
+      <!-- JOONG DUNK CARD -->
+      <a class="event-card" data-event-id="joongdunk" style="opacity:.65;pointer-events:none;cursor:default;">
+        <div class="card-status-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">Finalizado</div>
+        <img class="card-image" src="joongdunk/dunk.png" alt="Joong Dunk: Eyes On You Fancon 2026">
+        <div class="card-body">
+          <div class="card-badge">Fancon Online · GMMTV</div>
+          <h3 class="card-title">Joong Dunk<br>Eyes On You</h3>
+          <p class="card-subtitle">Eyes On You World Fancon 2026</p>
+          <p class="card-desc">
+            El primer fancon mundial del dúo más querido de GMMTV.
+            2 días de actuaciones en vivo, fan meetings y momentos únicos.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>05 – 06 Abril 2026 · Finalizado</span>
+            </div>
+          </div>
+          <span class="card-cta" style="border-color:#555;color:#888;cursor:default;">Evento Finalizado</span>
+        </div>
+      </a>
+
+      <!-- SEA KEEN CARD -->
+      <a class="event-card" data-event-id="seakeen" style="opacity:.65;pointer-events:none;cursor:default;">
+        <div class="card-status-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">Finalizado</div>
+        <img class="card-image" src="seakeen/seakeen.jpg" alt="Sea Keen 1st Fan Meeting in Thailand 2026" style="object-position:center top">
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#555;color:#999;">Fan Meeting Online · Thailand</div>
+          <h3 class="card-title">Sea Keen<br>1st Fan Meeting</h3>
+          <p class="card-subtitle" style="color:#888;">🌊 In Thailand · 2026</p>
+          <p class="card-desc">
+            El primer fan meeting de Sea Keen directamente desde Bangkok. Una noche íntima y especial para todos los fans.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Dom 26 · Abr · 2026 · Finalizado</span>
+            </div>
+          </div>
+          <span class="card-cta" style="border-color:#555;color:#888;cursor:default;">Evento Finalizado</span>
+        </div>
+      </a>
+
+      <!-- DMD LAND 3 CARD (FINISHED) -->
+      <a class="event-card" data-event-id="dmd2" style="opacity:.65;pointer-events:none;cursor:default;">
+        <div class="card-status-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">Finalizado</div>
+        <img class="card-image" src="dmdland3/dmdland3.jpg" alt="DMD LAND 3 : The Final Land">
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#555;color:#999;">Concierto Online · Land of Fusion</div>
+          <h3 class="card-title" style="color:#bbb;">DMD LAND 3<br>The Final Land</h3>
+          <p class="card-subtitle" style="color:#999;">⚡ Land of Fusion · 2026</p>
+          <p class="card-desc">
+            El tercer y último DMD Land. 2 días épicos desde IMPACT Arena — transmitidos en streaming privado.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>02 – 03 Mayo 2026 · Finalizado</span>
+            </div>
+          </div>
+          <span class="card-cta" style="border-color:#555;color:#888;cursor:default;">Evento Finalizado</span>
+        </div>
+      </a>
+
+      <!-- SURF JAVA CARD -->
+      <a class="event-card" data-event-id="surfjava" style="opacity:.65;pointer-events:none;cursor:default;">
+        <div class="card-status-badge" style="background:rgba(100,100,100,.15);border:1px solid #555;color:#888;">Finalizado</div>
+        <img class="card-image" src="surfjava/surf.jpg" alt="Surf Java 1st Fan Meeting in Thailand 2026">
+        <div class="card-body">
+          <div class="card-badge" style="border-color:#555;color:#999;">Fan Meeting Online · GMMTV</div>
+          <h3 class="card-title">Surf Java<br>1st Fan Meeting</h3>
+          <p class="card-subtitle" style="color:#888;">🌿 In Thailand · 2026</p>
+          <p class="card-desc">
+            El primer fan meeting de Surf Java en Tailandia. Una noche especial llena de magia y cercanía.
+          </p>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Sáb 25 · Abr · 2026 · Finalizado</span>
+            </div>
+          </div>
+          <span class="card-cta" style="border-color:#555;color:#888;cursor:default;">Evento Finalizado</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- SAVINGS CALCULATOR -->
+<section id="savings">
+  <div class="sv-wrap">
+    <p class="section-tag" data-i18n="svTag">Ahorra de verdad</p>
+    <h2 class="section-title" data-i18n="svTitle">Cuánto Ahorras</h2>
+    <p class="section-sub" data-i18n="svSub">Compara nuestro precio vs. el boleto oficial promedio ($35 USD por día)</p>
+
+    <div class="sv-controls">
+      <label data-i18n="svPick">Selecciona evento:</label>
+      <select id="sv-event"></select>
+    </div>
+
+    <div class="sv-grid">
+      <div class="sv-box">
+        <div class="sv-lbl" data-i18n="svOfficial">Precio Oficial</div>
+        <div class="sv-val" id="sv-official">$35<span class="small"> USD</span></div>
+      </div>
+      <div class="sv-box sv-highlight">
+        <div class="sv-lbl" data-i18n="svOurs">Nuestro Precio</div>
+        <div class="sv-val" id="sv-ours">$2.50<span class="small"> USD</span></div>
+      </div>
+      <div class="sv-box">
+        <div class="sv-lbl" data-i18n="svSave">Ahorras</div>
+        <div class="sv-val" id="sv-saved" style="color:#00c850;">$32.50<span class="small"> USD</span></div>
+        <div class="sv-pct" id="sv-pct">✓ 92% OFF</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrapper">
+    <p class="section-tag" data-i18n="hwTag">Proceso Simple</p>
+    <h2 class="section-title" data-i18n="hwTitle">¿Cómo Funciona?</h2>
+    <p class="section-sub" data-i18n="hwSub">Consigue tus boletos en 4 pasos sencillos</p>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="step-title" data-i18n="hw1Title">Elige tu Evento</div>
+        <p class="step-desc" data-i18n="hw1Desc">Explora los eventos online disponibles y selecciona el que te interesa.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="step-title" data-i18n="hw2Title">Escríbenos por Telegram</div>
+        <p class="step-desc" data-i18n="hw2Desc">Contáctanos en <b>@panchoenlared</b> y dinos qué evento te interesa.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="step-title" data-i18n="hw3Title">Coordina tu Pago</div>
+        <p class="step-desc" data-i18n="hw3Desc">Acordamos el método de pago más conveniente para ti directamente por Telegram.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.38 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.06 6.06l.9-.9a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="step-title" data-i18n="hw4Title">Recibe tu Acceso</div>
+        <p class="step-desc" data-i18n="hw4Desc">Te enviamos el enlace de acceso al evento online directamente por Telegram.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST / WHY US -->
+<section id="trust">
+  <div class="wrapper">
+    <p class="section-tag" data-i18n="trTag">Por Qué Elegirnos</p>
+    <h2 class="section-title" data-i18n="trTitle">Tu Confianza, Nuestra Prioridad</h2>
+    <p class="section-sub" data-i18n="trSub">Conectamos fans con sus eventos online favoritos, sin complicaciones</p>
+
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="trust-title" data-i18n="tr1Title">Acceso Garantizado</div>
+        <p class="trust-desc" data-i18n="tr1Desc">Recibes tu enlace antes del evento. Si no puedes conectarte en vivo, tienes acceso a la grabación completa.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="trust-title" data-i18n="tr2Title">Proceso Transparente</div>
+        <p class="trust-desc" data-i18n="tr2Desc">Sin costos ocultos. El precio que ves es el precio que pagas, sin sorpresas.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="trust-title" data-i18n="tr3Title">Atención Personalizada</div>
+        <p class="trust-desc" data-i18n="tr3Desc">Te acompañamos durante todo el proceso, desde la compra hasta el día del evento.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="trust-title" data-i18n="tr4Title">Respuesta Rápida</div>
+        <p class="trust-desc" data-i18n="tr4Desc">Respondemos tus dudas en minutos. Tu tiempo es valioso para nosotros.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDAR -->
+<section id="calendar">
+  <div class="wrapper">
+    <p class="section-tag" data-i18n="calTag">Agenda Completa</p>
+    <h2 class="section-title" data-i18n="calTitle">Calendario de Eventos</h2>
+    <p class="section-sub" data-i18n="calSub">Todos los eventos del año en un solo vistazo</p>
+    <div id="cal-container"></div>
+  </div>
+</section>
+
+<!-- REFERRAL -->
+<section id="referral">
+  <div class="ref-wrap">
+    <p class="section-tag" data-i18n="refTag">Trae a un amigo</p>
+    <h2 class="section-title" data-i18n="refTitle">Sistema de Referidos</h2>
+    <p class="section-sub" data-i18n="refSub">Comparte tu código y obtén <b style="color:var(--gold);">$0.50 USD de descuento</b> en tu próximo evento por cada amigo que compre</p>
+
+    <div class="ref-card">
+      <p style="font-size:.7rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;" data-i18n="refYourCode">Tu código único</p>
+      <div class="ref-code" id="ref-code" onclick="copyRefCode()">PE-XXXXXX</div>
+      <div class="ref-copied" id="ref-copied" data-i18n="refCopied">✓ Copiado al portapapeles</div>
+      <p style="font-size:.85rem;color:#888;letter-spacing:.04em;margin-top:14px;" data-i18n="refShare">Compártelo con tus amigos al reservar por Telegram</p>
+
+      <div class="ref-steps">
+        <div class="ref-step"><b data-i18n="refStep1Title">1 · Comparte</b><span data-i18n="refStep1">Envía tu código a tus amigos antes de que reserven</span></div>
+        <div class="ref-step"><b data-i18n="refStep2Title">2 · Compran</b><span data-i18n="refStep2">Tu amigo lo menciona al pagar por Telegram</span></div>
+        <div class="ref-step"><b data-i18n="refStep3Title">3 · Ahorras</b><span data-i18n="refStep3">Recibes $0.50 USD de descuento en tu próxima compra</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section id="cta-section">
+  <h2 class="cta-title" data-i18n="ctaTitle">¿Listo para vivir la experiencia?</h2>
+  <p class="cta-sub" data-i18n="ctaSub">No te quedes sin tu boleto — los lugares son limitados.</p>
+  <div class="hero-btns">
+    <a href="#events" class="btn btn-primary" data-i18n="heroBtnPrimary">Ver Eventos Disponibles</a>
+    <a href="https://t.me/panchoenlared" target="_blank" rel="noopener" class="btn btn-outline">Telegram: @panchoenlared</a>
+  </div>
+</section>
+
+<!-- CONTACT / FOOTER -->
+<footer id="contact">
+  <div class="footer-logo">Y<span>Pass</span></div>
+  <p class="footer-text" data-i18n="footerText">
+    Todos los eventos son <b style="color:#e4e4e4;">100% en línea</b>. Escríbenos por Telegram para disponibilidad, precios y proceso de pago.<br>
+    <a href="https://t.me/panchoenlared" target="_blank" rel="noopener"
+       style="color:var(--red-l);letter-spacing:.1em;font-family:'Orbitron',monospace;font-size:.8rem;text-decoration:none;">
+      ✈ @panchoenlared
+    </a>
+  </p>
+  <div class="footer-divider"></div>
+  <p class="footer-disclaimer" data-i18n="footerDisclaimer">
+    YPass es un servicio de reventa de boletos. Los precios pueden variar respecto al precio original del evento.
+    No estamos afiliados con las productoras ni organizadores oficiales de los eventos listados.
+    Todos los nombres de eventos y artistas son propiedad de sus respectivos dueños.
+  </p>
+</footer>
+
+<script>
+  /* ── Particle canvas ── */
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.r = Math.random() * 1.2 + 0.2;
+      this.speed = Math.random() * 0.3 + 0.05;
+      this.alpha = Math.random() * 0.35 + 0.05;
+      this.hue = Math.random() > 0.85 ? 0 : 0; // red tint
+      this.dx = (Math.random() - 0.5) * 0.2;
+    }
+    update() {
+      this.y -= this.speed;
+      this.x += this.dx;
+      if (this.y < -5) this.reset(), this.y = H + 5;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${Math.random() > 0.85 ? '200,30,30' : '200,200,200'},${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: 130 }, () => new Particle());
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  loop();
+
+  /* ── Smooth scroll for nav ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        closeBurger();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ── Hamburger menu ── */
+  const burger = document.getElementById('nav-burger');
+  const navLinks = document.getElementById('nav-links');
+
+  function closeBurger() {
+    burger.classList.remove('open');
+    navLinks.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.addEventListener('click', e => {
+    if (!burger.contains(e.target) && !navLinks.contains(e.target)) closeBurger();
+  });
+
+  /* ═══════════════════════════════════════════
+     CENTRAL EVENTS DATA (countdown, calendar, savings)
+  ═══════════════════════════════════════════ */
+  const EVENTS_DATA = [
+    { id:'olympop', name:{es:'Olympop 2', en:'Olympop 2'}, icon:'🏅', color:'#888',
+      days:['2026-05-09'], start:new Date('2026-05-09T13:00:00+07:00'), price:2.00, url:'/olympop', finished:true,
+      status:{es:'Finalizado', en:'Finished'},
+      badge:{es:'Fan Con Online · GMMTV · Sport Day', en:'Online Fan Con · GMMTV · Sport Day'},
+      subtitle:{es:'🏅 2026 · Sport Day', en:'🏅 2026 · Sport Day'},
+      desc:{es:'El gran Sport Day de OLYMPOP 2. Competencias, shows en vivo y mucha energía — disponible en streaming privado desde cualquier país.',
+            en:'OLYMPOP 2\'s big Sport Day. Competitions, live shows and pure energy — available via private streaming from any country.'},
+      metaRows:[
+        {es:'Sáb 09 · May · 2026', en:'Sat 09 · May · 2026'},
+        {es:'1:00 PM Bangkok (UTC+7)', en:'1:00 PM Bangkok (UTC+7)'},
+      ] },
+    { id:'lol3', name:{es:'Love Out Loud', en:'Love Out Loud'}, icon:'❤', color:'#888',
+      days:['2026-05-22','2026-05-23','2026-05-24'], start:new Date('2026-05-24T17:00:00+07:00'), price:4.00, dayPrice:2.00, url:'/loveoutloud', finished:true,
+      status:{es:'Finalizado', en:'Finished'},
+      badge:{es:'Concierto Online · 3 Días', en:'Online Concert · 3 Days'},
+      subtitle:{es:'❤ 2026 · Heart Race ❤', en:'❤ 2026 · Heart Race ❤'},
+      desc:{es:'3 noches de pura adrenalina y emoción. Elige 1, 2 o los 3 días de este espectáculo de alta velocidad — streaming privado exclusivo.',
+            en:'3 nights of pure adrenaline and emotion. Pick 1, 2 or all 3 days of this high-speed show — exclusive private streaming.'},
+      metaRows:[
+        {es:'22 · 23 · 24 Mayo 2026', en:'May 22 · 23 · 24, 2026'},
+        {es:'5:00 PM Bangkok (UTC+7)', en:'5:00 PM Bangkok (UTC+7)'},
+      ] },
+    { id:'poohpavel', name:{es:'Pooh Pavel', en:'Pooh Pavel'}, icon:'💖', color:'#FF6B9D',
+      days:['2026-06-07'], start:new Date('2026-06-07T15:00:00+07:00'), price:2.50, url:'/poohpavel',
+      status:{es:'Nuevo', en:'New'},
+      badge:{es:'Fancon Online · 1 Día', en:'Online Fancon · 1 Day'},
+      subtitle:{es:'💖 Second Date · 2026', en:'💖 Second Date · 2026'},
+      desc:{es:'Pooh y Pavel regresan con su segundo fancon. Una experiencia romántica e íntima — streaming privado con grabación incluida.',
+            en:'Pooh & Pavel are back with their second fancon. A romantic, intimate experience — private streaming with recording included.'},
+      metaRows:[
+        {es:'Dom 07 · Jun · 2026', en:'Sun 07 · Jun · 2026'},
+        {es:'3:00 PM Bangkok (UTC+7)', en:'3:00 PM Bangkok (UTC+7)'},
+      ] },
+    { id:'blush2', name:{es:'Blush Blossom', en:'Blush Blossom'}, icon:'🌸', color:'#ff9edb',
+      days:['2026-06-13','2026-06-14'], start:new Date('2026-06-13T17:00:00+07:00'), price:3.50, dayPrice:2.00, url:'/blushblossom',
+      status:{es:'Nuevo', en:'New'},
+      badge:{es:'Fan Fest Online · 2 Días', en:'Online Fan Fest · 2 Days'},
+      subtitle:{es:'🌸 Midnight Bloom · 2026', en:'🌸 Midnight Bloom · 2026'},
+      desc:{es:'7 parejas GMMTV juntas en un fan fest único. 2 noches de actuaciones, juegos y momentos íntimos — streaming privado.',
+            en:'7 GMMTV couples together in a one-of-a-kind fan fest. 2 nights of performances, games and intimate moments — private streaming.'},
+      metaRows:[
+        {es:'Sáb 13 · Dom 14 · Jun · 2026', en:'Sat 13 · Sun 14 · Jun · 2026'},
+        {es:'5:00 PM Bangkok (UTC+7)', en:'5:00 PM Bangkok (UTC+7)'},
+      ] },
+    { id:'perth2', name:{es:"Perth Santa Devil's Kiss Concert", en:"Perth Santa Devil's Kiss Concert"}, icon:'🎵', color:'#e8738a',
+      days:['2026-07-18','2026-07-19'], start:new Date('2026-07-18T17:00:00+07:00'), price:3.50, dayPrice:2.00, url:'/perthsanta',
+      status:{es:'Nuevo', en:'New'},
+      badge:{es:'Concierto Online · 2 Días', en:'Online Concert · 2 Days'},
+      subtitle:{es:'🎵 Paragon Hall · 2026', en:'🎵 Paragon Hall · 2026'},
+      desc:{es:'El concierto más esperado de Perth y Santa en Paragon Hall, Bangkok. 2 noches inolvidables — disponible en streaming privado.',
+            en:'The most anticipated Perth & Santa concert at Paragon Hall, Bangkok. 2 unforgettable nights — available via private streaming.'},
+      metaRows:[
+        {es:'Sáb 18 · Dom 19 · Jul · 2026', en:'Sat 18 · Sun 19 · Jul · 2026'},
+        {es:'5:00 PM Bangkok (UTC+7)', en:'5:00 PM Bangkok (UTC+7)'},
+      ] },
+    { id:'sotus', name:{es:'SOTUS 10 Years', en:'SOTUS 10 Years'}, icon:'🎓', color:'#FF5252',
+      days:['2026-08-29'], start:new Date('2026-08-29T18:00:00+07:00'), price:2.50, url:'/sotus',
+      status:{es:'Nuevo', en:'New'},
+      badge:{es:'Concierto Online · 10 Años', en:'Online Concert · 10 Years'},
+      subtitle:{es:'🎤 10 Years Concert · 2026', en:'🎤 10 Years Concert · 2026'},
+      desc:{es:'Celebra 10 años de SOTUS The Series con un concierto especial. Krist, Singto y el elenco reunidos — streaming privado.',
+            en:'Celebrate 10 years of SOTUS The Series with a special concert. Krist, Singto and the cast reunited — private streaming.'},
+      metaRows:[
+        {es:'Sáb 29 · Ago · 2026', en:'Sat 29 · Aug · 2026'},
+        {es:'Horario por confirmar · Bangkok (UTC+7)', en:'Time TBC · Bangkok (UTC+7)'},
+      ] },
+    { id:'starlympic', name:{es:'Starlympic 2026', en:'Starlympic 2026'}, icon:'🏆', color:'#FFD700',
+      days:['2026-11-28'], start:new Date('2026-11-28T14:00:00+07:00'), price:2.50, url:'/starlympic',
+      status:{es:'Nuevo', en:'New'},
+      badge:{es:'Sport Day Online · GMMTV', en:'Online Sport Day · GMMTV'},
+      subtitle:{es:'🏆 GMMTV Sport Day · 2026', en:'🏆 GMMTV Sport Day · 2026'},
+      desc:{es:'El evento deportivo más esperado de GMMTV. Tus artistas favoritos compitiendo en fútbol, básquetbol, bádminton y relevos — streaming privado.',
+            en:'GMMTV\'s most anticipated sports event. Your favorite artists competing in football, basketball, badminton and relays — private streaming.'},
+      metaRows:[
+        {es:'Sáb 28 · Nov · 2026', en:'Sat 28 · Nov · 2026'},
+        {es:'2:00 PM Bangkok (UTC+7) · Horario x confirmar', en:'2:00 PM Bangkok (UTC+7) · Time TBC'},
+      ] },
+    { id:'joongdunk', name:{es:'Joong Dunk', en:'Joong Dunk'}, icon:'🎤', color:'#888',
+      days:['2026-04-05','2026-04-06'], start:new Date('2026-04-05T17:00:00+07:00'), price:3.00, url:'/joongdunk', finished:true,
+      status:{es:'Finalizado', en:'Finished'},
+      badge:{es:'Fancon Online · GMMTV', en:'Online Fancon · GMMTV'},
+      subtitle:{es:'Eyes On You World Fancon 2026', en:'Eyes On You World Fancon 2026'},
+      desc:{es:'El primer fancon mundial del dúo más querido de GMMTV. 2 días de actuaciones en vivo, fan meetings y momentos únicos.',
+            en:'The first worldwide fancon of GMMTV\'s beloved duo. 2 days of live performances, fan meetings and unique moments.'},
+      metaRows:[ {es:'05 – 06 Abril 2026 · Finalizado', en:'05 – 06 April 2026 · Finished'} ] },
+    { id:'surfjava', name:{es:'Surf Java', en:'Surf Java'}, icon:'🌿', color:'#888',
+      days:['2026-04-25'], start:new Date('2026-04-25T17:00:00+07:00'), price:2.00, url:'/surfjava', finished:true,
+      status:{es:'Finalizado', en:'Finished'},
+      badge:{es:'Fan Meeting Online · GMMTV', en:'Online Fan Meeting · GMMTV'},
+      subtitle:{es:'🌿 In Thailand · 2026', en:'🌿 In Thailand · 2026'},
+      desc:{es:'El primer fan meeting de Surf Java en Tailandia. Una noche especial llena de magia y cercanía.',
+            en:'Surf & Java\'s first fan meeting in Thailand. A special night full of magic and closeness.'},
+      metaRows:[ {es:'Sáb 25 · Abr · 2026 · Finalizado', en:'Sat 25 · Apr · 2026 · Finished'} ] },
+    { id:'seakeen', name:{es:'Sea Keen', en:'Sea Keen'}, icon:'🌊', color:'#888',
+      days:['2026-04-26'], start:new Date('2026-04-26T17:00:00+07:00'), price:2.00, url:'/seakeen', finished:true,
+      status:{es:'Finalizado', en:'Finished'},
+      badge:{es:'Fan Meeting Online · Thailand', en:'Online Fan Meeting · Thailand'},
+      subtitle:{es:'🌊 In Thailand · 2026', en:'🌊 In Thailand · 2026'},
+      desc:{es:'El primer fan meeting de Sea Keen directamente desde Bangkok. Una noche íntima y especial para todos los fans.',
+            en:'Sea Keen\'s first fan meeting straight from Bangkok. An intimate, special night for all fans.'},
+      metaRows:[ {es:'Dom 26 · Abr · 2026 · Finalizado', en:'Sun 26 · Apr · 2026 · Finished'} ] },
+    { id:'dmd2', name:{es:'DMD Land 3', en:'DMD Land 3'}, icon:'⚡', color:'#888',
+      days:['2026-05-02','2026-05-03'], start:new Date('2026-05-02T16:00:00+07:00'), price:3.00, url:'/dmdland3', finished:true,
+      status:{es:'Finalizado', en:'Finished'},
+      badge:{es:'Concierto Online · Land of Fusion', en:'Online Concert · Land of Fusion'},
+      subtitle:{es:'⚡ Land of Fusion · 2026', en:'⚡ Land of Fusion · 2026'},
+      desc:{es:'El tercer y último DMD Land. 2 días épicos desde IMPACT Arena — transmitidos en streaming privado.',
+            en:'The third and final DMD Land. 2 epic days from IMPACT Arena — streamed privately.'},
+      metaRows:[ {es:'02 – 03 Mayo 2026 · Finalizado', en:'02 – 03 May 2026 · Finished'} ] },
+  ];
+
+  /* ═══════════════════════════════════════════
+     I18N — translations
+  ═══════════════════════════════════════════ */
+  const I18N = {
+    es: {
+      navEvents:'Eventos', navBundles:'Bundles', navCalendar:'Calendario',
+      navReferral:'Referidos', navHow:'Cómo funciona', navContact:'Contacto', navCta:'Ver Boletos',
+      gbLabel:'Próximo evento', gbCta:'Ver detalles',
+      gbD:'d', gbH:'h', gbM:'m', gbS:'s',
+      heroEyebrow:'Tus eventos a los mejores precios',
+      heroSub:'Tu pase al BL & GL Tailándes',
+      heroDesc:'Consigue tus boletos para los eventos más exclusivos.<br><b>Conciertos · Fancons · Shows en vivo</b> — todo en un solo lugar.',
+      heroBtnPrimary:'Ver Eventos Disponibles', heroBtnOutline:'¿Cómo Funciona?',
+      statActive:'Eventos Activos', statGuarantee:'Boletos Garantizados',
+      statSupport:'Soporte Disponible', statRating:'Calificación de Servicio',
+      evTag:'Disponibles Ahora', evTitle:'Eventos Actuales',
+      evSub:'Selecciona el evento de tu interés para ver disponibilidad y precios',
+      bnTag:'Combina & Ahorra', bnTitle:'Packs & Bundles',
+      bnSub:'Elige el pack que más te convenga y obtén el mejor precio',
+      fnTag:'Historial', fnTitle:'Eventos Finalizados',
+      fnSub:'Estos eventos ya concluyeron. ¡Gracias a todos los que participaron!',
+      hwTag:'Proceso Simple', hwTitle:'¿Cómo Funciona?', hwSub:'Consigue tus boletos en 4 pasos sencillos',
+      hw1Title:'Elige tu Evento', hw1Desc:'Explora los eventos online disponibles y selecciona el que te interesa.',
+      hw2Title:'Escríbenos por Telegram', hw2Desc:'Contáctanos en <b>@panchoenlared</b> y dinos qué evento te interesa.',
+      hw3Title:'Coordina tu Pago', hw3Desc:'Acordamos el método de pago más conveniente para ti directamente por Telegram.',
+      hw4Title:'Recibe tu Acceso', hw4Desc:'Te enviamos el enlace de acceso al evento online directamente por Telegram.',
+      trTag:'Por Qué Elegirnos', trTitle:'Tu Confianza, Nuestra Prioridad',
+      trSub:'Conectamos fans con sus eventos online favoritos, sin complicaciones',
+      tr1Title:'Acceso Garantizado', tr1Desc:'Recibes tu enlace antes del evento. Si no puedes conectarte en vivo, tienes acceso a la grabación completa.',
+      tr2Title:'Proceso Transparente', tr2Desc:'Sin costos ocultos. El precio que ves es el precio que pagas, sin sorpresas.',
+      tr3Title:'Atención Personalizada', tr3Desc:'Te acompañamos durante todo el proceso, desde la compra hasta el día del evento.',
+      tr4Title:'Respuesta Rápida', tr4Desc:'Respondemos tus dudas en minutos. Tu tiempo es valioso para nosotros.',
+      ctaTitle:'¿Listo para vivir la experiencia?', ctaSub:'No te quedes sin tu boleto — los lugares son limitados.',
+      footerText:'Todos los eventos son <b style="color:#e4e4e4;">100% en línea</b>. Escríbenos por Telegram para disponibilidad, precios y proceso de pago.<br><a href="https://t.me/panchoenlared" target="_blank" rel="noopener" style="color:var(--red-l);letter-spacing:.1em;font-family:\'Orbitron\',monospace;font-size:.8rem;text-decoration:none;">✈ @panchoenlared</a>',
+      footerDisclaimer:'YPass es un servicio de reventa de boletos. Los precios pueden variar respecto al precio original del evento. No estamos afiliados con las productoras ni organizadores oficiales de los eventos listados. Todos los nombres de eventos y artistas son propiedad de sus respectivos dueños.',
+      svTag:'Ahorra de verdad', svTitle:'Cuánto Ahorras',
+      svSub:'Compara nuestro precio vs. el boleto oficial promedio ($35 USD por día)',
+      svPick:'Selecciona evento:', svOfficial:'Precio Oficial', svOurs:'Nuestro Precio', svSave:'Ahorras',
+      calTag:'Agenda Completa', calTitle:'Calendario de Eventos',
+      calSub:'Todos los eventos del año en un solo vistazo',
+      refTag:'Trae a un amigo', refTitle:'Sistema de Referidos',
+      refSub:'Comparte tu código y obtén <b style="color:var(--gold);">$0.50 USD de descuento</b> en tu próximo evento por cada amigo que compre',
+      refYourCode:'Tu código único', refCopied:'✓ Copiado al portapapeles',
+      refShare:'Compártelo con tus amigos al reservar por Telegram',
+      refStep1Title:'1 · Comparte', refStep1:'Envía tu código a tus amigos antes de que reserven',
+      refStep2Title:'2 · Compran',  refStep2:'Tu amigo lo menciona al pagar por Telegram',
+      refStep3Title:'3 · Ahorras',  refStep3:'Recibes $0.50 USD de descuento en tu próxima compra',
+      ribbonBest:'⭐ MEJOR VALOR', ribbonPopular:'🔥 POPULAR',
+      pkBtn:'🎫 LO QUIERO', pkTotalBtn:'🎫 QUIERO EL PACK TOTAL',
+      pkTotalName:'Pack Total', pkTotalSub:'Todos los Eventos · Todos los Días',
+      pkTotalDesc:'Acceso completo a los <b style="color:#e4e4e4;">8 eventos</b> con todos sus días incluidos. Conciertos, Fan Meetings, Fancons, Fan Fests y Sport Days — la experiencia definitiva de YPass.',
+      pkMegaName:'Pack Mega', pkMegaSub:'5 Eventos Principales',
+      pkMegaDesc:'Los 5 eventos más grandes con todos sus días. El favorito de la comunidad.',
+      pkConcName:'Pack Conciertos', pkConcSub:'4 Conciertos · 7+ Días',
+      pkConcDesc:'Los 4 conciertos completos con todos sus días. Pura música y emoción.',
+      pkMayName:'Pack Mayo', pkMaySub:'Eventos de Mayo · 6 Días',
+      pkMayDesc:'Todos los eventos del mes de mayo juntos a precio especial.',
+      pkJunName:'Pack Junio', pkJunSub:'Mix Mayo-Junio · 4 Días',
+      pkJunDesc:'El cierre de mayo con Olympop + lo mejor de junio: Pooh Pavel y Blush Blossom 2 días.',
+      pkSportName:'Pack Sport Day', pkSportSub:'2 Sport Days GMMTV',
+      pkSportDesc:'Las 2 competencias deportivas de GMMTV juntas. Pura adrenalina y diversión.',
+    },
+    en: {
+      navEvents:'Events', navBundles:'Bundles', navCalendar:'Calendar',
+      navReferral:'Referrals', navHow:'How it works', navContact:'Contact', navCta:'Get Tickets',
+      gbLabel:'Next event', gbCta:'View details',
+      gbD:'d', gbH:'h', gbM:'m', gbS:'s',
+      heroEyebrow:'Your events at the best prices',
+      heroSub:'Your pass to Thai BL & GL',
+      heroDesc:'Get your tickets to the most exclusive Thai BL/GL events.<br><b>Concerts · Fancons · Live shows</b> — all in one place.',
+      heroBtnPrimary:'View Available Events', heroBtnOutline:'How does it work?',
+      statActive:'Active Events', statGuarantee:'Guaranteed Tickets',
+      statSupport:'Support Available', statRating:'Service Rating',
+      evTag:'Available Now', evTitle:'Current Events',
+      evSub:'Pick the event you want to see availability and prices',
+      bnTag:'Combine & Save', bnTitle:'Packs & Bundles',
+      bnSub:'Pick the pack that suits you best and get the best price',
+      fnTag:'Past', fnTitle:'Finished Events',
+      fnSub:'These events have already ended. Thanks to everyone who joined!',
+      hwTag:'Simple Process', hwTitle:'How Does It Work?', hwSub:'Get your tickets in 4 simple steps',
+      hw1Title:'Pick Your Event', hw1Desc:'Browse the available online events and pick the one you want.',
+      hw2Title:'Message us on Telegram', hw2Desc:'Reach us at <b>@panchoenlared</b> and tell us which event you want.',
+      hw3Title:'Set Up Payment', hw3Desc:'We agree on the most convenient payment method for you directly via Telegram.',
+      hw4Title:'Receive Access', hw4Desc:'We send you the access link to the online event directly via Telegram.',
+      trTag:'Why Choose Us', trTitle:'Your Trust, Our Priority',
+      trSub:'We connect fans with their favorite online events, hassle-free',
+      tr1Title:'Guaranteed Access', tr1Desc:'You get your link before the event. If you can\'t catch it live, you have access to the full recording.',
+      tr2Title:'Transparent Process', tr2Desc:'No hidden fees. The price you see is the price you pay — no surprises.',
+      tr3Title:'Personalized Support', tr3Desc:'We walk you through the whole process, from purchase to the event day.',
+      tr4Title:'Fast Response', tr4Desc:'We answer your questions in minutes. Your time matters to us.',
+      ctaTitle:'Ready to experience it?', ctaSub:'Don\'t miss out — spots are limited.',
+      footerText:'All events are <b style="color:#e4e4e4;">100% online</b>. Message us on Telegram for availability, pricing and payment process.<br><a href="https://t.me/panchoenlared" target="_blank" rel="noopener" style="color:var(--red-l);letter-spacing:.1em;font-family:\'Orbitron\',monospace;font-size:.8rem;text-decoration:none;">✈ @panchoenlared</a>',
+      footerDisclaimer:'YPass is a ticket reselling service. Prices may differ from the event\'s original price. We are not affiliated with the official producers or organizers of the listed events. All event and artist names are property of their respective owners.',
+      svTag:'Real savings', svTitle:'How Much You Save',
+      svSub:'Compare our price vs. the average official ticket ($35 USD per day)',
+      svPick:'Pick an event:', svOfficial:'Official Price', svOurs:'Our Price', svSave:'You Save',
+      calTag:'Full Schedule', calTitle:'Event Calendar',
+      calSub:'All events of the year at a glance',
+      refTag:'Refer a friend', refTitle:'Referral Program',
+      refSub:'Share your code and get <b style="color:var(--gold);">$0.50 USD off</b> your next event for every friend that purchases',
+      refYourCode:'Your unique code', refCopied:'✓ Copied to clipboard',
+      refShare:'Share it with your friends when they book via Telegram',
+      refStep1Title:'1 · Share',   refStep1:'Send your code to friends before they book',
+      refStep2Title:'2 · They buy', refStep2:'Your friend mentions it when paying via Telegram',
+      refStep3Title:'3 · You save', refStep3:'Get $0.50 USD off your next purchase',
+      ribbonBest:'⭐ BEST VALUE', ribbonPopular:'🔥 POPULAR',
+      pkBtn:'🎫 I WANT IT', pkTotalBtn:'🎫 I WANT THE TOTAL PACK',
+      pkTotalName:'Total Pack', pkTotalSub:'All Events · All Days',
+      pkTotalDesc:'Full access to all <b style="color:#e4e4e4;">8 events</b> with every day included. Concerts, Fan Meetings, Fancons, Fan Fests and Sport Days — the definitive YPass experience.',
+      pkMegaName:'Mega Pack', pkMegaSub:'5 Headline Events',
+      pkMegaDesc:'The 5 biggest events with all their days. Community favorite.',
+      pkConcName:'Concerts Pack', pkConcSub:'4 Concerts · 7+ Days',
+      pkConcDesc:'The 4 full concerts with every day included. Pure music and emotion.',
+      pkMayName:'May Pack', pkMaySub:'May Events · 6 Days',
+      pkMayDesc:'All May events bundled at a special price.',
+      pkJunName:'June Pack', pkJunSub:'May-June Mix · 4 Days',
+      pkJunDesc:'May closer with Olympop + the best of June: Pooh Pavel and Blush Blossom (2 days).',
+      pkSportName:'Sport Day Pack', pkSportSub:'2 GMMTV Sport Days',
+      pkSportDesc:'The 2 GMMTV sport competitions bundled. Pure adrenaline and fun.',
+    }
+  };
+
+  let currentLang = localStorage.getItem('pe_lang') || 'es';
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('pe_lang', lang);
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      const val = I18N[lang]?.[key];
+      if (val !== undefined) el.innerHTML = val;
+    });
+    renderCalendar();
+    renderSavings();
+    applyFx();
+    updateBanner();
+  }
+
+  /* ═══════════════════════════════════════════
+     CURRENCY SWITCHER
+  ═══════════════════════════════════════════ */
+  const FX_INFO = {
+    USD: { sym:'$',    round:2, locale:'en-US' },
+    MXN: { sym:'MX$',  round:0, locale:'es-MX' },
+    EUR: { sym:'€',    round:2, locale:'de-DE' },
+    CLP: { sym:'$',    round:0, locale:'es-CL' },
+    COP: { sym:'$',    round:0, locale:'es-CO' },
+  };
+  let currentFx = localStorage.getItem('pe_fx') || 'USD';
+  let fxRates = { USD:1, MXN:18.2, EUR:0.91, CLP:965, COP:4300 };
+
+  function fmtFxNumber(usd, cur) {
+    const r = fxRates[cur] || 1;
+    const v = usd * r;
+    const info = FX_INFO[cur];
+    if (info.round === 0) return Math.round(v).toLocaleString(info.locale);
+    return v.toFixed(2);
+  }
+
+  function priceHTML(usd, cur) {
+    const info = FX_INFO[cur];
+    const text = fmtFxNumber(usd, cur);
+    if (text.includes('.')) {
+      const [whole, dec] = text.split('.');
+      return `<sup>${info.sym}</sup>${whole}<sup>.${dec} ${cur}</sup>`;
+    }
+    return `<sup>${info.sym}</sup>${text}<sup> ${cur}</sup>`;
+  }
+
+  function chipsHTML(usd) {
+    const others = Object.keys(FX_INFO).filter(c => c !== currentFx).slice(0, 3);
+    return others.map(c => `<span class="b-cur">${FX_INFO[c].sym}<b>${fmtFxNumber(usd, c)} ${c}</b></span>`).join('');
+  }
+
+  function applyFx() {
+    document.querySelectorAll('[data-usd]').forEach(parent => {
+      const usd = parseFloat(parent.dataset.usd);
+      if (isNaN(usd)) return;
+      const main = parent.querySelector('.bp-new, .js-fx-main');
+      if (main) main.innerHTML = priceHTML(usd, currentFx);
+      const cur = parent.querySelector('[data-currencies]');
+      if (cur) cur.innerHTML = chipsHTML(usd);
+    });
+    injectCardPrices();
+  }
+
+  function injectCardPrices() {
+    const lblFull = currentLang === 'en' ? 'Full access' : 'Acceso completo';
+    const lblPerDay = currentLang === 'en' ? '/ day' : '/ día';
+    const lblDays = n => currentLang === 'en' ? `${n} days · all included` : `${n} días · todo incluido`;
+    const lblCta = currentLang === 'en' ? 'Get Tickets →' : 'Ver Boletos →';
+    const lblCtaFin = currentLang === 'en' ? 'Event Ended' : 'Evento Finalizado';
+    const lblOnline = currentLang === 'en' ? '100% Online Event' : 'Evento 100% Online';
+
+    document.querySelectorAll('[data-event-id]').forEach(card => {
+      const ev = EVENTS_DATA.find(e => e.id === card.dataset.eventId);
+      if (!ev) return;
+      const cardBody = card.querySelector('.card-body');
+      if (!cardBody) return;
+
+      // Status badge — dynamic "Últimos días" when ≤ 7 days
+      const status = card.querySelector('.card-status-badge');
+      if (status && ev.status) {
+        const diff = ev.start - Date.now();
+        const URGENT_MS = 7 * 86400000;
+        if (!ev.finished && diff > 0 && diff <= URGENT_MS) {
+          status.textContent = currentLang === 'en' ? '⚠ Last days!!' : '⚠ Últimos días!!';
+          status.classList.remove('status-available', 'status-limited');
+          status.classList.add('status-urgent');
+        } else {
+          status.textContent = ev.status[currentLang];
+          status.classList.remove('status-urgent');
+          // Re-apply original class based on text
+          if (!ev.finished) {
+            const isLimited = ev.status.es === 'Lugares Limitados';
+            status.classList.toggle('status-limited', isLimited);
+            status.classList.toggle('status-available', !isLimited);
+          }
+        }
+      }
+
+      // Card badge
+      const badge = cardBody.querySelector('.card-badge');
+      if (badge && ev.badge) badge.textContent = ev.badge[currentLang];
+
+      // Card subtitle
+      const sub = cardBody.querySelector('.card-subtitle');
+      if (sub && ev.subtitle) sub.textContent = ev.subtitle[currentLang];
+
+      // Card description
+      const desc = cardBody.querySelector('.card-desc');
+      if (desc && ev.desc) desc.textContent = ev.desc[currentLang];
+
+      // Meta rows (date, time) + last row "100% Online"
+      if (ev.metaRows) {
+        const rows = cardBody.querySelectorAll('.card-meta-row span:not(:first-child), .card-meta-row > span:nth-of-type(1)');
+        // Better: target each .card-meta-row's <span> child (after the svg)
+        const metaRows = cardBody.querySelectorAll('.card-meta-row');
+        ev.metaRows.forEach((row, i) => {
+          if (metaRows[i]) {
+            const sp = metaRows[i].querySelector('span');
+            if (sp) sp.textContent = row[currentLang];
+          }
+        });
+        // Last meta row "100% Online" (only on active events with 3 rows)
+        if (!ev.finished && metaRows.length > ev.metaRows.length) {
+          const lastSp = metaRows[metaRows.length - 1].querySelector('span');
+          if (lastSp) lastSp.textContent = lblOnline;
+        }
+      }
+
+      // CTA text
+      const cta = cardBody.querySelector('.card-cta');
+      if (cta) cta.textContent = ev.finished ? lblCtaFin : lblCta;
+
+      // Price block (active events only)
+      if (ev.finished) return;
+      if (!cta) return;
+      const days = ev.days.length;
+      let html;
+      if (days > 1 && ev.dayPrice) {
+        html = `
+          <div class="card-price-block">
+            <div class="cpr-item">
+              <span class="cpr-val">${priceHTML(ev.dayPrice, currentFx)}</span>
+              <span class="cpr-lbl">${lblPerDay}</span>
+            </div>
+            <div class="cpr-item bundle">
+              <span class="cpr-val">${priceHTML(ev.price, currentFx)}</span>
+              <span class="cpr-lbl">${lblDays(days)}</span>
+            </div>
+          </div>`;
+      } else {
+        html = `
+          <div class="card-price-block">
+            <div class="cpr-item bundle" style="flex:1;">
+              <span class="cpr-val">${priceHTML(ev.price, currentFx)}</span>
+              <span class="cpr-lbl">${lblFull}</span>
+            </div>
+          </div>`;
+      }
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html.trim();
+      const newBlock = tmp.firstElementChild;
+      const old = cardBody.querySelector('.card-price-block');
+      if (old) old.replaceWith(newBlock);
+      else cardBody.insertBefore(newBlock, cta);
+    });
+  }
+
+  async function loadRates() {
+    try {
+      const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache:'no-store' });
+      const d = await res.json();
+      if (d.result !== 'success') throw 0;
+      fxRates = { USD:1, MXN:d.rates.MXN, EUR:d.rates.EUR, CLP:d.rates.CLP, COP:d.rates.COP };
+    } catch {}
+    applyFx();
+    renderSavings();
+  }
+
+  /* ═══════════════════════════════════════════
+     GLOBAL COUNTDOWN BANNER
+  ═══════════════════════════════════════════ */
+  function pad2(n) { return String(n).padStart(2,'0'); }
+
+  function getNextEvent() {
+    const now = Date.now();
+    return EVENTS_DATA
+      .filter(e => !e.finished && e.start.getTime() > now)
+      .sort((a,b) => a.start - b.start)[0];
+  }
+
+  function updateBanner() {
+    const banner = document.getElementById('global-banner');
+    if (!banner) return;
+    if (sessionStorage.getItem('pe_banner_closed') === '1') return;
+    const next = getNextEvent();
+    if (!next) {
+      banner.classList.remove('show');
+      document.body.classList.remove('has-banner');
+      return;
+    }
+    document.getElementById('gb-event').textContent = `${next.icon} ${next.name[currentLang]}`;
+    document.getElementById('gb-cta').href = next.url;
+
+    const diff = next.start - Date.now();
+    if (diff <= 0) return;
+    document.getElementById('gb-d').textContent = pad2(Math.floor(diff/86400000));
+    document.getElementById('gb-h').textContent = pad2(Math.floor((diff%86400000)/3600000));
+    document.getElementById('gb-m').textContent = pad2(Math.floor((diff%3600000)/60000));
+    document.getElementById('gb-s').textContent = pad2(Math.floor((diff%60000)/1000));
+
+    if (!banner.classList.contains('show')) {
+      banner.classList.add('show');
+      document.body.classList.add('has-banner');
+    }
+  }
+
+  function closeBanner() {
+    document.getElementById('global-banner').classList.remove('show');
+    document.body.classList.remove('has-banner');
+    sessionStorage.setItem('pe_banner_closed', '1');
+  }
+
+  /* ═══════════════════════════════════════════
+     CALENDAR (paginated, single month)
+  ═══════════════════════════════════════════ */
+  let calMonths = [];
+  let calIdx = 0;
+
+  function buildCalMonths() {
+    const months = new Set();
+    EVENTS_DATA.forEach(ev => ev.days.forEach(d => {
+      const dt = new Date(d + 'T12:00:00');
+      months.add(`${dt.getFullYear()}-${pad2(dt.getMonth())}`);
+    }));
+    calMonths = [...months].sort();
+    // Default to current/upcoming month
+    const now = new Date();
+    const nowKey = `${now.getFullYear()}-${pad2(now.getMonth())}`;
+    const idx = calMonths.findIndex(m => m >= nowKey);
+    calIdx = idx >= 0 ? idx : 0;
+  }
+
+  function renderCalendar() {
+    const container = document.getElementById('cal-container');
+    if (!container) return;
+    if (!calMonths.length) buildCalMonths();
+    if (!calMonths.length) { container.innerHTML = ''; return; }
+
+    const dowEs = ['L','M','X','J','V','S','D'];
+    const dowEn = ['M','T','W','T','F','S','S'];
+    const dow = currentLang === 'en' ? dowEn : dowEs;
+    const monthNamesEs = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const monthNamesEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const monthNames = currentLang === 'en' ? monthNamesEn : monthNamesEs;
+
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${pad2(today.getMonth()+1)}-${pad2(today.getDate())}`;
+
+    const mk = calMonths[calIdx];
+    const [y, mStr] = mk.split('-');
+    const m = parseInt(mStr, 10);
+    const yNum = parseInt(y, 10);
+    const firstDay = new Date(yNum, m, 1);
+    const lastDay = new Date(yNum, m+1, 0);
+    const offset = (firstDay.getDay() + 6) % 7;
+    const totalDays = lastDay.getDate();
+
+    let cells = '';
+    dow.forEach(d => cells += `<div class="cal-dow">${d}</div>`);
+    for (let i = 0; i < offset; i++) cells += `<div class="cal-day"></div>`;
+    for (let day = 1; day <= totalDays; day++) {
+      const key = `${y}-${pad2(m+1)}-${pad2(day)}`;
+      const evs = EVENTS_DATA.filter(ev => ev.days.includes(key));
+      const isFinished = evs.length && evs.every(ev => ev.finished);
+      let cls = 'cal-day in-month';
+      if (key === todayKey) cls += ' today';
+      if (evs.length) cls += ' has-event';
+      if (isFinished) cls += ' finished';
+      let icon = '', tip = '';
+      if (evs.length) {
+        icon = `<span class="cal-icon">${evs.map(e=>e.icon).join('')}</span>`;
+        tip = `<span class="cal-tooltip">${evs.map(e=>e.name[currentLang]).join(' · ')}</span>`;
+      }
+      const click = evs.length && !isFinished ? `onclick="window.location='${evs[0].url}'"` : '';
+      cells += `<div class="${cls}" ${click}><span>${day}</span>${icon}${tip}</div>`;
+    }
+
+    const dots = calMonths.map((mm, i) => {
+      return `<button class="cal-dot ${i===calIdx?'active':''}" onclick="calGoTo(${i})" aria-label="Mes ${i+1}"></button>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="cal-month">
+        <div class="cal-nav">
+          <button class="cal-arrow" id="cal-prev" onclick="calPrev()" ${calIdx===0?'disabled':''} aria-label="Anterior">←</button>
+          <div class="cal-month-title">${monthNames[m]} ${y}</div>
+          <button class="cal-arrow" id="cal-next" onclick="calNext()" ${calIdx===calMonths.length-1?'disabled':''} aria-label="Siguiente">→</button>
+        </div>
+        <div class="cal-grid">${cells}</div>
+        <div class="cal-pager">${dots}</div>
+      </div>
+    `;
+  }
+
+  function calPrev() { if (calIdx > 0) { calIdx--; renderCalendar(); } }
+  function calNext() { if (calIdx < calMonths.length-1) { calIdx++; renderCalendar(); } }
+  function calGoTo(i) { calIdx = i; renderCalendar(); }
+
+  /* ═══════════════════════════════════════════
+     SAVINGS CALCULATOR
+  ═══════════════════════════════════════════ */
+  const OFFICIAL_PER_DAY = 35;
+
+  function renderSavings() {
+    const sel = document.getElementById('sv-event');
+    if (!sel) return;
+    if (!sel.options.length) {
+      EVENTS_DATA.filter(e => !e.finished).forEach(ev => {
+        const o = document.createElement('option');
+        o.value = ev.id;
+        o.textContent = `${ev.icon} ${ev.name[currentLang]} (${ev.days.length}d)`;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', updateSavings);
+    } else {
+      [...sel.options].forEach(o => {
+        const ev = EVENTS_DATA.find(e => e.id === o.value);
+        if (ev) o.textContent = `${ev.icon} ${ev.name[currentLang]} (${ev.days.length}d)`;
+      });
+    }
+    updateSavings();
+  }
+
+  function updateSavings() {
+    const sel = document.getElementById('sv-event');
+    if (!sel || !sel.value) return;
+    const ev = EVENTS_DATA.find(e => e.id === sel.value);
+    if (!ev) return;
+    const official = OFFICIAL_PER_DAY * ev.days.length;
+    const ours = ev.price;
+    const saved = official - ours;
+    const pct = Math.round((saved / official) * 100);
+    document.getElementById('sv-official').innerHTML = priceHTML(official, currentFx);
+    document.getElementById('sv-ours').innerHTML = priceHTML(ours, currentFx);
+    document.getElementById('sv-saved').innerHTML = priceHTML(saved, currentFx);
+    document.getElementById('sv-pct').textContent = `✓ ${pct}% OFF`;
+  }
+
+  /* ═══════════════════════════════════════════
+     REFERRAL CODE
+  ═══════════════════════════════════════════ */
+  function getRefCode() {
+    let code = localStorage.getItem('pe_ref_code');
+    if (!code) {
+      code = 'PE-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      localStorage.setItem('pe_ref_code', code);
+    }
+    return code;
+  }
+
+  function copyRefCode() {
+    const code = document.getElementById('ref-code').textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        const c = document.getElementById('ref-copied');
+        c.classList.add('show');
+        setTimeout(() => c.classList.remove('show'), 2000);
+      });
+    }
+  }
+
+
+
+  /* ═══════════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════════ */
+  document.getElementById('fx-select').value = currentFx;
+  document.getElementById('lang-select').value = currentLang;
+  document.getElementById('fx-select').addEventListener('change', e => {
+    currentFx = e.target.value;
+    localStorage.setItem('pe_fx', currentFx);
+    applyFx();
+  });
+  document.getElementById('lang-select').addEventListener('change', e => setLanguage(e.target.value));
+  document.getElementById('ref-code').textContent = getRefCode();
+
+  function sortEventCards() {
+    const grid = document.querySelector('#events .events-grid');
+    if (!grid) return;
+    const cards = [...grid.querySelectorAll('[data-event-id]')];
+    cards.sort((a, b) => {
+      const ea = EVENTS_DATA.find(e => e.id === a.dataset.eventId);
+      const eb = EVENTS_DATA.find(e => e.id === b.dataset.eventId);
+      if (!ea || !eb) return 0;
+      return ea.start - eb.start;
+    });
+    cards.forEach(c => grid.appendChild(c));
+  }
+
+  sortEventCards();
+  setLanguage(currentLang);
+  renderCalendar();
+  renderSavings();
+  updateBanner();
+  setInterval(updateBanner, 1000);
+  // Refresh status badges every minute (for urgent transition)
+  setInterval(injectCardPrices, 60000);
+  loadRates();
+</script>
+</body>
+</html>

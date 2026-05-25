@@ -1,30 +1,4 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/joongdunk",        "destination": "/joongdunk/index.html" },
-    { "source": "/joongdunk/stream", "destination": "/joongdunk/stream.html" },
-    { "source": "/loveoutloud",        "destination": "/loveoutloud/index.html" },
-    { "source": "/loveoutloud/stream", "destination": "/loveoutloud/stream.html" },
-    { "source": "/surfjava",           "destination": "/surfjava/index.html" },
-    { "source": "/surfjava/stream",    "destination": "/surfjava/stream.html" },
-    { "source": "/seakeen",            "destination": "/seakeen/index.html" },
-    { "source": "/seakeen/stream",     "destination": "/seakeen/stream.html" },
-    { "source": "/olympop",            "destination": "/olympop/index.html" },
-    { "source": "/olympop/stream",     "destination": "/olympop/stream.html" },
-    { "source": "/perthsanta",         "destination": "/perthsanta/index.html" },
-    { "source": "/perthsanta/stream",  "destination": "/perthsanta/stream.html" },
-    { "source": "/starlympic",         "destination": "/starlympic/index.html" },
-    { "source": "/starlympic/stream",  "destination": "/starlympic/stream.html" },
-    { "source": "/dmdland3",           "destination": "/dmdland3/index.html" },
-    { "source": "/dmdland3/stream",    "destination": "/dmdland3/stream.html" },
-    { "source": "/sotus",              "destination": "/sotus/index.html" },
-    { "source": "/sotus/stream",       "destination": "/sotus/stream.html" },
-    { "source": "/blushblossom",         "destination": "/blushblossom/index.html" },
-    { "source": "/blushblossom/stream",  "destination": "/blushblossom/stream.html" },
-    { "source": "/poohpavel",            "destination": "/poohpavel/index.html" },
-    { "source": "/poohpavel/stream",     "destination": "/poohpavel/stream.html" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
