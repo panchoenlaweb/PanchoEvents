@@ -166,7 +166,7 @@ export function StreamClient({ user, event: ev }: Props) {
 
       <footer className="border-t border-dark-border py-5 text-center">
         <p className="font-display text-[0.55rem] tracking-widest text-zinc-700 uppercase">
-          PanchoEvents · Stream privado · Solo para usuarios autorizados
+          YPass · Stream privado · Solo para usuarios autorizados
         </p>
       </footer>
 

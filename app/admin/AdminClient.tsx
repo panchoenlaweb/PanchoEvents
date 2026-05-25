@@ -215,7 +215,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
           <div className="flex items-center gap-3">
             <Shield size={16} className="text-amber" />
             <span className="font-display text-base text-amber tracking-wider">
-              PanchoEvents
+              YPass
             </span>
             <span className="font-display text-[0.6rem] tracking-widest text-zinc-600 uppercase hidden sm:block">
               · Panel de Administración

@@ -125,10 +125,10 @@ function LoginForm() {
             <div className="text-center mb-8">
               <div className="text-4xl mb-3 animate-[glow-pulse_2.5s_ease-in-out_infinite]">🔐</div>
               <h1 className="font-display text-2xl text-amber tracking-wider mb-1">
-                PanchoEvents
+                YPass
               </h1>
               <p className="font-display text-[0.6rem] tracking-[0.25em] text-zinc-500 uppercase">
-                Acceso Privado · Retransmisiones
+                Acceso Privado · Viewing Parties
               </p>
             </div>
 
@@ -208,7 +208,7 @@ function LoginForm() {
 
         {/* Footer */}
         <p className="text-center text-zinc-700 text-[0.6rem] font-display tracking-widest uppercase mt-6">
-          PanchoEvents · Stream Privado
+          YPass · panchoenlared.com
         </p>
       </div>
 

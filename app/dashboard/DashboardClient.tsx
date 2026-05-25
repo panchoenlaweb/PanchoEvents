@@ -44,10 +44,10 @@ export function DashboardClient({ user, events }: Props) {
         <div className="max-w-5xl mx-auto px-5 py-3.5 flex items-center justify-between gap-4">
           <div>
             <span className="font-display text-lg text-amber tracking-wider">
-              PanchoEvents
+              YPass
             </span>
             <span className="ml-2 font-display text-[0.6rem] tracking-widest text-zinc-500 uppercase hidden sm:inline">
-              · Stream Privado
+              · Viewing Parties
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -112,7 +112,7 @@ export function DashboardClient({ user, events }: Props) {
 
       <footer className="border-t border-dark-border py-5 text-center">
         <p className="font-display text-[0.55rem] tracking-widest text-zinc-700 uppercase">
-          PanchoEvents · Acceso Personal · No compartir
+          YPass · Acceso Personal · No compartir
         </p>
       </footer>
     </div>
