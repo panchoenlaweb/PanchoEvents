@@ -6,6 +6,7 @@ export interface User {
   is_active: boolean;
   created_at: string;
   last_login: string | null;
+  notes?: string | null;
 }
 
 export interface Event {
@@ -23,6 +24,13 @@ export interface Event {
 
 export interface UserEvent extends Event {
   assigned_at: string;
+}
+
+export interface UserEventPayment {
+  event_id: string;
+  payment_status: 'pending' | 'paid' | 'refunded';
+  payment_amount: number | null;
+  payment_method: string | null;
 }
 
 export interface AccessLog {

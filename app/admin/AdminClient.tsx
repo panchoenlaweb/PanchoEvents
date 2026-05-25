@@ -14,6 +14,7 @@ import { ToastContainer, useToast } from '@/components/ui/Toast';
 import { formatDate, slugify } from '@/lib/utils';
 
 type Tab = 'users' | 'events' | 'logs';
+type PaymentEntry = { payment_status: 'pending' | 'paid' | 'refunded'; payment_amount: string; payment_method: string };
 
 const REVENUE_PER_USER = 1.5;
 
@@ -38,7 +39,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
 
   // ── User modal state ─────────────────────────────────────────────────────────
   const [userModal, setUserModal] = useState<{ open: boolean; editing: User | null }>({ open: false, editing: null });
-  const [userForm, setUserForm] = useState({ username: '', email: '', password: '', role: 'user' as 'user' | 'admin', is_active: true });
+  const [userForm, setUserForm] = useState({ username: '', email: '', password: '', role: 'user' as 'user' | 'admin', is_active: true, notes: '' });
   const [userSaving, setUserSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -50,7 +51,9 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
   // ── Assign events modal ───────────────────────────────────────────────────────
   const [assignModal, setAssignModal] = useState<{ open: boolean; user: User | null }>({ open: false, user: null });
   const [assignedIds, setAssignedIds] = useState<string[]>([]);
+  const [paymentData, setPaymentData] = useState<Record<string, PaymentEntry>>({});
   const [assignSaving, setAssignSaving] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // ── Fetch helpers ────────────────────────────────────────────────────────────
   const fetchUsers = useCallback(async () => {
@@ -84,12 +87,12 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
 
   // ── User CRUD ────────────────────────────────────────────────────────────────
   function openCreateUser() {
-    setUserForm({ username: '', email: '', password: '', role: 'user', is_active: true });
+    setUserForm({ username: '', email: '', password: '', role: 'user', is_active: true, notes: '' });
     setUserModal({ open: true, editing: null });
   }
 
   function openEditUser(u: User) {
-    setUserForm({ username: u.username, email: u.email ?? '', password: '', role: u.role, is_active: u.is_active });
+    setUserForm({ username: u.username, email: u.email ?? '', password: '', role: u.role, is_active: u.is_active, notes: u.notes ?? '' });
     setUserModal({ open: true, editing: u });
   }
 
@@ -99,7 +102,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
       const isEdit = !!userModal.editing;
       const url = isEdit ? `/api/admin/users/${userModal.editing!.id}` : '/api/admin/users';
       const method = isEdit ? 'PUT' : 'POST';
-      const body: Record<string, unknown> = { username: userForm.username, role: userForm.role, is_active: userForm.is_active };
+      const body: Record<string, unknown> = { username: userForm.username, role: userForm.role, is_active: userForm.is_active, notes: userForm.notes || null };
       if (userForm.email) body.email = userForm.email;
       if (userForm.password) body.password = userForm.password;
       if (!isEdit) body.password = userForm.password;
@@ -136,10 +139,21 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
   // ── Event assignment ─────────────────────────────────────────────────────────
   async function openAssign(u: User) {
     setAssignModal({ open: true, user: u });
+    setPaymentData({});
     const res = await fetch(`/api/admin/users/${u.id}/events`);
     if (res.ok) {
       const d = await res.json();
-      setAssignedIds((d.data ?? []).map((r: Record<string, unknown>) => String(r.event_id)));
+      const rows: Record<string, unknown>[] = d.data ?? [];
+      setAssignedIds(rows.map((r) => String(r.event_id)));
+      const pd: Record<string, PaymentEntry> = {};
+      for (const r of rows) {
+        pd[String(r.event_id)] = {
+          payment_status: (r.payment_status as PaymentEntry['payment_status']) ?? 'pending',
+          payment_amount: r.payment_amount ? String(r.payment_amount) : '',
+          payment_method: r.payment_method ? String(r.payment_method) : '',
+        };
+      }
+      setPaymentData(pd);
     }
   }
 
@@ -147,16 +161,52 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
     if (!assignModal.user) return;
     setAssignSaving(true);
     try {
+      const assignments = assignedIds.map((eid) => ({
+        event_id: eid,
+        payment_status: paymentData[eid]?.payment_status ?? 'pending',
+        payment_amount: paymentData[eid]?.payment_amount ? parseFloat(paymentData[eid].payment_amount) : null,
+        payment_method: paymentData[eid]?.payment_method || null,
+      }));
       const res = await fetch(`/api/admin/users/${assignModal.user.id}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventIds: assignedIds }),
+        body: JSON.stringify({ assignments }),
       });
-      if (res.ok) { addToast('success', 'Eventos asignados'); setAssignModal({ open: false, user: null }); }
+      if (res.ok) { addToast('success', 'Eventos asignados'); setAssignModal({ open: false, user: null }); fetchEvents(); }
       else { const d = await res.json(); addToast('error', d.error ?? 'Error'); }
     } finally {
       setAssignSaving(false);
     }
+  }
+
+  function exportPaymentsCSV() {
+    const rows: string[][] = [['Usuario', 'Email', 'Evento', 'Estado Pago', 'Monto USD', 'Método']];
+    // We don’t have per-event payments loaded globally, so export what’s visible
+    addToast('success', 'Usa el botón de cada evento para exportar');
+  }
+
+  async function exportEventCSV(ev: Event) {
+    const res = await fetch(`/api/admin/events/${ev.id}/payments`);
+    if (!res.ok) {
+      // Fallback: just export assigned users from user_events via a simpler approach
+      addToast('error', 'No se pudo exportar');
+      return;
+    }
+    const d = await res.json();
+    const rows: string[][] = [['Usuario', 'Email', 'Estado Pago', 'Monto USD', 'Método', 'Asignado']];
+    for (const r of d.data ?? []) {
+      rows.push([
+        r.username ?? '', r.email ?? '',
+        r.payment_status ?? '', r.payment_amount ?? '', r.payment_method ?? '',
+        r.assigned_at ? new Date(r.assigned_at).toLocaleDateString() : '',
+      ]);
+    }
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${ev.slug}-pagos.csv`; a.click();
+    URL.revokeObjectURL(url);
   }
 
   // ── Event CRUD ────────────────────────────────────────────────────────────────
@@ -288,13 +338,22 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
         {/* ── Users tab ──────────────────────────────────────────────────────── */}
         {tab === 'users' && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <p className="font-display text-[0.6rem] tracking-[0.3em] text-zinc-500 uppercase">
                 {users.length} usuario{users.length !== 1 ? 's' : ''}
               </p>
               <Button size="sm" onClick={openCreateUser}>
                 <Plus size={12} /> Nuevo Usuario
               </Button>
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar por usuario o email..."
+                className="w-full bg-dark border border-zinc-800 hover:border-zinc-700 focus:border-amber/60 text-zinc-300 placeholder-zinc-600 font-sans text-sm px-4 py-2 transition-all focus:outline-none"
+              />
             </div>
 
             {loading ? (
@@ -312,9 +371,20 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((u) => (
+                    {users.filter((u) => {
+                      if (!searchQuery) return true;
+                      const q = searchQuery.toLowerCase();
+                      return u.username.toLowerCase().includes(q) || (u.email ?? '').toLowerCase().includes(q);
+                    }).map((u) => (
                       <tr key={u.id} className="border-b border-dark-border/50 hover:bg-dark-card/50 transition-colors">
-                        <td className="px-3 py-3 font-sans text-zinc-200">{u.username}</td>
+                        <td className="px-3 py-3 font-sans text-zinc-200">
+                          <div className="flex items-center gap-1.5">
+                            {u.username}
+                            {u.notes && (
+                              <span title={u.notes} className="cursor-help text-amber/60 text-xs" style={{lineHeight:1}}>📝</span>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-3 py-3 font-sans text-zinc-500 text-xs">{u.email ?? '—'}</td>
                         <td className="px-3 py-3">
                           <Badge variant={u.role === 'admin' ? 'admin' : 'user'}>{u.role}</Badge>
@@ -446,6 +516,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
                           <div className="flex items-center gap-1">
                             <ActionBtn icon={Edit2} title="Editar" onClick={() => openEditEvent(e)} />
                             <ActionBtn icon={Trash2} title="Eliminar" onClick={() => deleteEvent(e)} danger />
+                            <ActionBtn icon={ScrollText} title="Exportar CSV pagos" onClick={() => exportEventCSV(e)} />
                           </div>
                         </td>
                       </tr>
@@ -569,6 +640,17 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
               </button>
             </div>
           </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">Notas internas (solo visibles para admin)</label>
+            <textarea
+              value={userForm.notes}
+              onChange={(e) => setUserForm((f) => ({ ...f, notes: e.target.value }))
+              }
+              placeholder="Ej: Pagó vía Binance, 2 días, pendiente confirmación..."
+              rows={2}
+              className="w-full bg-dark border border-zinc-800 hover:border-zinc-600 focus:border-amber/70 text-zinc-100 placeholder-zinc-600 font-sans text-sm px-4 py-2.5 transition-all focus:outline-none resize-none"
+            />
+          </div>
           <div className="flex gap-4">
             <div className="flex flex-col gap-1.5 flex-1">
               <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">Rol</label>
@@ -615,45 +697,78 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
         title={`Asignar Eventos — ${assignModal.user?.username ?? ''}`}
         size="lg"
       >
-        <div className="flex flex-col gap-3 max-h-80 overflow-y-auto mb-4">
+        <div className="flex flex-col gap-2 max-h-[480px] overflow-y-auto mb-4 pr-1">
           {events.length === 0 && (
             <p className="text-zinc-500 text-sm font-sans text-center py-4">No hay eventos creados.</p>
           )}
           {events.map((e) => {
             const checked = assignedIds.includes(e.id);
+            const pd = paymentData[e.id] ?? { payment_status: 'pending', payment_amount: '', payment_method: '' };
             return (
-              <label key={e.id} className="flex items-center gap-3 cursor-pointer group">
-                <div
-                  className={`w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${
-                    checked ? 'bg-amber border-amber' : 'border-zinc-600 group-hover:border-zinc-400'
-                  }`}
-                >
-                  {checked && <CheckCircle size={10} className="text-black" />}
-                </div>
-                <input
-                  type="checkbox"
-                  className="hidden"
-                  checked={checked}
-                  onChange={() =>
-                    setAssignedIds((prev) =>
-                      checked ? prev.filter((id) => id !== e.id) : [...prev, e.id],
-                    )
-                  }
-                />
-                <div>
-                  <p className="text-zinc-200 text-sm font-sans">{e.title}</p>
-                  <p className="text-zinc-600 text-xs font-display tracking-widest">{e.slug}</p>
-                </div>
-                <Badge variant={e.status === 'active' ? 'active' : 'inactive'} className="ml-auto">
-                  {e.status === 'active' ? 'Activo' : 'Inactivo'}
-                </Badge>
-              </label>
+              <div key={e.id} className={`border transition-all ${
+                checked ? 'border-amber/30 bg-amber/5' : 'border-dark-border'
+              } p-3 flex flex-col gap-3`}>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <div className={`w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-all ${
+                    checked ? 'bg-amber border-amber' : 'border-zinc-600 hover:border-zinc-400'
+                  }`}>
+                    {checked && <CheckCircle size={10} className="text-black" />}
+                  </div>
+                  <input type="checkbox" className="hidden" checked={checked}
+                    onChange={() => {
+                      setAssignedIds((prev) => checked ? prev.filter((id) => id !== e.id) : [...prev, e.id]);
+                      if (!checked && !paymentData[e.id]) {
+                        setPaymentData((p) => ({ ...p, [e.id]: { payment_status: 'pending', payment_amount: '', payment_method: '' } }));
+                      }
+                    }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-zinc-200 text-sm font-sans truncate">{e.title}</p>
+                    <p className="text-zinc-600 text-xs font-display tracking-widest">{e.slug}</p>
+                  </div>
+                  <Badge variant={e.status === 'active' ? 'active' : 'inactive'}>
+                    {e.status === 'active' ? 'Activo' : 'Inactivo'}
+                  </Badge>
+                </label>
+                {checked && (
+                  <div className="grid grid-cols-3 gap-2 ml-7">
+                    <select
+                      value={pd.payment_status}
+                      onChange={(ev) => setPaymentData((p) => ({ ...p, [e.id]: { ...pd, payment_status: ev.target.value as PaymentEntry['payment_status'] } }))}
+                      className="bg-dark border border-zinc-800 text-zinc-300 font-sans text-xs px-2 py-1.5 focus:outline-none focus:border-amber/70"
+                    >
+                      <option value="pending">⏳ Pendiente</option>
+                      <option value="paid">✅ Pagado</option>
+                      <option value="refunded">🔄 Reembolsado</option>
+                    </select>
+                    <input
+                      type="number" step="0.01" min="0"
+                      value={pd.payment_amount}
+                      onChange={(ev) => setPaymentData((p) => ({ ...p, [e.id]: { ...pd, payment_amount: ev.target.value } }))}
+                      placeholder="Monto USD"
+                      className="bg-dark border border-zinc-800 text-zinc-300 font-sans text-xs px-2 py-1.5 focus:outline-none focus:border-amber/70 placeholder-zinc-600"
+                    />
+                    <input
+                      type="text"
+                      value={pd.payment_method}
+                      onChange={(ev) => setPaymentData((p) => ({ ...p, [e.id]: { ...pd, payment_method: ev.target.value } }))}
+                      placeholder="Método (Binance...)"
+                      className="bg-dark border border-zinc-800 text-zinc-300 font-sans text-xs px-2 py-1.5 focus:outline-none focus:border-amber/70 placeholder-zinc-600"
+                    />
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
         <div className="flex justify-between items-center pt-3 border-t border-dark-border">
           <span className="font-display text-[0.6rem] tracking-widest text-zinc-500 uppercase">
             {assignedIds.length} seleccionado{assignedIds.length !== 1 ? 's' : ''}
+            {assignedIds.filter(id => paymentData[id]?.payment_status === 'paid').length > 0 && (
+              <span className="ml-2 text-emerald-400">
+                · {assignedIds.filter(id => paymentData[id]?.payment_status === 'paid').length} pagado{assignedIds.filter(id => paymentData[id]?.payment_status === 'paid').length !== 1 ? 's' : ''}
+              </span>
+            )}
           </span>
           <div className="flex gap-3">
             <Button variant="outline" size="sm" onClick={() => setAssignModal({ open: false, user: null })}>

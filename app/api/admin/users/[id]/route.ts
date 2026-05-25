@@ -12,7 +12,7 @@ export async function GET(req: NextRequest, { params }: Params) {
 
   const { data, error } = await supabase
     .from('users')
-    .select('id, username, email, role, is_active, created_at, last_login')
+    .select('id, username, email, role, is_active, created_at, last_login, notes')
     .eq('id', params.id)
     .single();
 
@@ -36,6 +36,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       // Invalidate session if deactivating
       if (!body.is_active) await deleteSession(params.id);
     }
+    if (body.notes !== undefined) updates.notes = body.notes ? String(body.notes).substring(0, 1000) : null;
     if (body.password) {
       if (String(body.password).length < 6) {
         return NextResponse.json({ error: 'Contraseña mínimo 6 caracteres' }, { status: 400 });
@@ -53,7 +54,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
       .from('users')
       .update(updates)
       .eq('id', params.id)
-      .select('id, username, email, role, is_active, created_at, last_login')
+      .select('id, username, email, role, is_active, created_at, last_login, notes')
       .single();
 
     if (error) {
