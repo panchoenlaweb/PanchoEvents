@@ -97,6 +97,25 @@
       box-shadow: 0 0 20px var(--red-glow);
     }
 
+    .nav-login {
+      font-family: 'Orbitron', monospace;
+      font-size: .62rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--gold);
+      padding: 8px 18px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, box-shadow .2s;
+      white-space: nowrap;
+    }
+    .nav-login:hover {
+      background: #ffd740;
+      box-shadow: 0 0 20px rgba(245,197,24,.5);
+    }
+
     /* ── HAMBURGER ── */
     .nav-burger {
       display: none;
@@ -1186,6 +1205,7 @@
       <option value="en">🇬🇧 EN</option>
     </select>
   </div>
+  <a href="https://stream.panchoenlared.com" class="nav-login">🔐 Mi Stream</a>
   <a href="#events" class="nav-cta" data-i18n="navCta">Ver Boletos</a>
   <button class="nav-burger" id="nav-burger" aria-label="Abrir menú" aria-expanded="false">
     <span></span><span></span><span></span>
