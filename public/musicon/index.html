@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GMMTV MUSICON 2026 SINGAPORE – YPass</title>
+  <meta name="description" content="GMMTV MUSICON 2026 Singapore – Viewing party privado en español. 30 y 31 de Mayo 2026. Live + Grabación + Rerun + E-Photos.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --purple:  #a855f7;
+      --purple-d:#8b3cf7;
+      --cyan:    #22d3ee;
+      --cyan-d:  #06b6d4;
+      --gold:    #f5c518;
+      --dark:    #08070f;
+      --panel:   #0e0c1a;
+      --card:    #13101f;
+      --border:  #231e35;
+      --text:    #e8e4f5;
+      --muted:   #7a748f;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Rajdhani',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden}
+
+    /* ─── HERO ─── */
+    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1rem 4rem;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(168,85,247,.2) 0%,transparent 70%),radial-gradient(ellipse 60% 80% at 80% 80%,rgba(34,211,238,.1) 0%,transparent 60%),linear-gradient(180deg,rgba(8,7,15,.82) 0%,rgba(8,7,15,.6) 50%,rgba(8,7,15,.88) 100%);z-index:0}
+    .stripes{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+    .stripe{position:absolute;height:2px;animation:streakLeft 4s linear infinite;opacity:.3}
+    .stripe:nth-child(1){top:10%;width:60%;left:-60%;animation-delay:0s;background:linear-gradient(90deg,transparent,var(--purple),transparent)}
+    .stripe:nth-child(2){top:28%;width:45%;left:-45%;animation-delay:.9s;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+    .stripe:nth-child(3){top:50%;width:70%;left:-70%;animation-delay:1.8s;background:linear-gradient(90deg,transparent,var(--purple),transparent)}
+    .stripe:nth-child(4){top:70%;width:50%;left:-50%;animation-delay:2.7s;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .stripe:nth-child(5){top:88%;width:40%;left:-40%;animation-delay:3.6s;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+    @keyframes streakLeft{0%{transform:translateX(0);opacity:0}10%{opacity:.35}90%{opacity:.35}100%{transform:translateX(260vw);opacity:0}}
+    .deco-line-top,.deco-line-bottom{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--gold));z-index:2}
+    .deco-line-top{top:0}.deco-line-bottom{bottom:0}
+    .hero-content{position:relative;z-index:3;max-width:900px}
+    .badge-event{display:inline-block;background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.15em;padding:.25rem .9rem;border-radius:2px;margin-bottom:.8rem}
+
+    /* animated title */
+    .hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2.5rem,8vw,6rem);line-height:.95;letter-spacing:.04em;text-transform:uppercase;color:#fff;text-shadow:0 0 30px rgba(168,85,247,.5),0 0 80px rgba(168,85,247,.15)}
+    .hero-title .accent{color:var(--cyan);display:block;font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,7rem);letter-spacing:.02em;text-transform:uppercase}
+    .hero-subtitle{font-family:'Orbitron',sans-serif;font-size:clamp(.8rem,2vw,1.2rem);letter-spacing:.3em;color:var(--gold);margin-top:.5rem;text-shadow:0 0 20px rgba(245,197,24,.4)}
+    .hero-divider{width:140px;height:3px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent);margin:1.5rem auto}
+
+    /* meta row */
+    .hero-meta{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+    .hero-meta-item{text-align:center}
+    .hero-meta-item .label{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+    .hero-meta-item .value{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-top:.2rem}
+
+    /* shared badge */
+    .shared-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.45);border-radius:6px;padding:.5rem 1.2rem;font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.15em;color:var(--purple);margin-bottom:1rem}
+
+    /* local time */
+    .local-time-banner{margin-top:1.5rem;display:inline-flex;flex-direction:column;align-items:center;gap:.4rem;background:rgba(0,0,0,.45);border:1px solid rgba(34,211,238,.35);border-radius:10px;padding:.9rem 2rem;backdrop-filter:blur(8px);animation:fadeInUp .6s ease both}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .local-time-label{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
+    .local-time-value{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2rem);font-weight:900;color:var(--cyan);text-shadow:0 0 20px rgba(34,211,238,.4);line-height:1}
+    .local-time-tz{font-size:.78rem;color:var(--muted);letter-spacing:.05em}
+    .local-time-tz span{color:#fff}
+
+    /* hero btns */
+    .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+    .hero-btn{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.85rem 1.8rem;border-radius:5px;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;transition:transform .15s,box-shadow .15s;cursor:pointer;border:none}
+    .hero-btn-enter{background:transparent;border:2px solid var(--cyan);color:var(--cyan);cursor:pointer}
+    .hero-btn-enter:hover{border-color:var(--purple);color:var(--purple);box-shadow:0 0 20px rgba(168,85,247,.2)}
+    .hero-btn-reserve{background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;border:none;box-shadow:0 0 18px rgba(168,85,247,.3)}
+    .hero-btn-reserve:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(168,85,247,.5)}
+
+    /* ticker */
+    .ticker-wrap{width:100%;background:linear-gradient(90deg,var(--purple-d),var(--cyan-d));border-bottom:2px solid var(--gold);overflow:hidden;white-space:nowrap;padding:.55rem 0}
+    .ticker-track{display:inline-flex;animation:ticker-scroll 24s linear infinite}
+    .ticker-wrap:hover .ticker-track{animation-play-state:paused}
+    .ticker-item{font-family:'Orbitron',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;color:#fff;text-transform:uppercase;padding:0 1.2rem}
+    .ticker-sep{color:var(--gold);font-size:.9rem;padding:0 .2rem;opacity:.7}
+    @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* countdown */
+    .countdown-section{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2rem 1rem;text-align:center}
+    .countdown-label{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.3em;color:var(--muted);margin-bottom:1rem}
+    .countdown{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .cd-box{background:var(--card);border:1px solid var(--border);border-top:3px solid var(--purple);padding:.8rem 1.2rem;min-width:80px;border-radius:4px}
+    .cd-num{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;color:var(--purple);line-height:1}
+    .cd-unit{font-size:.7rem;color:var(--muted);letter-spacing:.15em;margin-top:.3rem}
+
+    /* sections */
+    .section{max-width:1100px;margin:0 auto;padding:5rem 1.5rem}
+    .section-tag{display:inline-block;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.25em;color:var(--purple);border:1px solid var(--purple);padding:.25rem .8rem;border-radius:2px;margin-bottom:1rem}
+    .section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:700;color:#fff;margin-bottom:.5rem}
+    .section-desc{color:var(--muted);font-size:1.05rem;max-width:600px;line-height:1.6;margin-bottom:2.5rem}
+
+    /* includes */
+    .includes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem}
+    .include-card{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:6px;padding:1.5rem;transition:transform .2s,border-color .2s}
+    .include-card:hover{transform:translateY(-4px);border-color:var(--cyan)}
+    .include-card .icon{font-size:2rem;margin-bottom:.7rem}
+    .include-card h3{font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--cyan);margin-bottom:.4rem}
+    .include-card p{color:var(--muted);font-size:.9rem;line-height:1.5}
+
+    /* prices */
+    .prices-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-bottom:2rem}
+    .price-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+    .price-card:hover{transform:translateY(-5px);box-shadow:0 12px 40px rgba(168,85,247,.2)}
+    .price-card.featured{border-color:var(--gold);box-shadow:0 0 30px rgba(245,197,24,.12)}
+    .price-card.featured::before{content:'⭐ MEJOR VALOR';position:absolute;top:0;left:0;right:0;background:var(--gold);color:#000;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.2em;padding:.3rem}
+    .price-card.featured{padding-top:2.8rem}
+    .price-days{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.2em;color:var(--muted)}
+    .price-nights{font-size:1.1rem;color:var(--text);font-weight:700;margin:.3rem 0}
+    .price-usd{font-family:'Orbitron',sans-serif;font-size:3rem;font-weight:900;color:var(--purple);line-height:1;margin:.5rem 0}
+    .price-usd span{font-size:1.5rem;vertical-align:super}
+    .price-dates{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+    .price-divider{width:60px;height:2px;background:var(--border);margin:1rem auto}
+
+    /* currency rows */
+    .currency-row{display:flex;justify-content:space-between;align-items:center;padding:.4rem .5rem;border-radius:4px;transition:background .15s}
+    .currency-row:hover{background:rgba(255,255,255,.04)}
+    .currency-flag{font-size:1.1rem;margin-right:.4rem}
+    .currency-code{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--muted);width:30px}
+    .currency-name{font-size:.8rem;color:var(--text);flex:1;text-align:left;margin-left:.3rem}
+    .currency-amount{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;color:var(--cyan)}
+
+    /* refund / deadline */
+    .refund-notice{background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.25);border-radius:8px;padding:1rem 1.4rem;display:flex;align-items:flex-start;gap:.9rem;margin-top:1.5rem;font-size:.88rem;color:var(--muted);line-height:1.6}
+    .refund-notice .ri-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem}
+    .refund-notice strong{color:var(--purple)}
+    .deadline-banner{background:linear-gradient(135deg,rgba(245,197,24,.1),rgba(245,197,24,.03));border:1px solid var(--gold);border-radius:8px;padding:1.5rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-top:2rem}
+    .deadline-icon{font-size:2.5rem;flex-shrink:0}
+    .deadline-text h3{font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--gold);margin-bottom:.3rem}
+    .deadline-text p{color:var(--muted);font-size:.95rem}
+    .deadline-text strong{color:#fff}
+
+    /* payments */
+    .payments-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+    .payment-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem;display:flex;align-items:flex-start;gap:.8rem;transition:border-color .2s}
+    .payment-card:hover{border-color:var(--purple)}
+    .payment-icon{font-size:1.8rem;flex-shrink:0}
+    .payment-info h4{font-family:'Orbitron',sans-serif;font-size:.75rem;color:var(--cyan);margin-bottom:.2rem}
+    .payment-info p{font-size:.85rem;color:var(--muted);line-height:1.4}
+
+    /* contact */
+    .contact-section{background:linear-gradient(135deg,var(--panel),rgba(168,85,247,.05));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 1.5rem;text-align:center}
+    .contact-note{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto;line-height:1.6}
+    .social-buttons{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin:1.8rem 0 1.2rem}
+    .contact-handle{display:inline-flex;align-items:center;gap:.7rem;font-family:'Orbitron',sans-serif;font-size:clamp(.85rem,2.5vw,1.1rem);font-weight:700;color:#fff;background:var(--card);border:2px solid var(--purple);border-radius:50px;padding:.75rem 1.6rem;text-decoration:none;transition:box-shadow .25s,transform .25s;box-shadow:0 0 14px rgba(168,85,247,.15)}
+    .contact-handle:hover{box-shadow:0 0 32px rgba(168,85,247,.45);transform:scale(1.05)}
+    .contact-handle.tg{border-color:#26A5E4;box-shadow:0 0 14px rgba(38,165,228,.15)}
+    .contact-handle.tg:hover{box-shadow:0 0 32px rgba(38,165,228,.45)}
+    .contact-handle.ig{border-color:#E1306C;box-shadow:0 0 14px rgba(225,48,108,.15)}
+    .contact-handle.ig:hover{box-shadow:0 0 32px rgba(225,48,108,.45)}
+
+    /* faq */
+    .faq-section{max-width:860px;margin:0 auto;padding:5rem 1.5rem}
+    .faq-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:6px;margin-bottom:.8rem;overflow:hidden;transition:border-color .2s}
+    .faq-item:hover{border-color:var(--cyan)}
+    .faq-question{font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:700;color:var(--text);padding:1.1rem 1.3rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;user-select:none}
+    .faq-question::after{content:'＋';font-size:1.1rem;color:var(--cyan);flex-shrink:0;transition:transform .25s}
+    .faq-item.open .faq-question::after{transform:rotate(45deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .25s;color:var(--muted);font-size:.92rem;line-height:1.7;padding:0 1.3rem}
+    .faq-item.open .faq-answer{max-height:400px;padding:0 1.3rem 1.2rem}
+    .faq-answer a{color:var(--cyan);text-decoration:none}
+
+    /* tz */
+    .tz-section{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:3.5rem 1.5rem}
+    .tz-inner{max-width:1100px;margin:0 auto}
+    .tz-header{text-align:center;margin-bottom:2rem}
+    .tz-origin{display:inline-flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--cyan);border-radius:6px;padding:.5rem 1.2rem;font-family:'Orbitron',sans-serif;font-size:.8rem;color:var(--cyan);margin-top:.8rem}
+    .tz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+    .tz-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1rem;text-align:center;transition:transform .2s,border-color .2s}
+    .tz-card:hover{transform:translateY(-4px);border-color:var(--purple)}
+    .tz-flag{font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:900;letter-spacing:.12em;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:3px;padding:.15rem .45rem;margin-bottom:.5rem;display:inline-block}
+    .tz-country{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.15em;color:var(--muted);margin-bottom:.5rem}
+    .tz-time{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;color:#fff;line-height:1}
+    .tz-ampm{font-size:.8rem;color:var(--purple);font-weight:700;margin-left:.2rem}
+    .tz-label{font-size:.75rem;color:var(--muted);margin-top:.3rem}
+
+    /* footer */
+    footer{background:#040308;border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center}
+    footer .footer-logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--purple)}
+    footer .footer-sub{font-size:.8rem;color:var(--muted);margin-top:.4rem}
+    footer .deco-footer{width:80px;height:3px;background:linear-gradient(90deg,var(--purple),var(--cyan));margin:.8rem auto 0;opacity:.5}
+
+    /* lang */
+    .lang-toggle{position:fixed;top:1rem;right:1rem;z-index:9999;display:flex;background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+    .lang-btn{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.12em;font-weight:700;padding:.5rem .9rem;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:background .2s,color .2s}
+    .lang-btn.active{background:var(--purple);color:#fff}
+    .lang-btn:hover:not(.active){background:rgba(255,255,255,.07);color:var(--text)}
+    html.lang-en .price-card.featured::before{content:'⭐ BEST VALUE'}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--purple);border-radius:3px}
+    @media(max-width:600px){.deadline-banner{flex-direction:column}}
+  </style>
+</head>
+<body>
+
+<style>.back-ypass{position:fixed;top:14px;left:14px;z-index:300;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);color:#fff;text-decoration:none;font-family:"Orbitron",sans-serif;font-size:.6rem;letter-spacing:.15em;padding:7px 14px;border-radius:6px;backdrop-filter:blur(8px);transition:.2s}.back-ypass:hover{background:rgba(255,255,255,.13)}</style>
+<a href="/" class="back-ypass">← YPass</a>
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button class="lang-btn active" id="lang-btn-es" onclick="setLang('es')">ES</button>
+  <button class="lang-btn"        id="lang-btn-en" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="deco-line-top"></div>
+  <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
+
+  <div class="hero-content">
+    <div class="shared-badge">🤝 <span data-i18n="shared-label">EVENTO COMPARTIDO</span></div>
+    <div class="badge-event">GMMTV &nbsp;·&nbsp; MUSICON 2026 &nbsp;·&nbsp; SINGAPORE</div>
+
+    <h1 class="hero-title">
+      GMMTV<span class="accent">Musicon</span>
+    </h1>
+
+    <p class="hero-subtitle">🎵 &nbsp; SINGAPORE · 2026 &nbsp; 🎵</p>
+
+    <div class="hero-divider"></div>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="label" data-i18n="label-dates">📅 Fechas</div>
+        <div class="value">30 · 31 MAY 2026</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-i18n="label-time">🕔 Horario</div>
+        <div class="value">5:00 PM (BKK)</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">📍 Venue</div>
+        <div class="value">SINGAPORE</div>
+      </div>
+    </div>
+
+    <div class="local-time-banner" id="local-time-banner">
+      <div class="local-time-label" data-i18n="local-time-label">🌍 El evento en tu país será a las</div>
+      <div class="local-time-value" id="local-time-value">--:--</div>
+      <div class="local-time-tz" id="local-time-tz">Detectando tu zona horaria…</div>
+    </div>
+
+    <div class="hero-btns">
+      <span class="hero-btn hero-btn-enter" data-i18n="hero-btn-enter" onclick="window.location.href='/login'">INGRESAR AL EVENTO</span>
+      <a class="hero-btn hero-btn-reserve" href="https://t.me/Panchoenlared" target="_blank" rel="noopener" data-i18n="hero-btn-reserve">🎫 RESERVAR AHORA</a>
+    </div>
+  </div>
+  <div class="deco-line-bottom"></div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">GMMTV MUSICON 2026</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">SINGAPORE</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">30 · 31 MAYO 2026</span><span class="ticker-sep">❖</span>
+    <span class="ticker-item">LIVE STREAMING PRIVADO</span><span class="ticker-sep">❖</span>
+    <span class="ticker-item">GRABACIÓN · RERUN · E-PHOTOS</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">GMMTV MUSICON 2026</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">SINGAPORE</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">30 · 31 MAYO 2026</span><span class="ticker-sep">❖</span>
+    <span class="ticker-item">LIVE STREAMING PRIVADO</span><span class="ticker-sep">❖</span>
+    <span class="ticker-item">GRABACIÓN · RERUN · E-PHOTOS</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown-section">
+  <p class="countdown-label" data-i18n="countdown-label">🎵 FALTAN PARA EL PRIMER DÍA · 30 MAYO</p>
+  <div class="countdown" id="countdown">
+    <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-unit" data-i18n="cd-unit-days">DÍAS</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-unit" data-i18n="cd-unit-hours">HORAS</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-min">--</div><div class="cd-unit">MIN</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-sec">--</div><div class="cd-unit" data-i18n="cd-unit-sec">SEG</div></div>
+  </div>
+</div>
+
+<!-- HORARIOS -->
+<div class="tz-section">
+  <div class="tz-inner">
+    <div class="tz-header">
+      <div class="section-tag" data-i18n="tz-tag">❖ HORARIOS</div>
+      <h2 class="section-title" data-i18n="tz-title">¿A qué hora es en tu país?</h2>
+      <p style="color:var(--muted);font-size:.95rem;" data-i18n="tz-subtitle">5:00 PM Bangkok / Singapur (UTC+7) · ambos días</p>
+      <div class="tz-origin">🇸🇬&nbsp; Singapur (UTC+7) &nbsp;·&nbsp; 5:00 PM &nbsp;·&nbsp; 30 &amp; 31 Mayo 2026</div>
+    </div>
+    <div class="tz-grid" id="tz-grid"></div>
+    <p class="tz-note" style="text-align:center;margin-top:1.5rem;font-size:.8rem;color:var(--muted);" data-i18n="tz-note">Ambos días comienzan a las <span style="color:var(--cyan)">5:00 PM Singapur</span>. Horarios aproximados según zona horaria local.</p>
+  </div>
+</div>
+
+<!-- QUÉ INCLUYE -->
+<div class="section">
+  <div class="section-tag" data-i18n="includes-tag">✦ INCLUYE</div>
+  <h2 class="section-title" data-i18n="includes-title">Todo lo que obtienes</h2>
+  <p class="section-desc" data-i18n="includes-desc">Cada acceso incluye lo siguiente sin costos ocultos.</p>
+  <div class="includes-grid">
+    <div class="include-card">
+      <div class="icon">🖥️</div>
+      <h3 data-i18n="inc-stream-title">LIVE STREAMING PRIVADO</h3>
+      <p data-i18n="inc-stream-desc">Transmisión en vivo exclusiva del concierto en plataforma privada de alta calidad.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">🎬</div>
+      <h3 data-i18n="inc-rec-title">GRABACIÓN COMPLETA</h3>
+      <p data-i18n="inc-rec-desc">Acceso a la grabación del evento una vez finalizado. Míralo cuando quieras.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">🔄</div>
+      <h3 data-i18n="inc-rerun-title">RERUN</h3>
+      <p data-i18n="inc-rerun-desc">Repetición del stream disponible por tiempo limitado después de cada función.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">📸</div>
+      <h3>E-PHOTOS</h3>
+      <p data-i18n="inc-photos-desc">Fotos digitales oficiales del evento incluidas en tu compra.</p>
+    </div>
+    <div class="include-card">
+      <div class="icon">🎟️</div>
+      <h3 data-i18n="inc-access-title">ACCESO YPass</h3>
+      <p data-i18n="inc-access-desc">Cuenta personal en YPass. Ingresa desde cualquier dispositivo con tu usuario y contraseña.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRECIOS -->
+<div class="section" style="padding-top:1rem;">
+  <div class="section-tag" data-i18n="tickets-tag">✦ TICKETS</div>
+  <h2 class="section-title" data-i18n="tickets-title">Precios</h2>
+  <p class="section-desc" data-i18n="tickets-desc">Precios fijos en tu moneda local. Sin sorpresas.</p>
+
+  <div class="prices-grid">
+
+    <!-- 1 DÍA -->
+    <div class="price-card">
+      <div class="price-days" data-i18n="price1-day">🎵 1 DÍA</div>
+      <div class="price-nights" data-i18n="price1-func">1 FUNCIÓN</div>
+      <div class="price-usd"><span>US$</span>2</div>
+      <div class="price-dates" data-i18n="price1-dates">Elige: Sáb 30 o Dom 31 de Mayo</div>
+      <div class="price-divider"></div>
+      <div class="currency-row"><span class="currency-flag">🇪🇺</span><span class="currency-code">EUR</span><span class="currency-name" data-i18n="cur-eur">Euro</span><span class="currency-amount">€1.85</span></div>
+      <div class="currency-row"><span class="currency-flag">🇲🇽</span><span class="currency-code">MXN</span><span class="currency-name" data-i18n="cur-mxn">Peso mexicano</span><span class="currency-amount">$35</span></div>
+      <div class="currency-row"><span class="currency-flag">🇨🇴</span><span class="currency-code">COP</span><span class="currency-name" data-i18n="cur-cop">Peso colombiano</span><span class="currency-amount">$7,800</span></div>
+      <div class="currency-row"><span class="currency-flag">🇨🇱</span><span class="currency-code">CLP</span><span class="currency-name" data-i18n="cur-clp">Peso chileno</span><span class="currency-amount">$1,850</span></div>
+      <div class="currency-row"><span class="currency-flag">🇦🇷</span><span class="currency-code">ARS</span><span class="currency-name" data-i18n="cur-ars">Peso argentino</span><span class="currency-amount">$1,780</span></div>
+      <div class="currency-row"><span class="currency-flag">🇵🇪</span><span class="currency-code">PEN</span><span class="currency-name" data-i18n="cur-pen">Sol peruano</span><span class="currency-amount">S/7.50</span></div>
+    </div>
+
+    <!-- 2 DÍAS -->
+    <div class="price-card featured">
+      <div class="price-days" data-i18n="price2-days">🎵🎵 2 DÍAS</div>
+      <div class="price-nights" data-i18n="price2-func">PASE COMPLETO</div>
+      <div class="price-usd"><span>US$</span>3.5</div>
+      <div class="price-dates" data-i18n="price2-dates">Sáb 30 + Dom 31 Mayo 2026</div>
+      <div class="price-divider"></div>
+      <div class="currency-row"><span class="currency-flag">🇪🇺</span><span class="currency-code">EUR</span><span class="currency-name" data-i18n="cur-eur">Euro</span><span class="currency-amount">€3.25</span></div>
+      <div class="currency-row"><span class="currency-flag">🇲🇽</span><span class="currency-code">MXN</span><span class="currency-name" data-i18n="cur-mxn">Peso mexicano</span><span class="currency-amount">$60</span></div>
+      <div class="currency-row"><span class="currency-flag">🇨🇴</span><span class="currency-code">COP</span><span class="currency-name" data-i18n="cur-cop">Peso colombiano</span><span class="currency-amount">$13,500</span></div>
+      <div class="currency-row"><span class="currency-flag">🇨🇱</span><span class="currency-code">CLP</span><span class="currency-name" data-i18n="cur-clp">Peso chileno</span><span class="currency-amount">$3,200</span></div>
+      <div class="currency-row"><span class="currency-flag">🇦🇷</span><span class="currency-code">ARS</span><span class="currency-name" data-i18n="cur-ars">Peso argentino</span><span class="currency-amount">$3,100</span></div>
+      <div class="currency-row"><span class="currency-flag">🇵🇪</span><span class="currency-code">PEN</span><span class="currency-name" data-i18n="cur-pen">Sol peruano</span><span class="currency-amount">S/13.00</span></div>
+    </div>
+
+  </div>
+
+  <div class="refund-notice">
+    <span class="ri-icon">⚠️</span>
+    <span data-i18n="refund-notice"><strong>Pago no reembolsable.</strong> Una vez confirmado el pago, no se realizan devoluciones. Ante cualquier inconveniente técnico, se garantiza acceso a la grabación completa.</span>
+  </div>
+
+  <div class="deadline-banner">
+    <div class="deadline-icon">⏰</div>
+    <div class="deadline-text">
+      <h3 data-i18n="deadline-title">FECHA LÍMITE DE PAGO</h3>
+      <p data-i18n="deadline-text">Se reciben pagos hasta el <strong>29 de Mayo de 2026</strong>.<br>Asegúrate de pagar antes para garantizar tu acceso.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGOS -->
+<div class="section" style="padding-top:1rem;padding-bottom:3rem;">
+  <div class="section-tag" data-i18n="payments-tag">✦ MÉTODOS DE PAGO</div>
+  <h2 class="section-title" data-i18n="payments-title">¿Cómo puedes pagar?</h2>
+  <p class="section-desc" data-i18n="payments-desc">Múltiples opciones según tu país, sin complicaciones.</p>
+  <div class="payments-grid">
+    <div class="payment-card"><div class="payment-icon">🌐</div><div class="payment-info"><h4>PAYPAL</h4><p data-i18n="pay-paypal-desc">Internacional. Aceptado desde cualquier país con cuenta PayPal.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇨🇱</div><div class="payment-info"><h4>CHILE</h4><p data-i18n="pay-chile-desc">Pagos nacionales disponibles. Transferencia o plataforma local.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇦🇷</div><div class="payment-info"><h4>ARGENTINA</h4><p data-i18n="pay-arg-desc">Pago vía <strong style="color:var(--cyan)">PREX</strong> Argentina.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇲🇽</div><div class="payment-info"><h4>MÉXICO</h4><p data-i18n="pay-mex-desc">Pagos nacionales disponibles. Consultar al contactar.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇵🇪</div><div class="payment-info"><h4>PERÚ</h4><p data-i18n="pay-peru-desc">Pagos nacionales disponibles. Consultar al contactar.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇨🇴</div><div class="payment-info"><h4>COLOMBIA</h4><p data-i18n="pay-col-desc">Pagos nacionales disponibles. Consultar al contactar.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇺🇾</div><div class="payment-info"><h4>URUGUAY</h4><p data-i18n="pay-uru-desc">Pago vía <strong style="color:var(--cyan)">PREX</strong> Uruguay.</p></div></div>
+    <div class="payment-card"><div class="payment-icon">🇪🇺</div><div class="payment-info"><h4>EUROPA</h4><p data-i18n="pay-eu-desc">Transferencia bancaria vía <strong style="color:var(--cyan)">IBAN</strong>.</p></div></div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="section-tag" data-i18n="faq-tag">✦ PREGUNTAS FRECUENTES</div>
+  <h2 class="section-title" style="margin-bottom:2rem;" data-i18n="faq-title">FAQ</h2>
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q1" onclick="toggleFaq(this)">¿Cómo accedo al stream el día del evento?</div>
+    <div class="faq-answer" data-i18n="faq-a1">Una vez confirmado tu pago, recibirás tus credenciales de acceso a YPass por Telegram. El día del evento ingresa en panchoenlared.com con tu usuario y contraseña desde cualquier dispositivo.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q2" onclick="toggleFaq(this)">¿Qué significa "evento compartido"?</div>
+    <div class="faq-answer" data-i18n="faq-a2">Significa que la transmisión es organizada junto a otras comunidades de fans. La calidad del stream y los beneficios incluidos (grabación, rerun, e-photos) son exactamente los mismos que en eventos exclusivos.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q3" onclick="toggleFaq(this)">¿Qué pasa si tengo problemas técnicos?</div>
+    <div class="faq-answer" data-i18n="faq-a3">Contáctanos de inmediato por Telegram (@Panchoenlared). Todos los compradores tienen acceso garantizado a la grabación completa del evento.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q4" onclick="toggleFaq(this)">¿El pago es reembolsable?</div>
+    <div class="faq-answer" data-i18n="faq-a4">No. Todos los pagos son no reembolsables una vez confirmados. Ante problemas técnicos del stream, se garantiza acceso a la grabación.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q5" onclick="toggleFaq(this)">¿Puedo ver el stream desde mi celular?</div>
+    <div class="faq-answer" data-i18n="faq-a5">Sí. La plataforma YPass es compatible con celulares, tablets y computadoras. Recomendamos al menos 10 Mbps para la mejor calidad.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" data-i18n="faq-q6" onclick="toggleFaq(this)">¿Hasta cuándo puedo pagar?</div>
+    <div class="faq-answer" data-i18n="faq-a6">Se aceptan pagos hasta el <strong>29 de Mayo de 2026</strong>. No se garantiza acceso para pagos realizados después de esa fecha.</div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-section">
+  <div class="section-tag" style="display:inline-block;" data-i18n="contact-tag">✦ CONTACTO</div>
+  <h2 class="section-title" style="margin-top:.5rem;" data-i18n="contact-title">¿Te interesa? ¡Escríbenos!</h2>
+  <p class="contact-note" data-i18n="contact-note">Para reservar tu lugar o cualquier consulta sobre el evento, contáctanos directamente:</p>
+  <div class="social-buttons">
+    <a class="contact-handle tg" href="https://t.me/Panchoenlared" target="_blank" rel="noopener">💬 Telegram &nbsp;<span style="opacity:.6;">@Panchoenlared</span></a>
+    <a class="contact-handle ig" href="https://instagram.com/Panchoenlaredd" target="_blank" rel="noopener">📸 Instagram &nbsp;<span style="opacity:.6;">@Panchoenlaredd</span></a>
+  </div>
+  <p class="contact-note" style="font-size:.85rem;"><span style="color:var(--gold);" data-i18n="contact-deadline">⚠ Pagos hasta el 29 de Mayo de 2026</span></p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GMMTV MUSICON 2026 · SINGAPORE</div>
+  <div class="footer-sub">
+    <span data-i18n="footer-sub">Comunidad de fans · Viewing party privado · GMMTV</span>
+  </div>
+  <div class="deco-footer"></div>
+</footer>
+
+<script>
+  /* ─── I18N ─── */
+  const T = {
+    es: {
+      'shared-label':     'EVENTO COMPARTIDO',
+      'label-dates':      '📅 Fechas',
+      'label-time':       '🕔 Horario',
+      'local-time-label': '🌍 El evento en tu país será a las',
+      'hero-btn-enter':   'INGRESAR AL EVENTO',
+      'hero-btn-reserve': '🎫 RESERVAR AHORA',
+      'countdown-label':  '🎵 FALTAN PARA EL PRIMER DÍA · 30 MAYO',
+      'cd-unit-days':'DÍAS','cd-unit-hours':'HORAS','cd-unit-sec':'SEG',
+      'countdown-live': '🎉 EN VIVO',
+      'tz-tag':'❖ HORARIOS','tz-title':'¿A qué hora es en tu país?',
+      'tz-subtitle':'5:00 PM Bangkok / Singapur (UTC+7) · ambos días',
+      'tz-note':'Ambos días comienzan a las <span style="color:var(--cyan)">5:00 PM Singapur</span>. Horarios aproximados.',
+      'includes-tag':'✦ INCLUYE','includes-title':'Todo lo que obtienes',
+      'includes-desc':'Cada acceso incluye lo siguiente sin costos ocultos.',
+      'inc-stream-title':'LIVE STREAMING PRIVADO',
+      'inc-stream-desc':'Transmisión en vivo exclusiva del concierto en plataforma privada de alta calidad.',
+      'inc-rec-title':'GRABACIÓN COMPLETA',
+      'inc-rec-desc':'Acceso a la grabación del evento una vez finalizado.',
+      'inc-rerun-title':'RERUN',
+      'inc-rerun-desc':'Repetición del stream disponible por tiempo limitado.',
+      'inc-photos-desc':'Fotos digitales oficiales del evento incluidas en tu compra.',
+      'inc-access-title':'ACCESO YPass',
+      'inc-access-desc':'Cuenta personal en YPass. Ingresa desde cualquier dispositivo.',
+      'tickets-tag':'✦ TICKETS','tickets-title':'Precios',
+      'tickets-desc':'Precios fijos en tu moneda local. Sin sorpresas.',
+      'price1-day':'🎵 1 DÍA','price1-func':'1 FUNCIÓN',
+      'price1-dates':'Elige: Sáb 30 o Dom 31 de Mayo',
+      'price2-days':'🎵🎵 2 DÍAS','price2-func':'PASE COMPLETO',
+      'price2-dates':'Sáb 30 + Dom 31 Mayo 2026',
+      'deadline-title':'FECHA LÍMITE DE PAGO',
+      'deadline-text':'Se reciben pagos hasta el <strong>29 de Mayo de 2026</strong>.<br>Asegúrate de pagar antes para garantizar tu acceso.',
+      'payments-tag':'✦ MÉTODOS DE PAGO','payments-title':'¿Cómo puedes pagar?',
+      'payments-desc':'Múltiples opciones según tu país, sin complicaciones.',
+      'pay-paypal-desc':'Internacional. Aceptado desde cualquier país con cuenta PayPal.',
+      'pay-chile-desc':'Pagos nacionales disponibles. Transferencia o plataforma local.',
+      'pay-arg-desc':'Pago vía <strong style="color:var(--cyan)">PREX</strong> Argentina.',
+      'pay-mex-desc':'Pagos nacionales disponibles. Consultar al contactar.',
+      'pay-peru-desc':'Pagos nacionales disponibles. Consultar al contactar.',
+      'pay-col-desc':'Pagos nacionales disponibles. Consultar al contactar.',
+      'pay-uru-desc':'Pago vía <strong style="color:var(--cyan)">PREX</strong> Uruguay.',
+      'pay-eu-desc':'Transferencia bancaria vía <strong style="color:var(--cyan)">IBAN</strong>.',
+      'refund-notice':'<strong>Pago no reembolsable.</strong> Una vez confirmado el pago, no se realizan devoluciones. Ante cualquier inconveniente técnico, se garantiza acceso a la grabación completa.',
+      'faq-tag':'✦ PREGUNTAS FRECUENTES','faq-title':'FAQ',
+      'faq-q1':'¿Cómo accedo al stream el día del evento?',
+      'faq-a1':'Una vez confirmado tu pago, recibirás tus credenciales de acceso a YPass por Telegram. El día del evento ingresa en panchoenlared.com con tu usuario y contraseña desde cualquier dispositivo.',
+      'faq-q2':'¿Qué significa "evento compartido"?',
+      'faq-a2':'Significa que la transmisión es organizada junto a otras comunidades de fans. La calidad del stream y los beneficios incluidos (grabación, rerun, e-photos) son exactamente los mismos.',
+      'faq-q3':'¿Qué pasa si tengo problemas técnicos?',
+      'faq-a3':'Contáctanos de inmediato por Telegram (@Panchoenlared). Todos los compradores tienen acceso garantizado a la grabación completa.',
+      'faq-q4':'¿El pago es reembolsable?',
+      'faq-a4':'No. Todos los pagos son no reembolsables una vez confirmados.',
+      'faq-q5':'¿Puedo ver el stream desde mi celular?',
+      'faq-a5':'Sí. La plataforma YPass es compatible con celulares, tablets y computadoras. Recomendamos al menos 10 Mbps.',
+      'faq-q6':'¿Hasta cuándo puedo pagar?',
+      'faq-a6':'Se aceptan pagos hasta el <strong>29 de Mayo de 2026</strong>.',
+      'contact-tag':'✦ CONTACTO','contact-title':'¿Te interesa? ¡Escríbenos!',
+      'contact-note':'Para reservar tu lugar o cualquier consulta sobre el evento, contáctanos directamente:',
+      'contact-deadline':'⚠ Pagos hasta el 29 de Mayo de 2026',
+      'footer-sub':'Comunidad de fans · Viewing party privado · GMMTV',
+      'cur-eur':'Euro','cur-mxn':'Peso mexicano','cur-cop':'Peso colombiano',
+      'cur-clp':'Peso chileno','cur-ars':'Peso argentino','cur-pen':'Sol peruano',
+    },
+    en: {
+      'shared-label':     'SHARED EVENT',
+      'label-dates':      '📅 Dates',
+      'label-time':       '🕔 Showtime',
+      'local-time-label': '🌍 The event in your country will be at',
+      'hero-btn-enter':   'ENTER EVENT',
+      'hero-btn-reserve': '🎫 RESERVE NOW',
+      'countdown-label':  '🎵 TIME LEFT TO DAY 1 · MAY 30',
+      'cd-unit-days':'DAYS','cd-unit-hours':'HOURS','cd-unit-sec':'SEC',
+      'countdown-live': '🎉 LIVE NOW',
+      'tz-tag':'❖ SHOWTIMES','tz-title':'What time is it in your country?',
+      'tz-subtitle':'5:00 PM Bangkok / Singapore (UTC+7) · both days',
+      'tz-note':'Both days start at <span style="color:var(--cyan)">5:00 PM Singapore time</span>. Times are approximate.',
+      'includes-tag':'✦ INCLUDES','includes-title':'Everything you get',
+      'includes-desc':'Each access includes the following with no hidden costs.',
+      'inc-stream-title':'PRIVATE LIVE STREAMING',
+      'inc-stream-desc':'Exclusive live broadcast on a private high-quality platform.',
+      'inc-rec-title':'FULL RECORDING',
+      'inc-rec-desc':'Access to the event recording once it ends.',
+      'inc-rerun-title':'RERUN',
+      'inc-rerun-desc':'Stream replay available for a limited time.',
+      'inc-photos-desc':'Official digital photos included with your purchase.',
+      'inc-access-title':'YPass ACCESS',
+      'inc-access-desc':'Personal YPass account. Log in from any device.',
+      'tickets-tag':'✦ TICKETS','tickets-title':'Prices',
+      'tickets-desc':'Fixed prices in your local currency. No surprises.',
+      'price1-day':'🎵 1 DAY','price1-func':'1 SHOW',
+      'price1-dates':'Choose: Sat May 30 or Sun May 31',
+      'price2-days':'🎵🎵 2 DAYS','price2-func':'FULL PASS',
+      'price2-dates':'Sat 30 + Sun 31 May 2026',
+      'deadline-title':'PAYMENT DEADLINE',
+      'deadline-text':'Payments accepted until <strong>May 29, 2026</strong>.<br>Pay before that date to guarantee your access.',
+      'payments-tag':'✦ PAYMENT METHODS','payments-title':'How can you pay?',
+      'payments-desc':'Multiple options depending on your country.',
+      'pay-paypal-desc':'International. Accepted from any country with PayPal.',
+      'pay-chile-desc':'Domestic payments available.',
+      'pay-arg-desc':'Payment via <strong style="color:var(--cyan)">PREX</strong> Argentina.',
+      'pay-mex-desc':'Domestic payments available.',
+      'pay-peru-desc':'Domestic payments available.',
+      'pay-col-desc':'Domestic payments available.',
+      'pay-uru-desc':'Payment via <strong style="color:var(--cyan)">PREX</strong> Uruguay.',
+      'pay-eu-desc':'Bank transfer via <strong style="color:var(--cyan)">IBAN</strong>.',
+      'refund-notice':'<strong>Non-refundable payment.</strong> Once confirmed, no refunds. In case of technical issues, access to the full recording is guaranteed.',
+      'faq-tag':'✦ FREQUENTLY ASKED QUESTIONS','faq-title':'FAQ',
+      'faq-q1':'How do I access the stream?',
+      'faq-a1':'Once your payment is confirmed, you will receive your YPass credentials via Telegram. Log in at panchoenlared.com with your username and password from any device.',
+      'faq-q2':'What does "shared event" mean?',
+      'faq-a2':'It means the stream is organized together with other fan communities. The stream quality and included benefits (recording, rerun, e-photos) are exactly the same.',
+      'faq-q3':'What if I have technical issues?',
+      'faq-a3':'Contact us immediately on Telegram (@Panchoenlared). All buyers are guaranteed access to the full recording.',
+      'faq-q4':'Is the payment refundable?',
+      'faq-a4':'No. All payments are non-refundable once confirmed.',
+      'faq-q5':'Can I watch from my phone?',
+      'faq-a5':'Yes. YPass works on phones, tablets, and computers. We recommend at least 10 Mbps.',
+      'faq-q6':'What is the payment deadline?',
+      'faq-a6':'Payments accepted until <strong>May 29, 2026</strong>.',
+      'contact-tag':'✦ CONTACT','contact-title':'Interested? Write to us!',
+      'contact-note':'To reserve your spot or for any question, contact us directly:',
+      'contact-deadline':'⚠ Payments until May 29, 2026',
+      'footer-sub':'Fan community · Private viewing party · GMMTV',
+      'cur-eur':'Euro','cur-mxn':'Mexican Peso','cur-cop':'Colombian Peso',
+      'cur-clp':'Chilean Peso','cur-ars':'Argentine Peso','cur-pen':'Peruvian Sol',
+    }
+  };
+
+  let currentLang = localStorage.getItem('mc26-lang') || 'es';
+  function t(k){ return T[currentLang][k] ?? T.es[k] ?? k; }
+
+  function setLang(lang){
+    currentLang = lang;
+    localStorage.setItem('mc26-lang', lang);
+    document.documentElement.lang = lang;
+    document.documentElement.className = 'lang-' + lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const v = T[lang][el.dataset.i18n];
+      if(v !== undefined) el.innerHTML = v;
+    });
+    document.getElementById('lang-btn-es').classList.toggle('active', lang==='es');
+    document.getElementById('lang-btn-en').classList.toggle('active', lang==='en');
+  }
+  (function initLang(){
+    document.documentElement.lang = currentLang;
+    document.documentElement.className = 'lang-' + currentLang;
+    if(currentLang === 'en'){
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const v = T.en[el.dataset.i18n];
+        if(v !== undefined) el.innerHTML = v;
+      });
+      document.getElementById('lang-btn-es').classList.remove('active');
+      document.getElementById('lang-btn-en').classList.add('active');
+    }
+  })();
+
+  /* ─── COUNTDOWN (May 30 2026 17:00 BKK = 10:00 UTC) ─── */
+  const eventDate = new Date('2026-05-30T10:00:00Z');
+  function updateCountdown(){
+    const diff = eventDate - new Date();
+    if(diff <= 0){
+      document.getElementById('countdown').innerHTML =
+        `<div class="cd-box" style="min-width:200px"><div class="cd-num" style="font-size:1.3rem;color:var(--cyan)">${t('countdown-live')}</div></div>`;
+      return;
+    }
+    document.getElementById('cd-days').textContent  = String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('cd-min').textContent   = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('cd-sec').textContent   = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  /* ─── LOCAL TIME ─── */
+  (function localTime(){
+    try {
+      const ev = new Date('2026-05-30T10:00:00Z');
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const fmt = new Intl.DateTimeFormat('es', { timeZone:tz, hour:'2-digit', minute:'2-digit', hour12:true });
+      const tzName = new Intl.DateTimeFormat('es', { timeZone:tz, timeZoneName:'short' }).format(ev).split(', ')[1] || tz;
+      document.getElementById('local-time-value').textContent = fmt.format(ev).toUpperCase();
+      document.getElementById('local-time-tz').innerHTML = `<span>${tzName}</span> · Sáb 30 May 2026`;
+    } catch(e) {}
+  })();
+
+  /* ─── TIMEZONE GRID ─── */
+  (function buildTZ(){
+    const grid = document.getElementById('tz-grid');
+    if(!grid) return;
+    const EV = new Date('2026-05-30T10:00:00Z');
+    const zones = [
+      {flag:'🇲🇽',name:'México (CDMX)',tz:'America/Mexico_City'},
+      {flag:'🇨🇷',name:'Costa Rica',tz:'America/Costa_Rica'},
+      {flag:'🇬🇹',name:'Guatemala',tz:'America/Guatemala'},
+      {flag:'🇨🇴',name:'Colombia',tz:'America/Bogota'},
+      {flag:'🇵🇪',name:'Perú',tz:'America/Lima'},
+      {flag:'🇪🇨',name:'Ecuador',tz:'America/Guayaquil'},
+      {flag:'🇻🇪',name:'Venezuela',tz:'America/Caracas'},
+      {flag:'🇧🇴',name:'Bolivia',tz:'America/La_Paz'},
+      {flag:'🇩🇴',name:'Rep. Dom.',tz:'America/Santo_Domingo'},
+      {flag:'🇨🇱',name:'Chile',tz:'America/Santiago'},
+      {flag:'🇦🇷',name:'Argentina',tz:'America/Argentina/Buenos_Aires'},
+      {flag:'🇺🇾',name:'Uruguay',tz:'America/Montevideo'},
+      {flag:'🇧🇷',name:'Brasil',tz:'America/Sao_Paulo'},
+      {flag:'🇪🇸',name:'España',tz:'Europe/Madrid'},
+      {flag:'🇬🇧',name:'Reino Unido',tz:'Europe/London'},
+      {flag:'🇸🇬',name:'Singapur ★',tz:'Asia/Singapore',highlight:true},
+    ];
+    zones.forEach(z => {
+      const tf = new Intl.DateTimeFormat('es',{timeZone:z.tz,hour:'2-digit',minute:'2-digit',hour12:true}).format(EV);
+      const [time,ampm] = tf.split(' ');
+      const card = document.createElement('div');
+      card.className = 'tz-card';
+      if(z.highlight) card.style.cssText='border-color:var(--cyan);box-shadow:0 0 18px rgba(34,211,238,.2);';
+      card.innerHTML = `<div class="tz-flag">${z.flag}</div><div class="tz-country">${z.name}</div><div class="tz-time">${time}<span class="tz-ampm">${ampm||''}</span></div><div class="tz-label">Sáb 30 May</div>`;
+      grid.appendChild(card);
+    });
+  })();
+
+  /* ─── FAQ ─── */
+  function toggleFaq(el){
+    const item = el.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
