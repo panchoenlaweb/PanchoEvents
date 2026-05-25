@@ -40,8 +40,8 @@ export function StreamClient({ user, event: ev }: Props) {
   }, [router]);
 
   useEffect(() => {
-    const pingId    = setInterval(heartbeat,     20_000);
-    const refreshId = setInterval(refreshToken, 12 * 60 * 1000);
+    const pingId    = setInterval(heartbeat,     60_000);       // 60s — enough for sharing detection
+    const refreshId = setInterval(refreshToken, 13 * 60 * 1000); // 13 min — JWT lasts 15 min
     return () => { clearInterval(pingId); clearInterval(refreshId); };
   }, [heartbeat, refreshToken]);
 
