@@ -22,7 +22,14 @@ export async function GET(req: NextRequest) {
       if (!ev) return null;
       return { ...ev, assigned_at: row.assigned_at };
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .sort((a, b) => {
+      const ra = a as Record<string, unknown>;
+      const rb = b as Record<string, unknown>;
+      const da = ra.event_date ? new Date(ra.event_date as string).getTime() : Infinity;
+      const db = rb.event_date ? new Date(rb.event_date as string).getTime() : Infinity;
+      return da - db;
+    });
 
   return NextResponse.json({ data: events });
 }
