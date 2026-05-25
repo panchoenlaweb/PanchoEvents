@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Users, Film, ScrollText, Plus, Edit2, Trash2, Power,
-  LogOut, Key, Link2, RefreshCw, Shield, CheckCircle, XCircle,
+  LogOut, Key, Link2, RefreshCw, Shield, CheckCircle, XCircle, Copy, Eye, EyeOff, Wand2,
 } from 'lucide-react';
 import type { JWTPayload, User, Event, AccessLog } from '@/types';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +14,14 @@ import { ToastContainer, useToast } from '@/components/ui/Toast';
 import { formatDate, slugify } from '@/lib/utils';
 
 type Tab = 'users' | 'events' | 'logs';
+
+function generatePassword(username: string): string {
+  const clean = username.replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const head  = clean.slice(0, 4);
+  const tail  = clean.length > 4 ? clean.slice(-3) : '';
+  const digits = String(Math.floor(1000 + Math.random() * 9000));
+  return `${head}${tail}${digits}`;
+}
 
 export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
   const router = useRouter();
@@ -30,6 +38,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
   const [userModal, setUserModal] = useState<{ open: boolean; editing: User | null }>({ open: false, editing: null });
   const [userForm, setUserForm] = useState({ username: '', email: '', password: '', role: 'user' as 'user' | 'admin', is_active: true });
   const [userSaving, setUserSaving] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // ── Event modal state ─────────────────────────────────────────────────────────
   const [eventModal, setEventModal] = useState<{ open: boolean; editing: Event | null }>({ open: false, editing: null });
@@ -466,14 +475,54 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
             onChange={(e) => setUserForm((f) => ({ ...f, email: e.target.value }))}
             placeholder="usuario@ejemplo.com"
           />
-          <Input
-            label={userModal.editing ? 'Nueva contraseña (dejar vacío para no cambiar)' : 'Contraseña *'}
-            type="password"
-            value={userForm.password}
-            onChange={(e) => setUserForm((f) => ({ ...f, password: e.target.value }))}
-            placeholder="Mínimo 6 caracteres"
-            icon={<Key size={14} />}
-          />
+          <div className="flex flex-col gap-1.5">
+            <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">
+              {userModal.editing ? 'Nueva contraseña (dejar vacío para no cambiar)' : 'Contraseña *'}
+            </label>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={userForm.password}
+                  onChange={(e) => setUserForm((f) => ({ ...f, password: e.target.value }))}
+                  placeholder="Mínimo 6 caracteres"
+                  className="w-full bg-dark border border-zinc-800 hover:border-zinc-600 focus:border-amber/70 text-zinc-100 placeholder-zinc-600 font-mono text-sm px-4 py-2.5 pr-10 transition-all focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+              <button
+                type="button"
+                title="Generar contraseña automática"
+                onClick={() => {
+                  const pwd = generatePassword(userForm.username || 'user');
+                  setUserForm((f) => ({ ...f, password: pwd }));
+                  setShowPassword(true);
+                }}
+                className="flex items-center gap-1.5 px-3 py-2.5 border border-zinc-700 text-zinc-400 hover:border-amber/50 hover:text-amber font-display text-[0.6rem] tracking-widest uppercase transition-all whitespace-nowrap"
+              >
+                <Wand2 size={12} /> Generar
+              </button>
+              <button
+                type="button"
+                title="Copiar contraseña"
+                onClick={() => {
+                  if (userForm.password) {
+                    navigator.clipboard.writeText(userForm.password);
+                    addToast('success', `Contraseña copiada: ${userForm.password}`);
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-2.5 border border-zinc-700 text-zinc-400 hover:border-amber/50 hover:text-amber font-display text-[0.6rem] tracking-widest uppercase transition-all"
+              >
+                <Copy size={12} />
+              </button>
+            </div>
+          </div>
           <div className="flex gap-4">
             <div className="flex flex-col gap-1.5 flex-1">
               <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">Rol</label>
