@@ -14,14 +14,14 @@ interface Props {
 export function DashboardClient({ user, events }: Props) {
   const router = useRouter();
 
-  // Poll every 30s to detect session invalidation
+  // Poll every 10s to detect session invalidation
   const checkSession = useCallback(async () => {
     const res = await fetch('/api/auth/me', { cache: 'no-store' });
-    if (res.status === 401) router.replace('/login?reason=expired');
+    if (res.status === 401) router.replace('/login?reason=session_revoked');
   }, [router]);
 
   useEffect(() => {
-    const id = setInterval(checkSession, 30_000);
+    const id = setInterval(checkSession, 10_000);
     return () => clearInterval(id);
   }, [checkSession]);
 

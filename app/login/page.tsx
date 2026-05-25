@@ -135,7 +135,12 @@ function LoginForm() {
             {/* Session expired banner */}
             {reason === 'expired' && !error && (
               <div className="mb-5 px-4 py-3 bg-amber/10 border border-amber/30 text-amber text-xs font-sans">
-                Tu sesión expiró o fue iniciada en otro dispositivo.
+                Tu sesión expiró. Vuelve a iniciar sesión.
+              </div>
+            )}
+            {reason === 'session_revoked' && !error && (
+              <div className="mb-5 px-4 py-3 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-sans">
+                ⚠️ Tu sesión fue cerrada porque se inició sesión desde otro dispositivo.
               </div>
             )}
 

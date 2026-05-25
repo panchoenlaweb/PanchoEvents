@@ -35,7 +35,7 @@ export function StreamClient({ user, event: ev }: Props) {
   }, [router]);
 
   useEffect(() => {
-    const id = setInterval(checkSession, 30_000);
+    const id = setInterval(checkSession, 10_000);
     return () => clearInterval(id);
   }, [checkSession]);
 

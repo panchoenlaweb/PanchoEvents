@@ -22,6 +22,35 @@ async function verifyToken(token: string): Promise<TokenPayload | null> {
   }
 }
 
+async function isSessionActive(userId: string, sessionToken: string): Promise<boolean> {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !serviceKey) return true; // fail-open if env missing
+
+  try {
+    const now = new Date().toISOString();
+    const url =
+      `${supabaseUrl}/rest/v1/sessions` +
+      `?user_id=eq.${userId}` +
+      `&session_token=eq.${sessionToken}` +
+      `&expires_at=gt.${encodeURIComponent(now)}` +
+      `&select=id&limit=1`;
+
+    const res = await fetch(url, {
+      headers: {
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
+      },
+      cache: 'no-store',
+    });
+
+    const rows = await res.json();
+    return Array.isArray(rows) && rows.length > 0;
+  } catch {
+    return true; // fail-open on network error
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(COOKIE_NAME)?.value;
@@ -42,6 +71,14 @@ export async function middleware(request: NextRequest) {
   // Invalid/expired JWT → login
   if (!payload) {
     const res = NextResponse.redirect(new URL('/login?reason=expired', request.url));
+    res.cookies.delete(COOKIE_NAME);
+    return res;
+  }
+
+  // Session revoked (another device logged in) → kick immediately
+  const active = await isSessionActive(payload.userId, payload.sessionToken);
+  if (!active) {
+    const res = NextResponse.redirect(new URL('/login?reason=session_revoked', request.url));
     res.cookies.delete(COOKIE_NAME);
     return res;
   }
