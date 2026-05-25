@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth, deleteSession, COOKIE_NAME } from '@/lib/auth';
+import { requireAuth, deleteSession, COOKIE_NAME, REFRESH_COOKIE_NAME } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { getClientIp } from '@/lib/utils';
 
@@ -17,13 +17,15 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const response = NextResponse.json({ message: 'Sesión cerrada' });
-  response.cookies.set(COOKIE_NAME, '', {
+  const cookieOpts = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'strict' as const,
     maxAge: 0,
     path: '/',
-  });
+  };
+  const response = NextResponse.json({ message: 'Sesión cerrada' });
+  response.cookies.set(COOKIE_NAME,         '', cookieOpts);
+  response.cookies.set(REFRESH_COOKIE_NAME, '', cookieOpts);
   return response;
 }

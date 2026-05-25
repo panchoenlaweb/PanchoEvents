@@ -80,5 +80,10 @@ ALTER TABLE user_events  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessions     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE access_logs  ENABLE ROW LEVEL SECURITY;
 
+-- ── Migration: refresh tokens + heartbeat (run if upgrading existing schema) ──
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS refresh_token  TEXT UNIQUE;
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS last_ping      TIMESTAMPTZ;
+CREATE INDEX IF NOT EXISTS idx_sessions_refresh ON sessions(refresh_token);
+
 -- ── Auto-cleanup expired sessions (optional cron via pg_cron) ────────────────
 -- DELETE FROM sessions WHERE expires_at < NOW();

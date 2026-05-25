@@ -14,16 +14,23 @@ interface Props {
 export function DashboardClient({ user, events }: Props) {
   const router = useRouter();
 
-  // Poll every 10s to detect session invalidation
-  const checkSession = useCallback(async () => {
-    const res = await fetch('/api/auth/me', { cache: 'no-store' });
+  // Heartbeat: ping every 20s — detects revoked session immediately
+  const heartbeat = useCallback(async () => {
+    const res = await fetch('/api/session/ping', { method: 'POST', cache: 'no-store' });
+    if (res.status === 401) router.replace('/login?reason=session_revoked');
+  }, [router]);
+
+  // Auto-refresh access token every 12 min (JWT lasts 15 min)
+  const refreshToken = useCallback(async () => {
+    const res = await fetch('/api/auth/refresh', { method: 'POST', cache: 'no-store' });
     if (res.status === 401) router.replace('/login?reason=session_revoked');
   }, [router]);
 
   useEffect(() => {
-    const id = setInterval(checkSession, 10_000);
-    return () => clearInterval(id);
-  }, [checkSession]);
+    const pingId    = setInterval(heartbeat,     20_000);
+    const refreshId = setInterval(refreshToken, 12 * 60 * 1000);
+    return () => { clearInterval(pingId); clearInterval(refreshId); };
+  }, [heartbeat, refreshToken]);
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });

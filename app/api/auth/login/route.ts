@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { supabase } from '@/lib/supabase';
-import { createJWT, createSession, buildSessionCookie } from '@/lib/auth';
+import { createJWT, createSession, buildSessionCookie, buildRefreshCookie } from '@/lib/auth';
 import { getClientIp, sanitizeString } from '@/lib/utils';
 
 export async function POST(req: NextRequest) {
@@ -74,9 +74,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Create session — invalidates all previous sessions (single-session)
-    const sessionToken = await createSession(user.id, ip ?? undefined, ua ?? undefined);
+    const { sessionToken, refreshToken } = await createSession(user.id, ip ?? undefined, ua ?? undefined);
 
-    // Sign JWT
+    // Sign JWT (15 min access token)
     const jwt = await createJWT({
       userId: user.id,
       username: user.username,
@@ -99,12 +99,14 @@ export async function POST(req: NextRequest) {
       user_agent: ua,
     });
 
-    const { name, value, options } = buildSessionCookie(jwt);
+    const access  = buildSessionCookie(jwt);
+    const refresh = buildRefreshCookie(refreshToken);
     const response = NextResponse.json({
       message: 'Login exitoso',
       user: { id: user.id, username: user.username, role: user.role },
     });
-    response.cookies.set(name, value, options);
+    response.cookies.set(access.name,  access.value,  access.options);
+    response.cookies.set(refresh.name, refresh.value, refresh.options);
     return response;
   } catch (err) {
     console.error('[login]', err);

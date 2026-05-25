@@ -5,8 +5,11 @@ import { supabase } from './supabase';
 import type { JWTPayload } from '@/types';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
-export const COOKIE_NAME = 'pe_session';
-export const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+export const COOKIE_NAME         = 'pe_session';
+export const REFRESH_COOKIE_NAME = 'pe_refresh';
+export const ACCESS_TOKEN_DURATION_MS  = 15 * 60 * 1000;        // 15 minutes
+export const REFRESH_TOKEN_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+export const SESSION_DURATION_MS       = REFRESH_TOKEN_DURATION_MS;
 
 // ── JWT ────────────────────────────────────────────────────────────────────────
 
@@ -14,7 +17,7 @@ export async function createJWT(payload: JWTPayload): Promise<string> {
   return new SignJWT({ ...(payload as unknown as Record<string, unknown>) })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('24h')
+    .setExpirationTime('15m')
     .sign(JWT_SECRET);
 }
 
@@ -82,29 +85,61 @@ export async function createSession(
   userId: string,
   ipAddress?: string,
   userAgent?: string,
-): Promise<string> {
+): Promise<{ sessionToken: string; refreshToken: string }> {
   // Delete ALL existing sessions → single-session enforcement
   await supabase.from('sessions').delete().eq('user_id', userId);
 
-  const sessionToken = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
+  const sessionToken  = crypto.randomUUID();
+  const refreshToken  = crypto.randomUUID();
+  const expiresAt     = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
 
   await supabase.from('sessions').insert({
-    user_id: userId,
+    user_id:       userId,
     session_token: sessionToken,
-    expires_at: expiresAt,
-    ip_address: ipAddress ?? null,
-    user_agent: userAgent ?? null,
+    refresh_token: refreshToken,
+    expires_at:    expiresAt,
+    ip_address:    ipAddress ?? null,
+    user_agent:    userAgent ?? null,
+    last_ping:     new Date().toISOString(),
   });
 
-  return sessionToken;
+  return { sessionToken, refreshToken };
+}
+
+export async function refreshSession(
+  refreshToken: string,
+): Promise<{ sessionToken: string; payload: JWTPayload } | null> {
+  const { data: session } = await supabase
+    .from('sessions')
+    .select('*, users(id, username, role, is_active)')
+    .eq('refresh_token', refreshToken)
+    .gt('expires_at', new Date().toISOString())
+    .single();
+
+  if (!session || !session.users?.is_active) return null;
+
+  // Rotate session_token (new sessionId on every refresh)
+  const newSessionToken = crypto.randomUUID();
+  await supabase
+    .from('sessions')
+    .update({ session_token: newSessionToken, last_ping: new Date().toISOString() })
+    .eq('refresh_token', refreshToken);
+
+  const jwtPayload: JWTPayload = {
+    userId:       session.users.id,
+    username:     session.users.username,
+    role:         session.users.role as 'admin' | 'user',
+    sessionToken: newSessionToken,
+  };
+
+  return { sessionToken: newSessionToken, payload: jwtPayload };
 }
 
 export async function deleteSession(userId: string): Promise<void> {
   await supabase.from('sessions').delete().eq('user_id', userId);
 }
 
-// ── Cookie helper ─────────────────────────────────────────────────────────────
+// ── Cookie helpers ────────────────────────────────────────────────────────────
 
 export function buildSessionCookie(jwt: string) {
   return {
@@ -114,7 +149,21 @@ export function buildSessionCookie(jwt: string) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict' as const,
-      maxAge: SESSION_DURATION_MS / 1000,
+      maxAge: ACCESS_TOKEN_DURATION_MS / 1000, // 15 min
+      path: '/',
+    },
+  };
+}
+
+export function buildRefreshCookie(refreshToken: string) {
+  return {
+    name: REFRESH_COOKIE_NAME,
+    value: refreshToken,
+    options: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict' as const,
+      maxAge: REFRESH_TOKEN_DURATION_MS / 1000, // 30 days
       path: '/',
     },
   };

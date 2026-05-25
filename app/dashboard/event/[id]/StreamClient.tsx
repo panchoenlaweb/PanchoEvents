@@ -29,15 +29,21 @@ function toEmbedUrl(raw: string): string {
 export function StreamClient({ user, event: ev }: Props) {
   const router = useRouter();
 
-  const checkSession = useCallback(async () => {
-    const res = await fetch('/api/auth/me', { cache: 'no-store' });
-    if (res.status === 401) router.replace('/login?reason=expired');
+  const heartbeat = useCallback(async () => {
+    const res = await fetch('/api/session/ping', { method: 'POST', cache: 'no-store' });
+    if (res.status === 401) router.replace('/login?reason=session_revoked');
+  }, [router]);
+
+  const refreshToken = useCallback(async () => {
+    const res = await fetch('/api/auth/refresh', { method: 'POST', cache: 'no-store' });
+    if (res.status === 401) router.replace('/login?reason=session_revoked');
   }, [router]);
 
   useEffect(() => {
-    const id = setInterval(checkSession, 10_000);
-    return () => clearInterval(id);
-  }, [checkSession]);
+    const pingId    = setInterval(heartbeat,     20_000);
+    const refreshId = setInterval(refreshToken, 12 * 60 * 1000);
+    return () => { clearInterval(pingId); clearInterval(refreshId); };
+  }, [heartbeat, refreshToken]);
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });
