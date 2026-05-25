@@ -86,22 +86,40 @@ export async function createSession(
   ipAddress?: string,
   userAgent?: string,
 ): Promise<{ sessionToken: string; refreshToken: string }> {
-  // Delete ALL existing sessions → single-session enforcement
-  await supabase.from('sessions').delete().eq('user_id', userId);
+  const sessionToken = crypto.randomUUID();
+  const refreshToken = crypto.randomUUID();
+  const expiresAt    = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
+  const now          = new Date().toISOString();
 
-  const sessionToken  = crypto.randomUUID();
-  const refreshToken  = crypto.randomUUID();
-  const expiresAt     = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
-
-  await supabase.from('sessions').insert({
+  // Try full schema (with refresh_token + last_ping)
+  let { error } = await supabase.from('sessions').insert({
     user_id:       userId,
     session_token: sessionToken,
     refresh_token: refreshToken,
     expires_at:    expiresAt,
     ip_address:    ipAddress ?? null,
     user_agent:    userAgent ?? null,
-    last_ping:     new Date().toISOString(),
+    last_ping:     now,
   });
+
+  // Fallback: schema migration not yet run — insert without new columns
+  if (error) {
+    const fallback = await supabase.from('sessions').insert({
+      user_id:       userId,
+      session_token: sessionToken,
+      expires_at:    expiresAt,
+      ip_address:    ipAddress ?? null,
+      user_agent:    userAgent ?? null,
+    });
+    if (fallback.error) throw new Error(fallback.error.message);
+  }
+
+  // Only delete OLD sessions AFTER the new one is safely inserted
+  await supabase
+    .from('sessions')
+    .delete()
+    .eq('user_id', userId)
+    .neq('session_token', sessionToken);
 
   return { sessionToken, refreshToken };
 }
