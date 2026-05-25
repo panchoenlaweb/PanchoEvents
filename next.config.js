@@ -2,7 +2,7 @@
 const EVENTS = [
   'joongdunk', 'surfjava', 'seakeen', 'dmdland3', 'loveoutloud',
   'olympop', 'perthsanta', 'poohpavel', 'blushblossom', 'sotus',
-  'starlympic', 'redworld',
+  'starlympic', 'redworld', 'khemjira',
 ];
 
 const nextConfig = {
