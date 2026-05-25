@@ -15,6 +15,8 @@ import { formatDate, slugify } from '@/lib/utils';
 
 type Tab = 'users' | 'events' | 'logs';
 
+const REVENUE_PER_USER = 1.5;
+
 function generatePassword(username: string): string {
   const clean = username.replace(/[^a-z0-9]/gi, '').toLowerCase();
   const head  = clean.slice(0, 4);
@@ -364,6 +366,28 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
               </Button>
             </div>
 
+            {/* ── Revenue summary ─────────────────────────── */}
+            {!loading && events.length > 0 && (() => {
+              const totalUsers   = events.reduce((s, e) => s + (e.user_count ?? 0), 0);
+              const totalRevenue = totalUsers * REVENUE_PER_USER;
+              return (
+                <div className="grid grid-cols-3 gap-3 mb-5">
+                  <div className="bg-dark-card border border-dark-border p-3 flex flex-col gap-1">
+                    <span className="font-display text-[0.55rem] tracking-widest text-zinc-500 uppercase">Total eventos</span>
+                    <span className="font-display text-xl text-zinc-100">{events.length}</span>
+                  </div>
+                  <div className="bg-dark-card border border-dark-border p-3 flex flex-col gap-1">
+                    <span className="font-display text-[0.55rem] tracking-widest text-zinc-500 uppercase">Total usuarios (todos los eventos)</span>
+                    <span className="font-display text-xl text-amber">{totalUsers}</span>
+                  </div>
+                  <div className="bg-dark-card border border-emerald-900/50 p-3 flex flex-col gap-1">
+                    <span className="font-display text-[0.55rem] tracking-widest text-zinc-500 uppercase">~Ingresos totales (${REVENUE_PER_USER} USD/usuario)</span>
+                    <span className="font-display text-xl text-emerald-400">${totalRevenue.toFixed(2)} USD</span>
+                  </div>
+                </div>
+              );
+            })()}
+
             {loading ? (
               <LoadingRows />
             ) : (
@@ -371,7 +395,7 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-dark-border">
-                      {['Título', 'Slug', 'Fecha', 'Stream', 'Estado', 'Acciones'].map((h) => (
+                      {['Título', 'Slug', 'Fecha', 'Usuarios', '~Ingresos', 'Stream', 'Estado', 'Acciones'].map((h) => (
                         <th key={h} className="font-display text-[0.6rem] tracking-widest text-zinc-500 uppercase text-left px-3 py-3">
                           {h}
                         </th>
@@ -385,6 +409,22 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
                         <td className="px-3 py-3 font-display text-[0.6rem] text-zinc-500 tracking-wider">{e.slug}</td>
                         <td className="px-3 py-3 font-sans text-zinc-500 text-xs whitespace-nowrap">
                           {formatDate(e.event_date)}
+                        </td>
+                        <td className="px-3 py-3 text-center">
+                          <span className={`font-display text-sm ${
+                            (e.user_count ?? 0) > 0 ? 'text-amber' : 'text-zinc-600'
+                          }`}>
+                            {e.user_count ?? 0}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3 font-sans text-xs whitespace-nowrap">
+                          {(e.user_count ?? 0) > 0 ? (
+                            <span className="text-emerald-400">
+                              ~${((e.user_count ?? 0) * REVENUE_PER_USER).toFixed(2)}
+                            </span>
+                          ) : (
+                            <span className="text-zinc-700">—</span>
+                          )}
                         </td>
                         <td className="px-3 py-3">
                           {e.stream_url ? (

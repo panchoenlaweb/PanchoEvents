@@ -18,6 +18,7 @@ export interface Event {
   status: 'active' | 'inactive';
   slug: string;
   created_at: string;
+  user_count?: number;
 }
 
 export interface UserEvent extends Event {

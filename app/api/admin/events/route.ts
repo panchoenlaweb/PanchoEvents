@@ -7,12 +7,19 @@ export async function GET(req: NextRequest) {
   const admin = await requireAdmin(req);
   if (!admin) return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
 
-  const { data, error } = await supabase
-    .from('events')
-    .select('*')
-    .order('event_date', { ascending: true, nullsFirst: false });
+  const [eventsResult, countsResult] = await Promise.all([
+    supabase.from('events').select('*').order('event_date', { ascending: true, nullsFirst: false }),
+    supabase.from('user_events').select('event_id'),
+  ]);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (eventsResult.error) return NextResponse.json({ error: eventsResult.error.message }, { status: 500 });
+
+  const countMap: Record<string, number> = {};
+  for (const row of countsResult.data ?? []) {
+    countMap[row.event_id] = (countMap[row.event_id] ?? 0) + 1;
+  }
+
+  const data = (eventsResult.data ?? []).map((e) => ({ ...e, user_count: countMap[e.id] ?? 0 }));
   return NextResponse.json({ data });
 }
 
