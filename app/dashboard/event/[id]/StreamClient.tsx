@@ -12,18 +12,30 @@ interface Props {
 
 function toEmbedUrl(raw: string): string {
   try {
-    const url = new URL(raw);
-    // Already an embed URL — return as-is
-    if (url.hostname === 'player.vimeo.com') return raw;
-    // Vimeo live event embed: vimeo.com/event/ID/embed/...
-    if (url.pathname.includes('/event/') && url.pathname.includes('/embed')) return raw;
-    // Regular Vimeo video: vimeo.com/123456789
-    const videoId = url.pathname.replace(/^\//, '').split('/')[0];
-    if (videoId && /^\d+$/.test(videoId)) {
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+    const trimmed = raw.trim();
+    const url = new URL(trimmed);
+
+    // Already a player embed URL — return as-is
+    if (url.hostname === 'player.vimeo.com') return trimmed;
+
+    if (url.hostname === 'vimeo.com' || url.hostname === 'www.vimeo.com') {
+      const parts = url.pathname.replace(/^\//, '').split('/').filter(Boolean);
+      // Already fully-formed event embed: /event/ID/embed/HASH or /event/ID/embed
+      if (parts[0] === 'event' && parts[2] === 'embed') return trimmed;
+      // Live event URL without /embed: vimeo.com/event/ID  or  vimeo.com/event/ID/anything
+      if (parts[0] === 'event' && parts[1]) {
+        const hash = parts[3] ?? ''; // preserve hash if present
+        return hash
+          ? `https://vimeo.com/event/${parts[1]}/embed/${hash}`
+          : `https://vimeo.com/event/${parts[1]}/embed`;
+      }
+      // Regular video: vimeo.com/123456789
+      if (parts[0] && /^\d+$/.test(parts[0])) {
+        return `https://player.vimeo.com/video/${parts[0]}?autoplay=1&title=0&byline=0&portrait=0`;
+      }
     }
-  } catch { /* not a valid URL, return as-is */ }
-  return raw;
+  } catch { /* not a valid URL — return as-is */ }
+  return raw.trim();
 }
 
 export function StreamClient({ user, event: ev }: Props) {

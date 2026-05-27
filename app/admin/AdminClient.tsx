@@ -841,12 +841,21 @@ export function AdminClient({ adminUser }: { adminUser: JWTPayload }) {
               </select>
             </div>
           </div>
-          <Input
-            label="URL del Stream (Vimeo)"
-            value={eventForm.stream_url}
-            onChange={(e) => setEventForm((f) => ({ ...f, stream_url: e.target.value }))}
-            placeholder="https://vimeo.com/123456789  ó  vimeo.com/event/ID/embed/interaction"
-          />
+          <div className="flex flex-col gap-1.5">
+            <label className="font-display text-[0.65rem] tracking-widest text-zinc-400 uppercase">URL del Stream (Vimeo)</label>
+            <input
+              type="url"
+              value={eventForm.stream_url}
+              onChange={(e) => setEventForm((f) => ({ ...f, stream_url: e.target.value }))}
+              placeholder="https://vimeo.com/event/1234567"
+              className="w-full bg-dark border border-zinc-800 hover:border-zinc-600 focus:border-amber/70 text-zinc-100 placeholder-zinc-600 font-sans text-sm px-4 py-2.5 transition-all focus:outline-none"
+            />
+            <p className="text-[0.6rem] text-zinc-600 font-sans leading-relaxed">
+              Acepta: <span className="text-zinc-500">vimeo.com/event/ID</span> · <span className="text-zinc-500">vimeo.com/event/ID/embed/HASH</span> · <span className="text-zinc-500">player.vimeo.com/video/ID</span>
+              <br />
+              <span className="text-amber/60">⚠ En Vimeo → Configuración del evento → Privacidad → añade <strong>panchoenlared.com</strong> a &quot;Dominios permitidos para embed&quot;</span>
+            </p>
+          </div>
           <Input
             label="URL de Miniatura"
             value={eventForm.thumbnail_url}
