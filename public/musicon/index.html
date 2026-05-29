@@ -664,13 +664,18 @@
       {flag:'🇸🇬',name:'Singapur ★',tz:'Asia/Singapore',highlight:true},
     ];
     zones.forEach(z => {
-      const tf = new Intl.DateTimeFormat('en-US',{timeZone:z.tz,hour:'2-digit',minute:'2-digit',hour12:true}).format(EV);
-      const [time,ampm] = tf.split(' ');
-      const card = document.createElement('div');
-      card.className = 'tz-card';
-      if(z.highlight) card.style.cssText='border-color:var(--cyan);box-shadow:0 0 18px rgba(34,211,238,.2);';
-      card.innerHTML = `<div class="tz-flag">${z.flag}</div><div class="tz-country">${z.name}</div><div class="tz-time">${time}<span class="tz-ampm">${ampm||''}</span></div><div class="tz-label">Sáb 30 May</div>`;
-      grid.appendChild(card);
+      try {
+        const fmt = new Intl.DateTimeFormat('en-US',{timeZone:z.tz,hour:'2-digit',minute:'2-digit',hour12:true});
+        const pts = fmt.formatToParts(EV);
+        const hour   = (pts.find(p=>p.type==='hour')||{}).value||'--';
+        const minute = (pts.find(p=>p.type==='minute')||{}).value||'--';
+        const ampm   = (pts.find(p=>p.type==='dayPeriod')||{}).value||'';
+        const card = document.createElement('div');
+        card.className = 'tz-card';
+        if(z.highlight) card.style.cssText='border-color:var(--cyan);box-shadow:0 0 18px rgba(34,211,238,.2);';
+        card.innerHTML = `<div class="tz-flag">${z.flag}</div><div class="tz-country">${z.name}</div><div class="tz-time">${hour}:${minute}<span class="tz-ampm">${ampm}</span></div><div class="tz-label">Sáb 30 May</div>`;
+        grid.appendChild(card);
+      } catch(e){}
     });
   })();
 
