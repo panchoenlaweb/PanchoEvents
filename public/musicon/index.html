@@ -226,7 +226,7 @@
       </div>
       <div class="hero-meta-item">
         <div class="label" data-i18n="label-time">🕔 Horario</div>
-        <div class="value">5:00 PM (BKK)</div>
+        <div class="value">5:00 PM (SGT)</div>
       </div>
       <div class="hero-meta-item">
         <div class="label">📍 Venue</div>
@@ -281,8 +281,8 @@
     <div class="tz-header">
       <div class="section-tag" data-i18n="tz-tag">❖ HORARIOS</div>
       <h2 class="section-title" data-i18n="tz-title">¿A qué hora es en tu país?</h2>
-      <p style="color:var(--muted);font-size:.95rem;" data-i18n="tz-subtitle">5:00 PM Bangkok / Singapur (UTC+7) · ambos días</p>
-      <div class="tz-origin">🇸🇬&nbsp; Singapur (UTC+7) &nbsp;·&nbsp; 5:00 PM &nbsp;·&nbsp; 30 &amp; 31 Mayo 2026</div>
+      <p style="color:var(--muted);font-size:.95rem;" data-i18n="tz-subtitle">5:00 PM Singapur (UTC+8) · ambos días</p>
+      <div class="tz-origin">🇸🇬&nbsp; Singapur (UTC+8) &nbsp;·&nbsp; 5:00 PM &nbsp;·&nbsp; 30 &amp; 31 Mayo 2026</div>
     </div>
     <div class="tz-grid" id="tz-grid"></div>
     <p class="tz-note" style="text-align:center;margin-top:1.5rem;font-size:.8rem;color:var(--muted);" data-i18n="tz-note">Ambos días comienzan a las <span style="color:var(--cyan)">5:00 PM Singapur</span>. Horarios aproximados según zona horaria local.</p>
@@ -459,8 +459,10 @@
       'cd-unit-days':'DÍAS','cd-unit-hours':'HORAS','cd-unit-sec':'SEG',
       'countdown-live': '🎉 EN VIVO',
       'tz-tag':'❖ HORARIOS','tz-title':'¿A qué hora es en tu país?',
-      'tz-subtitle':'5:00 PM Bangkok / Singapur (UTC+7) · ambos días',
-      'tz-note':'Ambos días comienzan a las <span style="color:var(--cyan)">5:00 PM Singapur</span>. Horarios aproximados.',
+      'tz-subtitle':'5:00 PM Singapur (UTC+8) · ambos días',
+      'tz-note':'Ambos días comienzan a las <span style="color:var(--cyan)">5:00 PM Singapur (UTC+8)</span>. Horarios aproximados.',
+      'local-banner':'Tu hora local: ',
+      'local-banner-suffix':'· hora Singapur: 5:00 PM (UTC+8)',
       'includes-tag':'✦ INCLUYE','includes-title':'Todo lo que obtienes',
       'includes-desc':'Cada acceso incluye lo siguiente sin costos ocultos.',
       'inc-stream-title':'LIVE STREAMING PRIVADO',
@@ -522,8 +524,10 @@
       'cd-unit-days':'DAYS','cd-unit-hours':'HOURS','cd-unit-sec':'SEC',
       'countdown-live': '🎉 LIVE NOW',
       'tz-tag':'❖ SHOWTIMES','tz-title':'What time is it in your country?',
-      'tz-subtitle':'5:00 PM Bangkok / Singapore (UTC+7) · both days',
-      'tz-note':'Both days start at <span style="color:var(--cyan)">5:00 PM Singapore time</span>. Times are approximate.',
+      'tz-subtitle':'5:00 PM Singapore (UTC+8) · both days',
+      'tz-note':'Both days start at <span style="color:var(--cyan)">5:00 PM Singapore time (UTC+8)</span>. Times are approximate.',
+      'local-banner':'Your local time: ',
+      'local-banner-suffix':'· Singapore time: 5:00 PM (UTC+8)',
       'includes-tag':'✦ INCLUDES','includes-title':'Everything you get',
       'includes-desc':'Each access includes the following with no hidden costs.',
       'inc-stream-title':'PRIVATE LIVE STREAMING',
@@ -604,8 +608,8 @@
     }
   })();
 
-  /* ─── COUNTDOWN (May 30 2026 17:00 BKK = 10:00 UTC) ─── */
-  const eventDate = new Date('2026-05-30T10:00:00Z');
+  /* ─── COUNTDOWN (May 30 2026 17:00 SGT = 09:00 UTC) ─── */
+  const eventDate = new Date('2026-05-30T09:00:00Z');
   function updateCountdown(){
     const diff = eventDate - new Date();
     if(diff <= 0){
@@ -637,7 +641,7 @@
   (function buildTZ(){
     const grid = document.getElementById('tz-grid');
     if(!grid) return;
-    const EV = new Date('2026-05-30T10:00:00Z');
+    const EV = new Date('2026-05-30T09:00:00Z');
     const zones = [
       {flag:'🇲🇽',name:'México (CDMX)',tz:'America/Mexico_City'},
       {flag:'🇨🇷',name:'Costa Rica',tz:'America/Costa_Rica'},
