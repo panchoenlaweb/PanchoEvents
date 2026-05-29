@@ -84,14 +84,9 @@ export async function POST(req: NextRequest) {
       sessionToken,
     });
 
-    // Update last_login
-    await supabase
-      .from('users')
-      .update({ last_login: new Date().toISOString() })
-      .eq('id', user.id);
-
-    // Log success
-    await supabase.from('access_logs').insert({
+    // Fire-and-forget: update last_login and log success (non-blocking)
+    void supabase.from('users').update({ last_login: new Date().toISOString() }).eq('id', user.id);
+    void supabase.from('access_logs').insert({
       user_id: user.id,
       username: user.username,
       event_type: 'login',
