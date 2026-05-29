@@ -628,13 +628,16 @@
   /* ─── LOCAL TIME ─── */
   (function localTime(){
     try {
-      const ev = new Date('2026-05-30T10:00:00Z');
+      const ev = new Date('2026-05-30T09:00:00Z');
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const fmt = new Intl.DateTimeFormat('en-US', { timeZone:tz, hour:'2-digit', minute:'2-digit', hour12:true });
-      const tzName = new Intl.DateTimeFormat('en-US', { timeZone:tz, timeZoneName:'short' }).format(ev).split(', ')[1] || tz;
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone:tz, timeZoneName:'short', hour:'numeric' }).formatToParts(ev);
+      const tzName = (parts.find(p => p.type === 'timeZoneName') || {}).value || tz;
       document.getElementById('local-time-value').textContent = fmt.format(ev).toUpperCase();
       document.getElementById('local-time-tz').innerHTML = `<span>${tzName}</span> · Sáb 30 May 2026`;
-    } catch(e) {}
+    } catch(e) {
+      document.getElementById('local-time-value').textContent = '—';
+    }
   })();
 
   /* ─── TIMEZONE GRID ─── */
