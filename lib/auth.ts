@@ -136,21 +136,21 @@ export async function refreshSession(
 
   if (!session || !session.users?.is_active) return null;
 
-  // Rotate session_token (new sessionId on every refresh)
-  const newSessionToken = crypto.randomUUID();
+  // Keep the same session_token — only update last_ping
+  // Rotating session_token breaks multi-tab sessions
   await supabase
     .from('sessions')
-    .update({ session_token: newSessionToken, last_ping: new Date().toISOString() })
+    .update({ last_ping: new Date().toISOString() })
     .eq('refresh_token', refreshToken);
 
   const jwtPayload: JWTPayload = {
     userId:       session.users.id,
     username:     session.users.username,
     role:         session.users.role as 'admin' | 'user',
-    sessionToken: newSessionToken,
+    sessionToken: session.session_token,
   };
 
-  return { sessionToken: newSessionToken, payload: jwtPayload };
+  return { sessionToken: session.session_token, payload: jwtPayload };
 }
 
 export async function deleteSession(userId: string): Promise<void> {
